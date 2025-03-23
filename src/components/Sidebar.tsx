@@ -80,18 +80,18 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                 : "text-foreground/70 hover:bg-accent hover:text-foreground"
             )}
           >
-            <div className="flex items-center">
+            <div className="flex items-center min-w-0">
               <div className={cn(
-                "flex items-center justify-center mr-3",
+                "flex-shrink-0 flex items-center justify-center mr-3",
                 isActive || isOpen ? "text-primary" : "text-foreground/70",
               )}>
                 {icon}
               </div>
-              <span>{label}</span>
+              <span className="truncate">{label}</span>
             </div>
             <ChevronDown
               className={cn(
-                "h-4 w-4 transition-transform duration-200",
+                "h-4 w-4 flex-shrink-0 ml-2 transition-transform duration-200",
                 isOpen ? "rotate-180" : ""
               )}
             />
@@ -104,7 +104,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                 key={index}
                 to={item.href}
                 className={cn(
-                  "rounded-md px-2 py-1.5 text-sm transition-all duration-200",
+                  "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
                   location.pathname === item.href
                     ? "bg-primary/10 text-primary font-medium" 
                     : "text-foreground/70 hover:bg-accent hover:text-foreground"
@@ -226,7 +226,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               <LayoutDashboard className="h-5 w-5" />
             </div>
             {!isCollapsed && (
-              <span className="ml-3">Dashboard</span>
+              <span className="ml-3 truncate">Dashboard</span>
             )}
             {location.pathname === "/" && (
               <div className="absolute left-0 h-8 w-1 rounded-r-lg bg-primary" />
