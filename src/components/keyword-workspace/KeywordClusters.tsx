@@ -11,7 +11,7 @@ import {
   MoveHorizontal, 
   Edit, 
   Save, 
-  Magic 
+  Sparkles 
 } from "lucide-react";
 
 interface KeywordClustersProps {
@@ -105,7 +105,7 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
           </Button>
         </div>
         <Button onClick={handleAutoCluster} variant="outline" className="flex items-center gap-1">
-          <Magic className="h-4 w-4" />
+          <Sparkles className="h-4 w-4" />
           Auto-Cluster
         </Button>
       </div>
@@ -118,17 +118,20 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
                 <div className="flex gap-2">
                   <Input 
                     defaultValue={cluster.name}
+                    id={`cluster-${cluster.id}-input`}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        handleSaveEdit(cluster.id, e.currentTarget.value);
+                        handleSaveEdit(cluster.id, (e.target as HTMLInputElement).value);
                       }
                     }}
                     autoFocus
                   />
                   <Button 
                     size="sm" 
-                    onClick={() => handleSaveEdit(cluster.id, 
-                      document.querySelector(`#cluster-${cluster.id}-input`)?.value || cluster.name)}
+                    onClick={() => {
+                      const input = document.querySelector(`#cluster-${cluster.id}-input`) as HTMLInputElement;
+                      handleSaveEdit(cluster.id, input?.value || cluster.name);
+                    }}
                     className="h-10 p-2"
                   >
                     <Save className="h-4 w-4" />
