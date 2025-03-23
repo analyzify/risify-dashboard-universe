@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,37 +32,52 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
   onCreateGroup,
   onRemoveGroup
 }) => {
-  const [clusters, setClusters] = useState<any[]>([
-    { 
-      id: "cluster1", 
-      name: "Product Features", 
-      color: "#E5DEFF", 
-      keywords: ["product customization", "product features", "product specifications"],
-      avgVolume: 1800,
-      avgDifficulty: 45
-    },
-    { 
-      id: "cluster2", 
-      name: "Buying Guides", 
-      color: "#D3E4FD", 
-      keywords: ["how to buy", "product comparison", "best options"],
-      avgVolume: 2400,
-      avgDifficulty: 38
-    },
-    { 
-      id: "cluster3", 
-      name: "Troubleshooting", 
-      color: "#FFDEE2", 
-      keywords: ["common issues", "troubleshooting guide", "fix problems"],
-      avgVolume: 1500,
-      avgDifficulty: 52
-    }
-  ]);
-  
+  const [clusters, setClusters] = useState<any[]>([]);
   const [newClusterName, setNewClusterName] = useState("");
   const [editingClusterId, setEditingClusterId] = useState<string | null>(null);
   const [selectedClusterId, setSelectedClusterId] = useState<string | null>(null);
   const [filterText, setFilterText] = useState("");
+  
+  // Initialize clusters based on groups and keywords
+  useEffect(() => {
+    const updatedClusters = groups
+      .filter(group => group.id !== "all") // Skip the "All Keywords" group for the clusters view
+      .map(group => {
+        // Create a mapping of keywords for each group
+        // In a real app, this would be based on the actual group membership
+        let groupKeywords: string[] = [];
+        
+        if (group.id === "brand") {
+          groupKeywords = ["saint bernard", "saintbernard shop"];
+        } else if (group.id === "jackets") {
+          groupKeywords = ["winter jackets", "north face jackets", "arcteryx jackets", "columbia winter jackets", "north face"];
+        } else if (group.id === "footwear") {
+          groupKeywords = ["snow shoes", "discounted snow shoes"];
+        } else if (group.id === "accessories") {
+          groupKeywords = ["winter accessories"];
+        }
+        
+        // Calculate average metrics
+        const keywordsData = keywords.filter(k => groupKeywords.includes(k.keyword));
+        const avgVolume = keywordsData.length 
+          ? Math.round(keywordsData.reduce((acc, k) => acc + k.volume, 0) / keywordsData.length)
+          : 0;
+        const avgDifficulty = keywordsData.length
+          ? Math.round(keywordsData.reduce((acc, k) => acc + k.difficulty, 0) / keywordsData.length)
+          : 0;
+        
+        return {
+          id: group.id,
+          name: group.name,
+          color: group.color,
+          keywords: groupKeywords,
+          avgVolume,
+          avgDifficulty
+        };
+      });
+      
+    setClusters(updatedClusters);
+  }, [groups, keywords]);
   
   const clusterColors = [
     "#E5DEFF", "#D3E4FD", "#FFDEE2", "#FDE1D3", "#F2FCE2", 
@@ -122,6 +138,8 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
         return <div className="h-2 w-2 rounded-full bg-purple-500 mr-2"></div>;
       case "transactional":
         return <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>;
+      case "navigational":
+        return <div className="h-2 w-2 rounded-full bg-orange-500 mr-2"></div>;
       default:
         return <div className="h-2 w-2 rounded-full bg-gray-500 mr-2"></div>;
     }
@@ -318,10 +336,10 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
                 <TableBody>
                   {selectedCluster.keywords.length > 0 ? (
                     selectedCluster.keywords.map((keyword: string, index: number) => {
-                      const volume = Math.floor(Math.random() * 5000) + 500;
-                      const difficulty = Math.floor(Math.random() * 70) + 20;
-                      const intents = ["informational", "commercial", "transactional"];
-                      const intent = intents[Math.floor(Math.random() * intents.length)];
+                      const keywordObj = keywords.find(k => k.keyword === keyword);
+                      const volume = keywordObj?.volume || Math.floor(Math.random() * 5000) + 500;
+                      const difficulty = keywordObj?.difficulty || Math.floor(Math.random() * 70) + 20;
+                      const intent = keywordObj?.intent || ["informational", "commercial", "transactional"][Math.floor(Math.random() * 3)];
                       
                       return (
                         <TableRow key={index}>

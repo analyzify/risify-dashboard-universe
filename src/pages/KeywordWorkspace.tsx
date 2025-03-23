@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -23,18 +23,22 @@ import IntentAnalysis from "@/components/keyword-workspace/IntentAnalysis";
 import KeywordMapping from "@/components/keyword-workspace/KeywordMapping";
 import MyKeywordsPanel from "@/components/keyword-workspace/MyKeywordsPanel";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { preselectedKeywords, preselectedGroups } from "@/lib/mock-data";
+import { toast } from "sonner";
 
 const KeywordWorkspace = () => {
   const [activeTab, setActiveTab] = useState("discovery");
-  const [selectedKeywords, setSelectedKeywords] = useState<any[]>([]);
+  const [selectedKeywords, setSelectedKeywords] = useState<any[]>(preselectedKeywords);
   const [selectedKeywordForContext, setSelectedKeywordForContext] = useState<any>(null);
-  const [keywordGroups, setKeywordGroups] = useState<any[]>([
-    { id: "all", name: "All Keywords", count: 0, isDefault: true },
-    { id: "group1", name: "Product Features", count: 3, color: "#E5DEFF" },
-    { id: "group2", name: "Customer Questions", count: 5, color: "#D3E4FD" },
-    { id: "group3", name: "Competitor Terms", count: 2, color: "#FFDEE2" }
-  ]);
+  const [keywordGroups, setKeywordGroups] = useState<any[]>(preselectedGroups);
   const [selectedGroupId, setSelectedGroupId] = useState<string>("all");
+
+  useEffect(() => {
+    // Initialize with the first keyword selected for context
+    if (selectedKeywords.length > 0 && !selectedKeywordForContext) {
+      setSelectedKeywordForContext(selectedKeywords[0]);
+    }
+  }, [selectedKeywords, selectedKeywordForContext]);
 
   const handleAddKeyword = (keyword: any, groupId = "all") => {
     if (!selectedKeywords.find(k => k.id === keyword.id)) {
@@ -49,6 +53,10 @@ const KeywordWorkspace = () => {
           return group;
         });
       });
+      
+      toast.success(`Added "${keyword.keyword}" to your keywords`);
+    } else {
+      toast.info(`"${keyword.keyword}" is already in your keywords`);
     }
   };
 
@@ -64,6 +72,11 @@ const KeywordWorkspace = () => {
         return group;
       });
     });
+    
+    const keyword = selectedKeywords.find(k => k.id === keywordId);
+    if (keyword) {
+      toast.success(`Removed "${keyword.keyword}" from your keywords`);
+    }
   };
 
   const handleSelectKeywordForContext = (keyword: any) => {
@@ -79,15 +92,22 @@ const KeywordWorkspace = () => {
     };
     
     setKeywordGroups([...keywordGroups, newGroup]);
+    toast.success(`Created new group: "${name}"`);
     return newGroup.id;
   };
 
   const handleRemoveGroup = (groupId: string) => {
     if (groupId === "all") return; // Can't remove default group
     
+    const groupToRemove = keywordGroups.find(g => g.id === groupId);
+    
     setKeywordGroups(keywordGroups.filter(g => g.id !== groupId));
     if (selectedGroupId === groupId) {
       setSelectedGroupId("all");
+    }
+    
+    if (groupToRemove) {
+      toast.success(`Removed group: "${groupToRemove.name}"`);
     }
   };
 
