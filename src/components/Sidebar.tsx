@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -26,7 +25,7 @@ interface SidebarProps {
 interface NavItemWithSubmenuProps {
   icon: React.ReactNode;
   label: string;
-  href?: string; // Add href property for the main menu item
+  href?: string;
   isCollapsed?: boolean;
   submenuItems?: Array<{
     label: string;
@@ -37,15 +36,25 @@ interface NavItemWithSubmenuProps {
 const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
   icon,
   label,
-  href, // Using the new href property
+  href,
   isCollapsed = false,
   submenuItems = []
 }) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const isActive = href ? location.pathname === href : submenuItems.some(item => location.pathname === item.href);
+  
+  const isActive = href ? location.pathname === href : false;
+  const isChildActive = submenuItems.some(item => location.pathname === item.href);
+  const isAnyActive = isActive || isChildActive;
+  
   const basePath = href ? href : submenuItems.length > 0 ? submenuItems[0].href.split('/')[1] : '';
   const baseHref = href ? href : `/${basePath}`;
+
+  useEffect(() => {
+    if (isChildActive || isActive) {
+      setIsOpen(true);
+    }
+  }, [location.pathname, isChildActive, isActive]);
 
   if (isCollapsed) {
     return (
@@ -53,18 +62,18 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
         to={baseHref}
         className={cn(
           "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 justify-center",
-          isActive 
+          isAnyActive 
             ? "bg-primary/10 text-primary" 
             : "text-foreground/70 hover:bg-accent hover:text-foreground"
         )}
       >
         <div className={cn(
           "flex items-center justify-center",
-          isActive ? "text-primary" : "text-foreground/70",
+          isAnyActive ? "text-primary" : "text-foreground/70",
         )}>
           {icon}
         </div>
-        {isActive && (
+        {isAnyActive && (
           <div className="absolute left-0 h-8 w-1 rounded-r-lg bg-primary" />
         )}
       </Link>
@@ -82,14 +91,14 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                   to={href}
                   className={cn(
                     "flex flex-grow items-center rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
-                    isActive
+                    isAnyActive
                       ? "bg-primary/10 text-primary" 
                       : "text-foreground/70 hover:bg-accent hover:text-foreground"
                   )}
                 >
                   <div className={cn(
                     "flex-shrink-0 flex items-center justify-center mr-3",
-                    isActive ? "text-primary" : "text-foreground/70",
+                    isAnyActive ? "text-primary" : "text-foreground/70",
                   )}>
                     {icon}
                   </div>
@@ -102,7 +111,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                   }}
                   className={cn(
                     "flex items-center justify-center p-2 rounded-md transition-all duration-200",
-                    isActive || isOpen
+                    isAnyActive || isOpen
                       ? "text-primary" 
                       : "text-foreground/70 hover:text-foreground"
                   )}
@@ -119,7 +128,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
               <button
                 className={cn(
                   "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
-                  isActive || isOpen
+                  isAnyActive || isOpen
                     ? "bg-primary/10 text-primary" 
                     : "text-foreground/70 hover:bg-accent hover:text-foreground"
                 )}
@@ -127,7 +136,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                 <div className="flex items-center min-w-0">
                   <div className={cn(
                     "flex-shrink-0 flex items-center justify-center mr-3",
-                    isActive || isOpen ? "text-primary" : "text-foreground/70",
+                    isAnyActive || isOpen ? "text-primary" : "text-foreground/70",
                   )}>
                     {icon}
                   </div>
@@ -162,7 +171,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
           </div>
         </CollapsibleContent>
       </Collapsible>
-      {isActive && !isOpen && (
+      {isAnyActive && !isOpen && (
         <div className="absolute left-0 h-8 w-1 rounded-r-lg bg-primary" />
       )}
     </div>
@@ -262,7 +271,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             isCollapsed={isCollapsed}
           />
 
-          {/* Search & Visibility section - now with href */}
           <NavItemWithSubmenu
             icon={<Search className="h-5 w-5" />}
             label="Search & Visibility"
