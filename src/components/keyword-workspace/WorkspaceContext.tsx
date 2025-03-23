@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { 
-  LayoutPanelRight, 
+  LayoutPanel, 
   TrendingUp, 
   BarChart2, 
   Globe, 
@@ -73,7 +73,7 @@ const WorkspaceContext = () => {
         
         {!selectedKeyword ? (
           <CardContent className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-            <LayoutPanelRight className="h-10 w-10 mb-3 opacity-50" />
+            <LayoutPanel className="h-10 w-10 mb-3 opacity-50" />
             <p className="mb-2">Select a keyword to see detailed information</p>
             <p className="text-xs">Insights, trends, and competitive data will appear here</p>
           </CardContent>
