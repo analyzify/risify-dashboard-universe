@@ -170,24 +170,6 @@ const PositionTracking = () => {
     setDateRange(value);
   };
 
-  // Helper function to determine badge variant based on position
-  const getPositionBadgeVariant = (position: number) => {
-    if (position <= 3) return "default";
-    if (position <= 10) return "default";
-    if (position <= 20) return "secondary";
-    if (position <= 50) return "outline";
-    return "destructive";
-  };
-
-  // Helper function to determine badge className based on position
-  const getPositionBadgeClass = (position: number) => {
-    if (position <= 3) return "bg-green-500 hover:bg-green-600";
-    if (position <= 10) return "bg-green-400 hover:bg-green-500";
-    if (position <= 20) return "";
-    if (position <= 50) return "text-orange-500 border-orange-300";
-    return "";
-  };
-
   return (
     <Layout title="Position Tracking">
       <div className="space-y-6">
@@ -399,10 +381,13 @@ const PositionTracking = () => {
                       </TableCell>
                       <TableCell className="font-medium">{keyword.keyword}</TableCell>
                       <TableCell className="text-center">
-                        <Badge 
-                          variant={getPositionBadgeVariant(keyword.position)} 
-                          className={getPositionBadgeClass(keyword.position)}
-                        >
+                        <Badge variant={
+                          keyword.position <= 3 ? "success" :
+                          keyword.position <= 10 ? "default" :
+                          keyword.position <= 20 ? "secondary" :
+                          keyword.position <= 50 ? "warning" :
+                          "destructive"
+                        }>
                           {keyword.position}
                         </Badge>
                       </TableCell>
@@ -594,13 +579,12 @@ const PositionTracking = () => {
                             <span>+{keyword.change} positions</span>
                           </div>
                         </div>
-                        <Badge 
-                          variant={keyword.position <= 3 ? "default" : 
-                                  keyword.position <= 10 ? "default" : 
-                                  keyword.position <= 20 ? "secondary" : 
-                                  "outline"}
-                          className={keyword.position <= 3 ? "bg-green-500 hover:bg-green-600" : ""}
-                        >
+                        <Badge variant={
+                          keyword.position <= 3 ? "success" :
+                          keyword.position <= 10 ? "default" :
+                          keyword.position <= 20 ? "secondary" :
+                          "outline"
+                        }>
                           #{keyword.position}
                         </Badge>
                       </div>
@@ -620,13 +604,12 @@ const PositionTracking = () => {
                             <span>{keyword.change} positions</span>
                           </div>
                         </div>
-                        <Badge 
-                          variant={keyword.position > 50 ? "destructive" : 
-                                  keyword.position > 20 ? "outline" : 
-                                  keyword.position > 10 ? "secondary" : 
-                                  "outline"}
-                          className={keyword.position > 20 ? "text-orange-500 border-orange-300" : ""}
-                        >
+                        <Badge variant={
+                          keyword.position > 50 ? "destructive" :
+                          keyword.position > 20 ? "warning" :
+                          keyword.position > 10 ? "secondary" :
+                          "outline"
+                        }>
                           #{keyword.position}
                         </Badge>
                       </div>
