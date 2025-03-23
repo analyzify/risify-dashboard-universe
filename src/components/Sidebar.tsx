@@ -233,9 +233,34 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             )}
           </Link>
 
+          {/* Update Search & Visibility Link */}
+          <Link
+            to="/search"
+            className={cn(
+              "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
+              isCollapsed ? "justify-center" : "justify-start",
+              location.pathname === "/search" 
+                ? "bg-primary/10 text-primary" 
+                : "text-foreground/70 hover:bg-accent hover:text-foreground"
+            )}
+          >
+            <div className={cn(
+              "flex items-center justify-center",
+              location.pathname === "/search" ? "text-primary" : "text-foreground/70",
+            )}>
+              <Search className="h-5 w-5" />
+            </div>
+            {!isCollapsed && (
+              <span className="ml-3 truncate">Search & Visibility</span>
+            )}
+            {location.pathname === "/search" && (
+              <div className="absolute left-0 h-8 w-1 rounded-r-lg bg-primary" />
+            )}
+          </Link>
+
           <NavItemWithSubmenu
             icon={<Search className="h-5 w-5" />}
-            label="Search & Visibility"
+            label="Search Tools"
             isCollapsed={isCollapsed}
             submenuItems={searchSubmenu}
           />

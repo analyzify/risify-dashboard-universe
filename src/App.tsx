@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import Content from "./pages/Content";
 import Search from "./pages/Search";
+import PositionTracking from "./pages/PositionTracking";
 import Catalog from "./pages/Catalog";
 import Components from "./pages/Components";
 import Tasks from "./pages/Tasks";
@@ -28,7 +29,7 @@ const App = () => (
           
           {/* Search & Visibility */}
           <Route path="/search" element={<Search />} />
-          <Route path="/search/position-tracking" element={<PlaceholderPage title="Position Tracking" />} />
+          <Route path="/search/position-tracking" element={<PositionTracking />} />
           <Route path="/search/keyword-workspace" element={<PlaceholderPage title="Keyword Workspace" />} />
           <Route path="/search/market-intelligence" element={<PlaceholderPage title="Market Intelligence" />} />
           <Route path="/search/faq-explorer" element={<PlaceholderPage title="FAQ Explorer" />} />
