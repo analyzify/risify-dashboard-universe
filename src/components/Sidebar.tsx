@@ -26,6 +26,7 @@ interface SidebarProps {
 interface NavItemWithSubmenuProps {
   icon: React.ReactNode;
   label: string;
+  href?: string; // Add href property for the main menu item
   isCollapsed?: boolean;
   submenuItems?: Array<{
     label: string;
@@ -36,14 +37,15 @@ interface NavItemWithSubmenuProps {
 const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
   icon,
   label,
+  href, // Using the new href property
   isCollapsed = false,
   submenuItems = []
 }) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const isActive = submenuItems.some(item => location.pathname === item.href);
-  const basePath = submenuItems.length > 0 ? submenuItems[0].href.split('/')[1] : '';
-  const baseHref = `/${basePath}`;
+  const isActive = href ? location.pathname === href : submenuItems.some(item => location.pathname === item.href);
+  const basePath = href ? href : submenuItems.length > 0 ? submenuItems[0].href.split('/')[1] : '';
+  const baseHref = href ? href : `/${basePath}`;
 
   if (isCollapsed) {
     return (
@@ -73,30 +75,73 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
     <div className="relative">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
-          <button
-            className={cn(
-              "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
-              isActive || isOpen
-                ? "bg-primary/10 text-primary" 
-                : "text-foreground/70 hover:bg-accent hover:text-foreground"
-            )}
-          >
-            <div className="flex items-center min-w-0">
-              <div className={cn(
-                "flex-shrink-0 flex items-center justify-center mr-3",
-                isActive || isOpen ? "text-primary" : "text-foreground/70",
-              )}>
-                {icon}
+          <div className="w-full">
+            {href ? (
+              <div className="flex w-full">
+                <Link
+                  to={href}
+                  className={cn(
+                    "flex flex-grow items-center rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-primary/10 text-primary" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  <div className={cn(
+                    "flex-shrink-0 flex items-center justify-center mr-3",
+                    isActive ? "text-primary" : "text-foreground/70",
+                  )}>
+                    {icon}
+                  </div>
+                  <span className="truncate">{label}</span>
+                </Link>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsOpen(!isOpen);
+                  }}
+                  className={cn(
+                    "flex items-center justify-center p-2 rounded-md transition-all duration-200",
+                    isActive || isOpen
+                      ? "text-primary" 
+                      : "text-foreground/70 hover:text-foreground"
+                  )}
+                >
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 flex-shrink-0 transition-transform duration-200",
+                      isOpen ? "rotate-180" : ""
+                    )}
+                  />
+                </button>
               </div>
-              <span className="truncate">{label}</span>
-            </div>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 flex-shrink-0 ml-2 transition-transform duration-200",
-                isOpen ? "rotate-180" : ""
-              )}
-            />
-          </button>
+            ) : (
+              <button
+                className={cn(
+                  "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
+                  isActive || isOpen
+                    ? "bg-primary/10 text-primary" 
+                    : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                )}
+              >
+                <div className="flex items-center min-w-0">
+                  <div className={cn(
+                    "flex-shrink-0 flex items-center justify-center mr-3",
+                    isActive || isOpen ? "text-primary" : "text-foreground/70",
+                  )}>
+                    {icon}
+                  </div>
+                  <span className="truncate">{label}</span>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 flex-shrink-0 ml-2 transition-transform duration-200",
+                    isOpen ? "rotate-180" : ""
+                  )}
+                />
+              </button>
+            )}
+          </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="pl-10 pr-2 pt-1 pb-1">
           <div className="flex flex-col space-y-1 border-l border-muted pl-2">
@@ -217,10 +262,11 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             isCollapsed={isCollapsed}
           />
 
-          {/* Search & Visibility section */}
+          {/* Search & Visibility section - now with href */}
           <NavItemWithSubmenu
             icon={<Search className="h-5 w-5" />}
             label="Search & Visibility"
+            href="/search"
             isCollapsed={isCollapsed}
             submenuItems={searchSubmenu}
           />
