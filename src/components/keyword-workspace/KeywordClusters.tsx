@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,11 +19,17 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 interface KeywordClustersProps {
   keywords: any[];
   onSelectKeyword: (keyword: any) => void;
+  groups: any[];
+  onCreateGroup: (name: string, color?: string) => string;
+  onRemoveGroup: (groupId: string) => void;
 }
 
 const KeywordClusters: React.FC<KeywordClustersProps> = ({ 
   keywords,
-  onSelectKeyword
+  onSelectKeyword,
+  groups,
+  onCreateGroup,
+  onRemoveGroup
 }) => {
   const [clusters, setClusters] = useState<any[]>([
     { 
@@ -66,21 +71,12 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
   const handleAddCluster = () => {
     if (!newClusterName) return;
     
-    const newCluster = {
-      id: `cluster${Date.now()}`,
-      name: newClusterName,
-      color: clusterColors[Math.floor(Math.random() * clusterColors.length)],
-      keywords: [],
-      avgVolume: 0,
-      avgDifficulty: 0
-    };
-    
-    setClusters([...clusters, newCluster]);
+    const clusterId = onCreateGroup(newClusterName);
     setNewClusterName("");
   };
   
   const handleDeleteCluster = (clusterId: string) => {
-    setClusters(clusters.filter(cluster => cluster.id !== clusterId));
+    onRemoveGroup(clusterId);
     if (selectedClusterId === clusterId) {
       setSelectedClusterId(null);
     }
@@ -100,8 +96,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
   };
   
   const handleAutoCluster = () => {
-    // In a real app, this would use an algorithm to automatically group keywords
-    // For the mockup, we'll just display a message
     alert("Auto-clustering would analyze your keywords and create semantic groups automatically.");
   };
 
@@ -120,7 +114,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
 
   const selectedCluster = clusters.find(c => c.id === selectedClusterId);
 
-  // Helper function to render intent indicator
   const renderIntentBadge = (intent: string) => {
     switch (intent) {
       case "informational":
@@ -136,7 +129,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
 
   return (
     <div className="flex flex-col h-full space-y-4">
-      {/* Top action bar */}
       <div className="flex justify-between items-center gap-4 bg-card p-4 rounded-lg border">
         <div className="flex gap-2 items-center flex-1">
           <Input
@@ -171,9 +163,7 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
         </div>
       </div>
 
-      {/* Main content */}
       <div className="grid grid-cols-1 gap-4 flex-1 overflow-auto">
-        {/* Clusters table */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Keyword Groups</CardTitle>
@@ -302,7 +292,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
           </CardContent>
         </Card>
 
-        {/* Selected group details */}
         {selectedCluster && (
           <Card>
             <CardHeader className="pb-2">
@@ -329,7 +318,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
                 <TableBody>
                   {selectedCluster.keywords.length > 0 ? (
                     selectedCluster.keywords.map((keyword: string, index: number) => {
-                      // Mock data for each keyword
                       const volume = Math.floor(Math.random() * 5000) + 500;
                       const difficulty = Math.floor(Math.random() * 70) + 20;
                       const intents = ["informational", "commercial", "transactional"];
@@ -341,7 +329,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
                             <div 
                               className="cursor-pointer hover:text-primary"
                               onClick={() => {
-                                // Find the corresponding keyword object from the keywords array
                                 const keywordObj = keywords.find(k => k.keyword === keyword);
                                 if (keywordObj) {
                                   onSelectKeyword(keywordObj);
@@ -423,7 +410,6 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
           </Card>
         )}
 
-        {/* Empty state when no cluster is selected */}
         {!selectedCluster && filteredClusters.length > 0 && (
           <Card className="border-dashed bg-muted/20">
             <CardContent className="flex flex-col items-center justify-center py-12">
