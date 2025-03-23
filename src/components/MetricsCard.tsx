@@ -1,72 +1,58 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 
-interface MetricsCardProps {
+export interface MetricsCardProps {
   className?: string;
   title: string;
-  value: string | number;
+  value: string;
+  trend: "up" | "down" | "neutral";
   change?: number;
-  trend?: "up" | "down" | "neutral";
   icon?: React.ReactNode;
-  loading?: boolean;
+  animate?: string;
+  delay?: number;
 }
 
 const MetricsCard: React.FC<MetricsCardProps> = ({
   className,
   title,
   value,
-  change,
   trend,
+  change = 0,
   icon,
-  loading = false,
+  animate,
+  delay = 0
 }) => {
   return (
-    <div
+    <div 
       className={cn(
-        "rounded-lg border p-4 bg-card transition-all duration-200 hover:bg-card/80",
+        "bg-white rounded-xl border p-6 shadow-sm",
+        animate && `animate-${animate}`,
         className
       )}
+      style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground mb-1">{title}</p>
-          {loading ? (
-            <div className="h-7 w-24 animate-pulse rounded bg-muted"></div>
-          ) : (
-            <h3 className="text-2xl font-semibold leading-none tracking-tight">
-              {value}
-            </h3>
-          )}
-        </div>
-        {icon && (
-          <div className="rounded-full p-2 bg-primary/10 text-primary">
-            {icon}
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+        {icon && <div className="text-muted-foreground">{icon}</div>}
+      </div>
+      <div className="text-2xl font-bold mb-2">{value}</div>
+      <div className="flex items-center text-xs">
+        {trend === "up" && (
+          <div className="flex items-center gap-1 text-green-600">
+            <ArrowUpIcon className="h-3 w-3" />
+            <span>+{change}%</span>
           </div>
         )}
+        {trend === "down" && (
+          <div className="flex items-center gap-1 text-red-600">
+            <ArrowDownIcon className="h-3 w-3" />
+            <span>-{change}%</span>
+          </div>
+        )}
+        <span className="ml-1 text-muted-foreground">vs last period</span>
       </div>
-      
-      {change !== undefined && trend && (
-        <div className="mt-2 flex items-center text-xs">
-          {trend === "up" ? (
-            <>
-              <TrendingUp className="mr-1 h-3 w-3 text-risify-green" />
-              <span className="text-risify-green font-medium">
-                {Math.abs(change)}%
-              </span>
-            </>
-          ) : trend === "down" ? (
-            <>
-              <TrendingDown className="mr-1 h-3 w-3 text-risify-red" />
-              <span className="text-risify-red font-medium">
-                {Math.abs(change)}%
-              </span>
-            </>
-          ) : null}
-          <span className="ml-1 text-muted-foreground">from last month</span>
-        </div>
-      )}
     </div>
   );
 };
