@@ -13,7 +13,8 @@ import {
   Download,
   ExternalLink,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Link as LinkIcon
 } from "lucide-react";
 import {
   Pagination,
@@ -40,7 +41,6 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-// Extended page type with additional fields
 type Page = {
   id: number;
   title: string;
@@ -56,7 +56,6 @@ type Page = {
 }
 
 const Pages = () => {
-  // Extended mock data with 20+ pages
   const allPages: Page[] = [
     {
       id: 1,
@@ -352,7 +351,6 @@ const Pages = () => {
   
   const pageSize = 10;
   
-  // Filter functions
   const filterByType = (pages: Page[], type: string | null) => {
     if (!type) return pages;
     return pages.filter(page => page.type === type);
@@ -367,10 +365,8 @@ const Pages = () => {
     );
   };
   
-  // Apply filters and search
   const filteredPages = filterByType(filterBySearch(allPages, searchTerm), activeFilter as any);
   
-  // Pagination logic
   const totalPages = Math.ceil(filteredPages.length / pageSize);
   const pagesForCurrentPage = filteredPages.slice(
     (currentPage - 1) * pageSize,
@@ -393,7 +389,6 @@ const Pages = () => {
   return (
     <Layout title="Pages">
       <div className="flex flex-col h-full space-y-4">
-        {/* Header with combined search, filter and actions */}
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Pages</h1>
           <div className="flex items-center space-x-2">
@@ -429,7 +424,6 @@ const Pages = () => {
           </div>
         </div>
         
-        {/* Quick filters */}
         <div className="flex flex-wrap gap-2">
           <Badge 
             variant={activeFilter === null ? "default" : "outline"} 
@@ -475,7 +469,6 @@ const Pages = () => {
           </Badge>
         </div>
         
-        {/* Pages table */}
         <div className="border rounded-md overflow-hidden">
           <Table>
             <TableHeader>
@@ -483,7 +476,7 @@ const Pages = () => {
                 <TableHead className="w-[250px]">
                   Page Title
                 </TableHead>
-                <TableHead className="w-[140px]">
+                <TableHead className="w-[80px]">
                   URL
                 </TableHead>
                 <TableHead>
@@ -498,8 +491,8 @@ const Pages = () => {
                 <TableHead>
                   Opportunity
                 </TableHead>
-                <TableHead className="w-[120px]">
-                  Keyword Mapping
+                <TableHead className="w-[70px]">
+                  Keywords
                 </TableHead>
                 <TableHead className="w-[60px]">
                   Actions
@@ -516,11 +509,8 @@ const Pages = () => {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="flex items-center gap-1">
-                            <span className="text-sm text-blue-600 truncate max-w-[100px]">
-                              {page.url}
-                            </span>
-                            <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                          <div className="flex items-center">
+                            <ExternalLink className="h-3 w-3 text-blue-600" />
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -560,8 +550,9 @@ const Pages = () => {
                     {page.keywordsMapped.length > 0 ? (
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-8 text-xs">
-                            {page.keywordsMapped.length} keywords
+                          <Button variant="ghost" size="icon" className="h-7 w-7 flex gap-1 items-center">
+                            <LinkIcon className="h-3.5 w-3.5 text-blue-600" />
+                            <span className="text-xs">{page.keywordsMapped.length}</span>
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-80 p-0">
@@ -578,7 +569,7 @@ const Pages = () => {
                         </PopoverContent>
                       </Popover>
                     ) : (
-                      <span className="text-xs text-muted-foreground">No keywords</span>
+                      <span className="text-xs text-muted-foreground">0</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -592,7 +583,6 @@ const Pages = () => {
           </Table>
         </div>
         
-        {/* Pagination */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
             Showing {pagesForCurrentPage.length} of {filteredPages.length} pages
@@ -608,7 +598,6 @@ const Pages = () => {
               </PaginationItem>
               
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                // Show pagination numbers depending on current page
                 let pageNum = i + 1;
                 if (totalPages > 5 && currentPage > 3) {
                   pageNum = currentPage - 3 + i;
