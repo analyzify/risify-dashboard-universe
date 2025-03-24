@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PlaceholderPage from "./pages/PlaceholderPage";
@@ -35,6 +35,7 @@ const App = () => (
           <Route path="/search" element={<Search />} />
           <Route path="/search/position-tracking" element={<PositionTracking />} />
           <Route path="/search/keywords" element={<Keywords />} /> {/* Updated route */}
+          <Route path="/search/keyword-workspace" element={<Navigate to="/search/keywords" replace />} /> {/* Redirect */}
           <Route path="/search/discovery" element={<SearchDiscovery />} />
           <Route path="/search/pages" element={<Pages />} /> {/* New route */}
           <Route path="/search/market-intelligence" element={<PlaceholderPage title="Market Intelligence" />} />

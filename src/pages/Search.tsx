@@ -306,7 +306,7 @@ const Search = () => {
                 <h3 className="text-sm font-medium">Research</h3>
                 <div className="grid gap-2">
                   <Button variant="outline" className="justify-start" asChild>
-                    <Link to="/search/keyword-workspace">Find new keywords</Link>
+                    <Link to="/search/keywords">Find new keywords</Link>
                   </Button>
                   <Button variant="outline" className="justify-start" asChild>
                     <Link to="/search/faq-explorer">Explore customer questions</Link>
