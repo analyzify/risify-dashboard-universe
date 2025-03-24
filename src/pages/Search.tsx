@@ -9,7 +9,8 @@ import {
   MessageSquareText, 
   LineChart, 
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,15 @@ const Search = () => {
       link: "/search/keyword-workspace",
       metrics: "1,200+ Keyword Suggestions",
       tag: "Strategy"
+    },
+    {
+      id: "discovery",
+      title: "Keyword Discovery",
+      description: "Discover new keyword opportunities from multiple sources including competitors.",
+      icon: <Sparkles className="h-8 w-8 text-primary" />,
+      link: "/search/discovery",
+      metrics: "248 Keywords Found",
+      tag: "New"
     },
     {
       id: "market-intelligence",

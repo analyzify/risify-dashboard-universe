@@ -11,6 +11,7 @@ import Content from "./pages/Content";
 import Search from "./pages/Search";
 import PositionTracking from "./pages/PositionTracking";
 import KeywordWorkspace from "./pages/KeywordWorkspace";
+import SearchDiscovery from "./pages/SearchDiscovery";
 import Catalog from "./pages/Catalog";
 import Components from "./pages/Components";
 import Tasks from "./pages/Tasks";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/search" element={<Search />} />
           <Route path="/search/position-tracking" element={<PositionTracking />} />
           <Route path="/search/keyword-workspace" element={<KeywordWorkspace />} />
+          <Route path="/search/discovery" element={<SearchDiscovery />} />
           <Route path="/search/market-intelligence" element={<PlaceholderPage title="Market Intelligence" />} />
           <Route path="/search/faq-explorer" element={<PlaceholderPage title="FAQ Explorer" />} />
           <Route path="/search/search-console" element={<PlaceholderPage title="Search Console" />} />
