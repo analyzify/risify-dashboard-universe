@@ -18,6 +18,7 @@ import Catalog from "./pages/Catalog";
 import Components from "./pages/Components";
 import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
+import MarketIntelligence from "./pages/MarketIntelligence"; // Import the new page
 
 const queryClient = new QueryClient();
 
@@ -38,7 +39,7 @@ const App = () => (
           <Route path="/search/keyword-workspace" element={<Navigate to="/search/keywords" replace />} /> {/* Redirect */}
           <Route path="/search/discovery" element={<SearchDiscovery />} />
           <Route path="/search/pages" element={<Pages />} /> {/* New route */}
-          <Route path="/search/market-intelligence" element={<PlaceholderPage title="Market Intelligence" />} />
+          <Route path="/search/market-intelligence" element={<MarketIntelligence />} /> {/* Use real component instead of placeholder */}
           <Route path="/search/faq-explorer" element={<PlaceholderPage title="FAQ Explorer" />} />
           <Route path="/search/search-console" element={<PlaceholderPage title="Search Console" />} />
           
