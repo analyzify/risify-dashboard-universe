@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,8 @@ import {
   ExternalLink,
   ArrowUp,
   ArrowDown,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Lightbulb
 } from "lucide-react";
 import {
   Pagination,
@@ -54,6 +54,7 @@ type Page = {
   lastMonthClicks: number;
   opportunityScore: "high" | "medium" | "low";
   keywordsMapped: string[];
+  hasOptimizationIdeas?: boolean;
 }
 
 const Pages = () => {
@@ -69,7 +70,8 @@ const Pages = () => {
       isIndexed: true,
       lastMonthClicks: 548,
       opportunityScore: "high",
-      keywordsMapped: ["online store", "buy products", "shop now"]
+      keywordsMapped: ["online store", "buy products", "shop now"],
+      hasOptimizationIdeas: true
     },
     {
       id: 2,
@@ -121,7 +123,8 @@ const Pages = () => {
       isIndexed: true,
       lastMonthClicks: 435,
       opportunityScore: "high",
-      keywordsMapped: ["winter jackets", "warm coats", "winter apparel"]
+      keywordsMapped: ["winter jackets", "warm coats", "winter apparel"],
+      hasOptimizationIdeas: true
     },
     {
       id: 6,
@@ -134,7 +137,8 @@ const Pages = () => {
       isIndexed: true,
       lastMonthClicks: 320,
       opportunityScore: "high",
-      keywordsMapped: ["winter fashion", "fashion trends", "seasonal clothing"]
+      keywordsMapped: ["winter fashion", "fashion trends", "seasonal clothing"],
+      hasOptimizationIdeas: true
     },
     {
       id: 7,
@@ -495,6 +499,9 @@ const Pages = () => {
                 <TableHead className="w-[60px]">
                   Keywords
                 </TableHead>
+                <TableHead className="w-[50px]">
+                  Ideas
+                </TableHead>
                 <TableHead className="w-[60px]">
                   Actions
                 </TableHead>
@@ -575,6 +582,24 @@ const Pages = () => {
                     )}
                   </TableCell>
                   <TableCell>
+                    {page.hasOptimizationIdeas ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-7 w-7">
+                              <Lightbulb className="h-4 w-4 text-amber-500 fill-amber-100" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View optimization ideas</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <span className="h-7 w-7 block"></span> 
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
@@ -636,3 +661,4 @@ const Pages = () => {
 };
 
 export default Pages;
+
