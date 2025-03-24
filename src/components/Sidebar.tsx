@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -107,6 +108,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                 <button
                   onClick={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     setIsOpen(!isOpen);
                   }}
                   className={cn(
@@ -132,6 +134,10 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                     ? "bg-primary/10 text-primary" 
                     : "text-foreground/70 hover:bg-accent hover:text-foreground"
                 )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(!isOpen);
+                }}
               >
                 <div className="flex items-center min-w-0">
                   <div className={cn(
@@ -158,6 +164,10 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
               <Link
                 key={index}
                 to={item.href}
+                onClick={(e) => {
+                  // Prevent parent collapse from triggering
+                  e.stopPropagation();
+                }}
                 className={cn(
                   "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
                   location.pathname === item.href
