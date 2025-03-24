@@ -1,4 +1,5 @@
 
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,8 +11,9 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import Content from "./pages/Content";
 import Search from "./pages/Search";
 import PositionTracking from "./pages/PositionTracking";
-import KeywordWorkspace from "./pages/KeywordWorkspace";
+import Keywords from "./pages/Keywords"; // Renamed from KeywordWorkspace
 import SearchDiscovery from "./pages/SearchDiscovery";
+import Pages from "./pages/Pages"; // New Pages page
 import Catalog from "./pages/Catalog";
 import Components from "./pages/Components";
 import Tasks from "./pages/Tasks";
@@ -32,8 +34,9 @@ const App = () => (
           {/* Search & Visibility */}
           <Route path="/search" element={<Search />} />
           <Route path="/search/position-tracking" element={<PositionTracking />} />
-          <Route path="/search/keyword-workspace" element={<KeywordWorkspace />} />
+          <Route path="/search/keywords" element={<Keywords />} /> {/* Updated route */}
           <Route path="/search/discovery" element={<SearchDiscovery />} />
+          <Route path="/search/pages" element={<Pages />} /> {/* New route */}
           <Route path="/search/market-intelligence" element={<PlaceholderPage title="Market Intelligence" />} />
           <Route path="/search/faq-explorer" element={<PlaceholderPage title="FAQ Explorer" />} />
           <Route path="/search/search-console" element={<PlaceholderPage title="Search Console" />} />

@@ -1,4 +1,3 @@
-
 import React from "react";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
@@ -10,7 +9,8 @@ import {
   LineChart, 
   ArrowRight,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  FileText
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,11 +30,11 @@ const Search = () => {
       tag: "Most Popular"
     },
     {
-      id: "keyword-workspace",
-      title: "Keyword Workspace",
+      id: "keywords",
+      title: "Keywords",
       description: "Research, organize, and expand keyword strategy with clustering and intent analysis.",
       icon: <Briefcase className="h-8 w-8 text-primary" />,
-      link: "/search/keyword-workspace",
+      link: "/search/keywords",
       metrics: "1,200+ Keyword Suggestions",
       tag: "Strategy"
     },
@@ -46,6 +46,15 @@ const Search = () => {
       link: "/search/discovery",
       metrics: "248 Keywords Found",
       tag: "New"
+    },
+    {
+      id: "pages",
+      title: "Pages",
+      description: "Manage and analyze your website's pages for SEO performance.",
+      icon: <FileText className="h-8 w-8 text-primary" />,
+      link: "/search/pages",
+      metrics: "12 Pages Tracked",
+      tag: "Content"
     },
     {
       id: "market-intelligence",
