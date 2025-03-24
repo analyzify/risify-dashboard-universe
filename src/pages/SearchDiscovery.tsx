@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,7 +15,8 @@ import {
   ExternalLink,
   MoreHorizontal,
   PlusCircle,
-  Check
+  Check,
+  Clock
 } from "lucide-react";
 import { 
   Table,
@@ -25,6 +26,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 const metrics = [
   {
@@ -53,7 +56,7 @@ const metrics = [
   }
 ];
 
-const sourceTabs = ["Google", "Reddit", "Competitors", "Q&A Sites"];
+const sourceTabs = ["All", "Google", "Reddit", "Competitors", "Q&A Sites"];
 
 const seedKeywords = [
   { id: 1, keyword: "organic coffee", active: true },
@@ -65,14 +68,16 @@ const seedKeywords = [
   { id: 7, keyword: "coffee roasters", active: false }
 ];
 
-const discoveredKeywords = [
+const allKeywords = [
   { 
     id: 1, 
     keyword: "best organic coffee beans", 
     seed: "organic coffee", 
     source: "Google",
     added: false,
-    link: true
+    link: true,
+    placement: "Related Search",
+    discoveredOn: new Date(2023, 7, 12)
   },
   { 
     id: 2, 
@@ -80,7 +85,9 @@ const discoveredKeywords = [
     seed: "specialty coffee", 
     source: "Google",
     added: false,
-    link: true
+    link: true,
+    placement: "PAA",
+    discoveredOn: new Date(2023, 7, 15)
   },
   { 
     id: 3, 
@@ -88,7 +95,9 @@ const discoveredKeywords = [
     seed: "fair trade coffee", 
     source: "Competitors",
     added: true,
-    link: true
+    link: true,
+    placement: "Related Search",
+    discoveredOn: new Date(2023, 7, 10)
   },
   { 
     id: 4, 
@@ -96,7 +105,9 @@ const discoveredKeywords = [
     seed: "coffee beans", 
     source: "Reddit",
     added: false,
-    link: true
+    link: true,
+    placement: "Autocomplete",
+    discoveredOn: new Date(2023, 7, 8)
   },
   { 
     id: 5, 
@@ -104,16 +115,62 @@ const discoveredKeywords = [
     seed: "specialty coffee", 
     source: "Competitors",
     added: false,
-    link: true
+    link: true,
+    placement: "Related Search",
+    discoveredOn: new Date(2023, 7, 5)
+  },
+  { 
+    id: 6, 
+    keyword: "arabica coffee beans", 
+    seed: "arabica coffee", 
+    source: "Google",
+    added: false,
+    link: true,
+    placement: "Autocomplete",
+    discoveredOn: new Date(2023, 7, 3)
+  },
+  { 
+    id: 7, 
+    keyword: "coffee brewing methods", 
+    seed: "coffee brewing", 
+    source: "Q&A Sites",
+    added: true,
+    link: true,
+    placement: "PAA",
+    discoveredOn: new Date(2023, 6, 28)
   }
 ];
 
 const SearchDiscovery = () => {
-  const [selectedSource, setSelectedSource] = useState<string>("Google");
+  const [selectedSource, setSelectedSource] = useState<string>("All");
   const [selectedKeywords, setSelectedKeywords] = useState<number[]>([]);
+  const [activeSeedKeywords, setActiveSeedKeywords] = useState<string[]>(
+    seedKeywords.filter(k => k.active).map(k => k.keyword)
+  );
+  const [discoveredKeywords, setDiscoveredKeywords] = useState(allKeywords);
+  
+  // Filter keywords based on selected source and active seed keywords
+  useEffect(() => {
+    let filtered = [...allKeywords];
+    
+    // Filter by source
+    if (selectedSource !== "All") {
+      filtered = filtered.filter(keyword => keyword.source === selectedSource);
+    }
+    
+    // Filter by active seed keywords
+    if (activeSeedKeywords.length > 0) {
+      filtered = filtered.filter(keyword => 
+        activeSeedKeywords.includes(keyword.seed)
+      );
+    }
+    
+    setDiscoveredKeywords(filtered);
+  }, [selectedSource, activeSeedKeywords]);
   
   const handleSourceChange = (source: string) => {
     setSelectedSource(source);
+    toast.success(`Filtered by source: ${source}`);
   };
 
   const handleKeywordToggle = (id: number) => {
@@ -126,7 +183,18 @@ const SearchDiscovery = () => {
 
   const handleAddKeyword = (id: number) => {
     // This would update the status in a real app
+    toast.success(`Added keyword with id: ${id} to your list`);
     console.log(`Adding keyword with id: ${id}`);
+  };
+  
+  const toggleSeedKeyword = (keyword: string) => {
+    if (activeSeedKeywords.includes(keyword)) {
+      setActiveSeedKeywords(activeSeedKeywords.filter(k => k !== keyword));
+      toast.info(`Removed filter: ${keyword}`);
+    } else {
+      setActiveSeedKeywords([...activeSeedKeywords, keyword]);
+      toast.success(`Added filter: ${keyword}`);
+    }
   };
 
   return (
@@ -153,7 +221,7 @@ const SearchDiscovery = () => {
         {/* Keywords Count and Source Filters */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <h2 className="text-lg font-medium">
-            <span className="font-bold">5</span> Keywords
+            <span className="font-bold">{discoveredKeywords.length}</span> Keywords
           </h2>
           
           <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center w-full sm:w-auto">
@@ -193,12 +261,19 @@ const SearchDiscovery = () => {
               {seedKeywords.map(keyword => (
                 <Badge 
                   key={keyword.id}
-                  variant={keyword.active ? "secondary" : "outline"}
-                  className={`${keyword.active ? "" : "text-muted-foreground"} cursor-pointer`}
+                  variant={activeSeedKeywords.includes(keyword.keyword) ? "secondary" : "outline"}
+                  className={`${activeSeedKeywords.includes(keyword.keyword) ? "" : "text-muted-foreground"} cursor-pointer`}
+                  onClick={() => toggleSeedKeyword(keyword.keyword)}
                 >
                   {keyword.keyword}
-                  {keyword.active && (
-                    <button className="ml-1 hover:bg-secondary-foreground/20 rounded-full">
+                  {activeSeedKeywords.includes(keyword.keyword) && (
+                    <button 
+                      className="ml-1 hover:bg-secondary-foreground/20 rounded-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSeedKeyword(keyword.keyword);
+                      }}
+                    >
                       ×
                     </button>
                   )}
@@ -218,7 +293,7 @@ const SearchDiscovery = () => {
               <TableRow>
                 <TableHead className="w-[30px]">
                   <Checkbox 
-                    checked={selectedKeywords.length === discoveredKeywords.length}
+                    checked={selectedKeywords.length === discoveredKeywords.length && discoveredKeywords.length > 0}
                     onCheckedChange={() => {
                       if (selectedKeywords.length === discoveredKeywords.length) {
                         setSelectedKeywords([]);
@@ -231,66 +306,94 @@ const SearchDiscovery = () => {
                 <TableHead>Keyword</TableHead>
                 <TableHead>Seed</TableHead>
                 <TableHead>Source</TableHead>
+                <TableHead>Placement</TableHead>
+                <TableHead>Discovered On</TableHead>
                 <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {discoveredKeywords.map((keyword) => (
-                <TableRow key={keyword.id}>
-                  <TableCell>
-                    <Checkbox 
-                      checked={selectedKeywords.includes(keyword.id)}
-                      onCheckedChange={() => handleKeywordToggle(keyword.id)}
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      {keyword.keyword}
-                      {keyword.link && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="font-normal">
-                      {keyword.seed}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant="outline" 
-                      className={`
-                        ${keyword.source === "Google" ? "bg-blue-50 text-blue-700 border-blue-200" : 
-                          keyword.source === "Reddit" ? "bg-orange-50 text-orange-700 border-orange-200" : 
-                          keyword.source === "Competitors" ? "bg-purple-50 text-purple-700 border-purple-200" : 
-                          "bg-gray-50 text-gray-700 border-gray-200"}
-                      `}
-                    >
-                      {keyword.source}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      {keyword.added ? (
-                        <Badge variant="secondary" className="flex items-center gap-1">
-                          <Check className="h-3 w-3" />
-                          Added
-                        </Badge>
-                      ) : (
-                        <Button 
-                          size="sm" 
-                          className="flex items-center gap-1"
-                          onClick={() => handleAddKeyword(keyword.id)}
-                        >
-                          <PlusCircle className="h-4 w-4" />
-                          Add
+              {discoveredKeywords.length > 0 ? (
+                discoveredKeywords.map((keyword) => (
+                  <TableRow key={keyword.id}>
+                    <TableCell>
+                      <Checkbox 
+                        checked={selectedKeywords.includes(keyword.id)}
+                        onCheckedChange={() => handleKeywordToggle(keyword.id)}
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {keyword.keyword}
+                        {keyword.link && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="outline" 
+                        className="font-normal cursor-pointer"
+                        onClick={() => toggleSeedKeyword(keyword.seed)}
+                      >
+                        {keyword.seed}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="outline" 
+                        className={`
+                          ${keyword.source === "Google" ? "bg-blue-50 text-blue-700 border-blue-200" : 
+                            keyword.source === "Reddit" ? "bg-orange-50 text-orange-700 border-orange-200" : 
+                            keyword.source === "Competitors" ? "bg-purple-50 text-purple-700 border-purple-200" : 
+                            keyword.source === "Q&A Sites" ? "bg-green-50 text-green-700 border-green-200" :
+                            "bg-gray-50 text-gray-700 border-gray-200"}
+                        `}
+                      >
+                        {keyword.source}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                        {keyword.placement}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        <Clock className="h-3 w-3 mr-1.5 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">
+                          {format(keyword.discoveredOn, "MMM d, yyyy")}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        {keyword.added ? (
+                          <Badge variant="secondary" className="flex items-center gap-1">
+                            <Check className="h-3 w-3" />
+                            Added
+                          </Badge>
+                        ) : (
+                          <Button 
+                            size="sm" 
+                            className="flex items-center gap-1"
+                            onClick={() => handleAddKeyword(keyword.id)}
+                          >
+                            <PlusCircle className="h-4 w-4" />
+                            Add
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
                         </Button>
-                      )}
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-24 text-center">
+                    No keywords match your current filters
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>
