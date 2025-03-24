@@ -13,7 +13,8 @@ import {
   Save, 
   Sparkles,
   Filter,
-  MoreHorizontal
+  MoreHorizontal,
+  Search
 } from "lucide-react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
@@ -149,15 +150,20 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
     <div className="flex flex-col h-full space-y-4">
       <div className="flex justify-between items-center gap-4 bg-card p-4 rounded-lg border">
         <div className="flex gap-2 items-center flex-1">
-          <Input
-            placeholder="Filter groups..."
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            className="max-w-xs"
-          />
-          <Button variant="outline" size="sm" onClick={() => setFilterText("")} disabled={!filterText}>
-            Clear
-          </Button>
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Filter groups..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          {filterText && (
+            <Button variant="outline" size="sm" onClick={() => setFilterText("")}>
+              Clear
+            </Button>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
@@ -181,136 +187,108 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 flex-1 overflow-auto">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Keyword Groups</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Group Name</TableHead>
-                  <TableHead className="text-right">Keywords</TableHead>
-                  <TableHead className="text-right">Avg. Volume</TableHead>
-                  <TableHead className="text-right">Avg. Difficulty</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredClusters.length > 0 ? (
-                  filteredClusters.map(cluster => (
-                    <TableRow 
-                      key={cluster.id}
-                      className={`cursor-pointer ${selectedClusterId === cluster.id ? 'bg-primary/10' : ''}`}
-                      onClick={() => handleSelectCluster(cluster.id)}
+      {/* Group cards - horizontal scrolling row */}
+      <div className="overflow-x-auto pb-2">
+        <div className="flex gap-3 min-w-max">
+          {filteredClusters.map(cluster => (
+            <Card 
+              key={cluster.id}
+              className={`w-48 cursor-pointer hover:border-primary transition-colors ${
+                selectedClusterId === cluster.id ? 'border-primary' : ''
+              }`}
+              onClick={() => handleSelectCluster(cluster.id)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div 
+                    className="h-3 w-3 rounded-full" 
+                    style={{ backgroundColor: cluster.color }}
+                  ></div>
+                  <div className="flex space-x-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 w-6 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(cluster.id);
+                      }}
                     >
-                      <TableCell>
-                        <div className="flex items-center">
-                          <div 
-                            className="h-3 w-3 rounded-full mr-2" 
-                            style={{ backgroundColor: cluster.color }}
-                          ></div>
-                          {editingClusterId === cluster.id ? (
-                            <div className="flex gap-2">
-                              <Input 
-                                defaultValue={cluster.name}
-                                id={`cluster-${cluster.id}-input`}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    handleSaveEdit(cluster.id, (e.target as HTMLInputElement).value);
-                                  }
-                                }}
-                                autoFocus
-                                onClick={(e) => e.stopPropagation()}
-                                className="w-48"
-                              />
-                              <Button 
-                                size="sm" 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const input = document.querySelector(`#cluster-${cluster.id}-input`) as HTMLInputElement;
-                                  handleSaveEdit(cluster.id, input?.value || cluster.name);
-                                }}
-                              >
-                                <Save className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <span className="font-medium">{cluster.name}</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">{cluster.keywords.length}</TableCell>
-                      <TableCell className="text-right">{cluster.avgVolume.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end">
-                          <div className="w-12 bg-gray-200 h-2 rounded-full mr-2">
-                            <div 
-                              className={`h-2 rounded-full ${
-                                cluster.avgDifficulty > 70 ? 'bg-red-500' : 
-                                cluster.avgDifficulty > 40 ? 'bg-yellow-500' : 'bg-green-500'
-                              }`}
-                              style={{ width: `${cluster.avgDifficulty}%` }}
-                            ></div>
-                          </div>
-                          <span>{cluster.avgDifficulty}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end space-x-1">
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="h-8 w-8 p-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEdit(cluster.id);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="h-8 w-8 p-0 text-destructive"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteCluster(cluster.id);
-                            }}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 w-6 p-0 text-destructive"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCluster(cluster.id);
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+                
+                {editingClusterId === cluster.id ? (
+                  <div className="flex gap-1 mt-2">
+                    <Input 
+                      defaultValue={cluster.name}
+                      id={`cluster-${cluster.id}-input`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSaveEdit(cluster.id, (e.target as HTMLInputElement).value);
+                        }
+                      }}
+                      autoFocus
+                      onClick={(e) => e.stopPropagation()}
+                      className="h-7 text-sm"
+                    />
+                    <Button 
+                      size="sm" 
+                      className="h-7 p-0 w-7"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const input = document.querySelector(`#cluster-${cluster.id}-input`) as HTMLInputElement;
+                        handleSaveEdit(cluster.id, input?.value || cluster.name);
+                      }}
+                    >
+                      <Save className="h-3 w-3" />
+                    </Button>
+                  </div>
                 ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
-                      <div className="flex flex-col items-center justify-center text-muted-foreground">
-                        <Folder className="h-10 w-10 mb-2" />
-                        <p>No keyword groups found</p>
-                        {filterText && (
-                          <Button 
-                            variant="link" 
-                            size="sm" 
-                            onClick={() => setFilterText("")}
-                            className="mt-1"
-                          >
-                            Clear filter
-                          </Button>
-                        )}
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-sm truncate">{cluster.name}</h3>
+                    <div className="text-xs text-muted-foreground">
+                      {cluster.keywords.length} keywords
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <div>Vol: {cluster.avgVolume.toLocaleString()}</div>
+                      <div className="flex items-center">
+                        <span>KD: </span>
+                        <div className="w-8 bg-gray-200 h-1.5 rounded-full mx-1">
+                          <div 
+                            className={`h-1.5 rounded-full ${
+                              cluster.avgDifficulty > 70 ? 'bg-red-500' : 
+                              cluster.avgDifficulty > 40 ? 'bg-yellow-500' : 'bg-green-500'
+                            }`}
+                            style={{ width: `${cluster.avgDifficulty}%` }}
+                          ></div>
+                        </div>
+                        <span>{cluster.avgDifficulty}</span>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </div>
                 )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
 
-        {selectedCluster && (
+      {/* Selected cluster or empty state */}
+      <div className="flex-1 overflow-auto">
+        {selectedCluster ? (
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center">
@@ -426,17 +404,15 @@ const KeywordClusters: React.FC<KeywordClustersProps> = ({
               </Table>
             </CardContent>
           </Card>
-        )}
-
-        {!selectedCluster && filteredClusters.length > 0 && (
-          <Card className="border-dashed bg-muted/20">
+        ) : (
+          <Card className="h-full border-dashed bg-muted/20">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Folder className="h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-center text-muted-foreground mb-2">
                 Select a keyword group to view its keywords
               </p>
               <p className="text-sm text-muted-foreground">
-                Click on any group in the table above to see its keywords and details
+                Click on any group in the cards above to see its keywords and details
               </p>
             </CardContent>
           </Card>
