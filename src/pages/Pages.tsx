@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,22 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 // Extended page type with additional fields
 type Page = {
@@ -34,7 +49,7 @@ type Page = {
   status: "Published" | "Draft";
   views: number;
   type: "page" | "product" | "collection" | "blog" | "other";
-  isIndexed: boolean;
+  isIndexed: boolean | "lost";
   lastMonthClicks: number;
   opportunityScore: "high" | "medium" | "low";
   keywordsMapped: string[];
@@ -370,10 +385,15 @@ const Pages = () => {
     }
   };
 
+  const getIndexedStatus = (status: boolean | "lost") => {
+    if (status === "lost") return { label: "Lost", variant: "destructive" as const };
+    return status ? { label: "Yes", variant: "default" as const } : { label: "No", variant: "outline" as const };
+  };
+
   return (
     <Layout title="Pages">
       <div className="flex flex-col h-full space-y-4">
-        {/* Header with search and actions */}
+        {/* Header with combined search, filter and actions */}
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Pages</h1>
           <div className="flex items-center space-x-2">
@@ -387,24 +407,24 @@ const Pages = () => {
               />
             </div>
             <Button 
+              variant="outline" 
+              className="flex items-center gap-1"
+            >
+              <Filter className="h-4 w-4" />
+              Filter
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-1"
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+            <Button 
               className="flex items-center gap-1"
             >
               <Plus className="h-4 w-4" />
               New Page
-            </Button>
-          </div>
-        </div>
-        
-        {/* Workspace controls */}
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-2">
-            <Button variant="outline" className="flex items-center gap-1">
-              <Filter className="h-4 w-4" />
-              Filter
-            </Button>
-            <Button variant="outline" className="flex items-center gap-1">
-              <Download className="h-4 w-4" />
-              Export
             </Button>
           </div>
         </div>
@@ -463,17 +483,11 @@ const Pages = () => {
                 <TableHead className="w-[250px]">
                   Page Title
                 </TableHead>
-                <TableHead>
+                <TableHead className="w-[140px]">
                   URL
                 </TableHead>
                 <TableHead>
                   Last Updated
-                </TableHead>
-                <TableHead>
-                  Status
-                </TableHead>
-                <TableHead>
-                  Views
                 </TableHead>
                 <TableHead>
                   Indexed
@@ -484,7 +498,7 @@ const Pages = () => {
                 <TableHead>
                   Opportunity
                 </TableHead>
-                <TableHead>
+                <TableHead className="w-[120px]">
                   Keyword Mapping
                 </TableHead>
                 <TableHead className="w-[60px]">
@@ -499,34 +513,37 @@ const Pages = () => {
                     {page.title}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm text-blue-600 truncate max-w-[200px]">
-                        {page.url}
-                      </span>
-                      <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                    </div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm text-blue-600 truncate max-w-[100px]">
+                              {page.url}
+                            </span>
+                            <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{page.url}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableCell>
                   <TableCell>
                     {page.lastUpdated}
                   </TableCell>
                   <TableCell>
-                    <Badge 
-                      variant={page.status === "Published" ? "secondary" : "outline"}
-                      className="px-2 py-1 text-xs"
-                    >
-                      {page.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {page.views.toLocaleString()}
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={page.isIndexed ? "default" : "outline"}
-                      className="px-2 py-1 text-xs"
-                    >
-                      {page.isIndexed ? 'Yes' : 'No'}
-                    </Badge>
+                    {(() => {
+                      const status = getIndexedStatus(page.isIndexed);
+                      return (
+                        <Badge 
+                          variant={status.variant}
+                          className="px-2 py-1 text-xs"
+                        >
+                          {status.label}
+                        </Badge>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell>
                     {page.lastMonthClicks.toLocaleString()}
@@ -540,22 +557,29 @@ const Pages = () => {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {page.keywordsMapped.length > 0 ? (
-                        <>
-                          <Badge variant="outline" className="text-xs">
-                            {page.keywordsMapped[0]}
-                          </Badge>
-                          {page.keywordsMapped.length > 1 && (
-                            <Badge variant="outline" className="text-xs bg-muted text-muted-foreground">
-                              +{page.keywordsMapped.length - 1}
-                            </Badge>
-                          )}
-                        </>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">No keywords</span>
-                      )}
-                    </div>
+                    {page.keywordsMapped.length > 0 ? (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-8 text-xs">
+                            {page.keywordsMapped.length} keywords
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80 p-0">
+                          <div className="p-4">
+                            <h4 className="font-medium mb-2">Keywords mapped to: {page.title}</h4>
+                            <div className="flex flex-wrap gap-1">
+                              {page.keywordsMapped.map((keyword, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {keyword}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">No keywords</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
