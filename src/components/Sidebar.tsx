@@ -198,6 +198,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const searchSubmenu = [
     { label: "Position Tracking", href: "/search/position-tracking" },
     { label: "Keywords", href: "/search/keywords" },
+    { label: "Discovery", href: "/search/discovery" },
     { label: "Pages", href: "/search/pages" },
     { label: "Market Intelligence", href: "/search/market-intelligence" },
     { label: "FAQ Explorer", href: "/search/faq-explorer" },
