@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -476,7 +477,7 @@ const Pages = () => {
                 <TableHead className="w-[250px]">
                   Page Title
                 </TableHead>
-                <TableHead className="w-[80px]">
+                <TableHead className="w-[50px]">
                   URL
                 </TableHead>
                 <TableHead>
@@ -491,7 +492,7 @@ const Pages = () => {
                 <TableHead>
                   Opportunity
                 </TableHead>
-                <TableHead className="w-[70px]">
+                <TableHead className="w-[60px]">
                   Keywords
                 </TableHead>
                 <TableHead className="w-[60px]">
@@ -505,12 +506,13 @@ const Pages = () => {
                   <TableCell className="font-medium">
                     {page.title}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-xs text-muted-foreground whitespace-nowrap overflow-hidden text-ellipsis max-w-[50px]">
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="flex items-center">
-                            <ExternalLink className="h-3 w-3 text-blue-600" />
+                          <div className="flex items-center space-x-1">
+                            <ExternalLink className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                            <span className="truncate">{page.url}</span>
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>
