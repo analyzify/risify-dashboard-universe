@@ -84,8 +84,7 @@ const RisingTrends: React.FC<RisingTrendsProps> = ({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Page URL</TableHead>
-                  <TableHead>Domain</TableHead>
+                  <TableHead>Page</TableHead>
                   <TableHead>Growth</TableHead>
                   <TableHead>Main Keywords</TableHead>
                 </TableRow>
@@ -93,8 +92,12 @@ const RisingTrends: React.FC<RisingTrendsProps> = ({
               <TableBody>
                 {trendingPages.map((item, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">{item.url}</TableCell>
-                    <TableCell>{item.domain}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex flex-col">
+                        <span>{item.url}</span>
+                        <span className="text-xs text-muted-foreground">{item.domain}</span>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <span className="text-green-500 font-medium">+{item.growthPercentage}%</span>
                     </TableCell>
