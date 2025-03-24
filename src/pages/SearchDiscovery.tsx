@@ -6,6 +6,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { 
   Calendar, 
   TrendingUp, 
@@ -149,6 +158,10 @@ const SearchDiscovery = () => {
   );
   const [discoveredKeywords, setDiscoveredKeywords] = useState(allKeywords);
   
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+  
   // Filter keywords based on selected source and active seed keywords
   useEffect(() => {
     let filtered = [...allKeywords];
@@ -166,6 +179,8 @@ const SearchDiscovery = () => {
     }
     
     setDiscoveredKeywords(filtered);
+    // Reset to first page when filters change
+    setCurrentPage(1);
   }, [selectedSource, activeSeedKeywords]);
   
   const handleSourceChange = (source: string) => {
@@ -195,6 +210,58 @@ const SearchDiscovery = () => {
       setActiveSeedKeywords([...activeSeedKeywords, keyword]);
       toast.success(`Added filter: ${keyword}`);
     }
+  };
+
+  // Get current page items
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentKeywords = discoveredKeywords.slice(indexOfFirstItem, indexOfLastItem);
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(discoveredKeywords.length / itemsPerPage);
+  
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total pages is less than or equal to max visible pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Complex logic for showing ellipsis
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      // Always show first page
+      if (startPage > 1) {
+        pageNumbers.push(1);
+        if (startPage > 2) {
+          pageNumbers.push('ellipsis-start');
+        }
+      }
+      
+      // Add visible page numbers
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+      
+      // Always show last page
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          pageNumbers.push('ellipsis-end');
+        }
+        pageNumbers.push(totalPages);
+      }
+    }
+    
+    return pageNumbers;
   };
 
   return (
@@ -293,12 +360,12 @@ const SearchDiscovery = () => {
               <TableRow>
                 <TableHead className="w-[30px]">
                   <Checkbox 
-                    checked={selectedKeywords.length === discoveredKeywords.length && discoveredKeywords.length > 0}
+                    checked={selectedKeywords.length === currentKeywords.length && currentKeywords.length > 0}
                     onCheckedChange={() => {
-                      if (selectedKeywords.length === discoveredKeywords.length) {
+                      if (selectedKeywords.length === currentKeywords.length) {
                         setSelectedKeywords([]);
                       } else {
-                        setSelectedKeywords(discoveredKeywords.map(k => k.id));
+                        setSelectedKeywords(currentKeywords.map(k => k.id));
                       }
                     }}
                   />
@@ -312,8 +379,8 @@ const SearchDiscovery = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {discoveredKeywords.length > 0 ? (
-                discoveredKeywords.map((keyword) => (
+              {currentKeywords.length > 0 ? (
+                currentKeywords.map((keyword) => (
                   <TableRow key={keyword.id}>
                     <TableCell>
                       <Checkbox 
@@ -397,6 +464,60 @@ const SearchDiscovery = () => {
             </TableBody>
           </Table>
         </div>
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Pagination className="mt-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                  }}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              
+              {getPageNumbers().map((page, index) => {
+                if (page === 'ellipsis-start' || page === 'ellipsis-end') {
+                  return (
+                    <PaginationItem key={`ellipsis-${index}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  );
+                }
+                
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationLink 
+                      href="#" 
+                      isActive={currentPage === page}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(page as number);
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                  }}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </div>
     </Layout>
   );
