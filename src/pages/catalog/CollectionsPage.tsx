@@ -263,12 +263,15 @@ const CollectionsPage: React.FC = () => {
 
   // Handle component mount/unmount lifecycle
   useEffect(() => {
+    // Set isMounted to true on mount
+    isMounted.current = true;
+    
     // Short delay to ensure proper initialization
     const timer = setTimeout(() => {
       if (isMounted.current) {
         setTreeReady(true);
       }
-    }, 100);
+    }, 500); // Increased delay to ensure DOM is fully ready
     
     return () => {
       isMounted.current = false;
@@ -435,33 +438,46 @@ const CollectionsPage: React.FC = () => {
   // Render the tree component with error boundary
   const renderTree = useCallback(() => {
     if (!treeReady) {
-      return <div className="flex justify-center items-center h-[500px]">Loading collections...</div>;
+      return (
+        <div className="flex justify-center items-center h-[500px]">
+          <div className="text-center">
+            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p>Loading collections...</p>
+          </div>
+        </div>
+      );
     }
 
     return (
       <ErrorBoundary>
-        <DndProvider backend={HTML5Backend}>
-          <div style={{ height: 500 }}>
-            <SortableTree
-              treeData={treeData}
-              onChange={setTreeData}
-              searchQuery={searchString}
-              searchFocusOffset={0}
-              searchFinishCallback={(matches) => {
-                if (isMounted.current) {
-                  console.log(`${matches.length} nodes found`);
-                }
-              }}
-              canDrag={true}
-              generateNodeProps={({ node, path }) => ({
-                title: renderNode({ node, path: path as number[] })
-              })}
-            />
-          </div>
-        </DndProvider>
+        <div style={{ height: 500 }} className="tree-wrapper">
+          <SortableTree
+            treeData={treeData}
+            onChange={setTreeData}
+            searchQuery={searchString}
+            searchFocusOffset={0}
+            searchFinishCallback={(matches) => {
+              if (isMounted.current) {
+                console.log(`${matches.length} nodes found`);
+              }
+            }}
+            canDrag={true}
+            generateNodeProps={({ node, path }) => ({
+              title: renderNode({ node, path: path as number[] })
+            })}
+            style={{ width: '100%' }}
+            innerStyle={{ padding: '15px' }}
+          />
+        </div>
       </ErrorBoundary>
     );
   }, [treeData, treeReady, searchString, renderNode]);
+
+  // Debug log to ensure data is available
+  useEffect(() => {
+    console.log("Tree data:", treeData);
+    console.log("Tree ready state:", treeReady);
+  }, [treeData, treeReady]);
 
   return (
     <Layout title="Collections">
@@ -500,8 +516,8 @@ const CollectionsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Collections Tree */}
-        <div className="border rounded-md p-4 min-h-[500px] bg-white">
+        {/* Collections Tree with border, better visibility */}
+        <div className="border rounded-md p-4 min-h-[500px] bg-white shadow-sm">
           {renderTree()}
         </div>
       </div>

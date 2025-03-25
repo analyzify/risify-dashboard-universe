@@ -90,18 +90,43 @@
   background-color: #f3f4f6;
 }
 
-/* Fix for DnD context errors */
-.rst__tree {
+/* Additional fixes for React 18 compatibility */
+.tree-wrapper {
   position: relative !important;
+  overflow: hidden;
+  width: 100%;
 }
 
-/* Fix for scrolling issues */
+/* Important: Ensure the tree container is visible and properly sized */
 .ReactVirtualized__Grid {
   overflow: visible !important;
+  width: 100% !important;
 }
 
 /* Fix for height issues */
 .rst__virtualScrollOverride {
   height: auto !important;
   max-height: 500px;
+}
+
+/* Fix for container issues */
+.ReactVirtualized__Grid__innerScrollContainer {
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+/* Make tree nodes more visible */
+.rst__rowContents {
+  border-width: 1px;
+  transition: all 0.2s ease;
+}
+
+.rst__rowContents:hover {
+  border-color: #d1d5db;
+  background-color: #f3f4f6;
+}
+
+/* Fix for row labels */
+.rst__rowLabel {
+  flex: 1;
 }
