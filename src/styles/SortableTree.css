@@ -72,6 +72,7 @@
 /* Ensure tree container has proper z-index */
 .rst__tree {
   z-index: 1;
+  position: relative;
 }
 
 /* Make sure the tree stays within its container */
@@ -95,6 +96,7 @@
   position: relative !important;
   overflow: hidden;
   width: 100%;
+  height: 100%;
 }
 
 /* Important: Ensure the tree container is visible and properly sized */
@@ -129,4 +131,9 @@
 /* Fix for row labels */
 .rst__rowLabel {
   flex: 1;
+}
+
+/* Fix for DND context */
+.rst__tree .ReactVirtualized__Grid__innerScrollContainer {
+  position: relative;
 }

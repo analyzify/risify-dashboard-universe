@@ -271,7 +271,7 @@ const CollectionsPage: React.FC = () => {
       if (isMounted.current) {
         setTreeReady(true);
       }
-    }, 500); // Increased delay to ensure DOM is fully ready
+    }, 800); // Increased delay to ensure DOM is fully ready
     
     return () => {
       isMounted.current = false;
@@ -450,25 +450,27 @@ const CollectionsPage: React.FC = () => {
 
     return (
       <ErrorBoundary>
-        <div style={{ height: 500 }} className="tree-wrapper">
-          <SortableTree
-            treeData={treeData}
-            onChange={setTreeData}
-            searchQuery={searchString}
-            searchFocusOffset={0}
-            searchFinishCallback={(matches) => {
-              if (isMounted.current) {
-                console.log(`${matches.length} nodes found`);
-              }
-            }}
-            canDrag={true}
-            generateNodeProps={({ node, path }) => ({
-              title: renderNode({ node, path: path as number[] })
-            })}
-            style={{ width: '100%' }}
-            innerStyle={{ padding: '15px' }}
-          />
-        </div>
+        <DndProvider backend={HTML5Backend}>
+          <div style={{ height: 500 }} className="tree-wrapper">
+            <SortableTree
+              treeData={treeData}
+              onChange={setTreeData}
+              searchQuery={searchString}
+              searchFocusOffset={0}
+              searchFinishCallback={(matches) => {
+                if (isMounted.current) {
+                  console.log(`${matches.length} nodes found`);
+                }
+              }}
+              canDrag={true}
+              generateNodeProps={({ node, path }) => ({
+                title: renderNode({ node, path: path as number[] })
+              })}
+              style={{ width: '100%' }}
+              innerStyle={{ padding: '15px' }}
+            />
+          </div>
+        </DndProvider>
       </ErrorBoundary>
     );
   }, [treeData, treeReady, searchString, renderNode]);
