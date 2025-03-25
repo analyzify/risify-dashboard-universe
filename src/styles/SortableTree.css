@@ -1,0 +1,64 @@
+
+/* Custom styles for react-sortable-tree */
+.rst__rowWrapper {
+  padding: 4px 0;
+}
+
+.rst__row {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.rst__moveHandle {
+  background-color: #f4f4f5;
+  border-color: #e4e4e7;
+}
+
+.rst__rowContents {
+  background-color: #f9fafb;
+  border-color: #e4e4e7;
+  box-shadow: none;
+  padding: 0 12px;
+  min-width: 300px;
+}
+
+.rst__rowLabel {
+  padding: 8px 0;
+  width: 100%;
+}
+
+.rst__rowTitle {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.rst__rowContent {
+  width: 100%;
+}
+
+.rst__lineHalfHorizontalRight::before,
+.rst__lineFullVertical::after,
+.rst__lineHalfVerticalTop::after,
+.rst__lineHalfVerticalBottom::after,
+.rst__lineChildren::after {
+  background-color: #e4e4e7;
+}
+
+.rst__collapseButton, .rst__expandButton {
+  background-color: #f4f4f5;
+  border-color: #e4e4e7;
+  box-shadow: none;
+}
+
+/* Add spacing for children */
+.rst__node {
+  margin-left: 24px;
+}
+
+/* First level nodes should not have left margin */
+.rst__tree > .rst__node {
+  margin-left: 0;
+}

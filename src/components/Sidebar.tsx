@@ -205,7 +205,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const catalogSubmenu = [
     { label: "Products", href: "/catalog/products" },
     { label: "Relations", href: "/catalog/relations" },
-    { label: "Hierarchy", href: "/catalog/hierarchy" },
+    { label: "Collections", href: "/catalog/collections" },
     { label: "Taxonomies", href: "/catalog/taxonomies" },
   ];
 
