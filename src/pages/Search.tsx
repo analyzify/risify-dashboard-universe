@@ -66,15 +66,6 @@ const Search = () => {
       tag: "Competitive"
     },
     {
-      id: "faq-explorer",
-      title: "FAQ Explorer",
-      description: "Discover questions people are asking related to your products and create targeted content.",
-      icon: <MessageSquareText className="h-8 w-8 text-primary" />,
-      link: "/search/faq-explorer",
-      metrics: "250+ Questions Indexed",
-      tag: "Content"
-    },
-    {
       id: "search-console",
       title: "Search Console",
       description: "Connect Google Search Console data for deeper insights into your organic performance.",

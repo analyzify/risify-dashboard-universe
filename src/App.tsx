@@ -19,6 +19,7 @@ import Components from "./pages/Components";
 import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
 import MarketIntelligence from "./pages/MarketIntelligence"; // Import the new page
+import SearchConsole from "./pages/SearchConsole"; // Add the SearchConsole import
 
 const queryClient = new QueryClient();
 
@@ -40,8 +41,7 @@ const App = () => (
           <Route path="/search/discovery" element={<SearchDiscovery />} />
           <Route path="/search/pages" element={<Pages />} /> {/* New route */}
           <Route path="/search/market-intelligence" element={<MarketIntelligence />} /> {/* Use real component instead of placeholder */}
-          <Route path="/search/faq-explorer" element={<PlaceholderPage title="FAQ Explorer" />} />
-          <Route path="/search/search-console" element={<PlaceholderPage title="Search Console" />} />
+          <Route path="/search/search-console" element={<SearchConsole />} /> {/* Changed from placeholder to real component */}
           
           {/* Catalog Management */}
           <Route path="/catalog" element={<Catalog />} />

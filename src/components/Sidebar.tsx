@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -165,7 +164,6 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                 key={index}
                 to={item.href}
                 onClick={(e) => {
-                  // Prevent parent collapse from triggering
                   e.stopPropagation();
                 }}
                 className={cn(
@@ -201,7 +199,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Discovery", href: "/search/discovery" },
     { label: "Pages", href: "/search/pages" },
     { label: "Market Intelligence", href: "/search/market-intelligence" },
-    { label: "FAQ Explorer", href: "/search/faq-explorer" },
     { label: "Search Console", href: "/search/search-console" },
   ];
 
@@ -354,3 +351,4 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 };
 
 export default Sidebar;
+
