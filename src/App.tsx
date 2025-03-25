@@ -20,6 +20,7 @@ import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
 import MarketIntelligence from "./pages/MarketIntelligence"; // Import the new page
 import SearchConsole from "./pages/SearchConsole"; // Add the SearchConsole import
+import ProductsPage from "./pages/catalog/ProductsPage"; // Import the new ProductsPage component
 
 const queryClient = new QueryClient();
 
@@ -45,7 +46,7 @@ const App = () => (
           
           {/* Catalog Management */}
           <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/products" element={<PlaceholderPage title="Products" />} />
+          <Route path="/catalog/products" element={<ProductsPage />} />
           <Route path="/catalog/relations" element={<PlaceholderPage title="Relations" />} />
           <Route path="/catalog/hierarchy" element={<PlaceholderPage title="Hierarchy" />} />
           <Route path="/catalog/taxonomies" element={<PlaceholderPage title="Taxonomies" />} />
