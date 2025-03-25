@@ -89,3 +89,19 @@
 .rst__rowContents:hover {
   background-color: #f3f4f6;
 }
+
+/* Fix for DnD context errors */
+.rst__tree {
+  position: relative !important;
+}
+
+/* Fix for scrolling issues */
+.ReactVirtualized__Grid {
+  overflow: visible !important;
+}
+
+/* Fix for height issues */
+.rst__virtualScrollOverride {
+  height: auto !important;
+  max-height: 500px;
+}

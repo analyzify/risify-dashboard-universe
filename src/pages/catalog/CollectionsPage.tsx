@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Layout from "@/components/Layout";
 import SortableTree, { TreeItem, addNodeUnderParent, removeNodeAtPath, changeNodeAtPath } from "react-sortable-tree";
 import "react-sortable-tree/style.css";
@@ -68,6 +68,29 @@ const initialData: TreeItem[] = [
   }
 ];
 
+// Error boundary component to catch any errors in the tree
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("Error in component:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div className="p-4 text-center">Something went wrong with the collections tree. Please try refreshing the page.</div>;
+    }
+    return this.props.children;
+  }
+}
+
 const CollectionsPage: React.FC = () => {
   const [treeData, setTreeData] = useState<TreeItem[]>(initialData);
   const [searchString, setSearchString] = useState("");
@@ -76,23 +99,29 @@ const CollectionsPage: React.FC = () => {
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [renamedValue, setRenamedValue] = useState("");
-  const [isPageMounted, setIsPageMounted] = useState(false);
+  const [treeReady, setTreeReady] = useState(false);
   
   // Reference to track component mounted state
   const isMounted = useRef(true);
 
   // Handle component mount/unmount lifecycle
   useEffect(() => {
-    setIsPageMounted(true);
+    // Short delay to ensure proper initialization
+    const timer = setTimeout(() => {
+      if (isMounted.current) {
+        setTreeReady(true);
+      }
+    }, 100);
     
     return () => {
       isMounted.current = false;
-      setIsPageMounted(false);
+      setTreeReady(false);
+      clearTimeout(timer);
     };
   }, []);
   
   // Function to handle adding a new collection
-  const handleAddCollection = () => {
+  const handleAddCollection = useCallback(() => {
     if (newNodeName.trim() === "") {
       toast({
         title: "Error",
@@ -126,10 +155,10 @@ const CollectionsPage: React.FC = () => {
       title: "Success",
       description: "Collection added successfully"
     });
-  };
+  }, [newNodeName, selectedNodePath, treeData]);
 
   // Function to handle renaming a collection
-  const handleRenameCollection = () => {
+  const handleRenameCollection = useCallback(() => {
     if (renamedValue.trim() === "") {
       toast({
         title: "Error",
@@ -155,10 +184,10 @@ const CollectionsPage: React.FC = () => {
       title: "Success",
       description: "Collection renamed successfully"
     });
-  };
+  }, [renamedValue, selectedNodePath, treeData]);
 
   // Function to handle deleting a collection
-  const handleDeleteCollection = (path: number[]) => {
+  const handleDeleteCollection = useCallback((path: number[]) => {
     setTreeData(
       removeNodeAtPath({
         treeData,
@@ -171,7 +200,7 @@ const CollectionsPage: React.FC = () => {
       title: "Success",
       description: "Collection deleted successfully"
     });
-  };
+  }, [treeData]);
 
   // Function to get a node at a specific path
   const getNodeAtPath = (data: TreeItem[], path: number[]) => {
@@ -190,7 +219,7 @@ const CollectionsPage: React.FC = () => {
   };
 
   // Export collections as JSON
-  const exportCollections = () => {
+  const exportCollections = useCallback(() => {
     const dataStr = JSON.stringify(treeData, null, 2);
     const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
     
@@ -205,10 +234,10 @@ const CollectionsPage: React.FC = () => {
       title: "Success",
       description: "Collections exported successfully"
     });
-  };
+  }, [treeData]);
 
   // Custom node render to add action buttons
-  const renderNode = ({ node, path }: { node: TreeItem, path: number[] }) => {
+  const renderNode = useCallback(({ node, path }: { node: TreeItem, path: number[] }) => {
     return (
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
@@ -244,12 +273,38 @@ const CollectionsPage: React.FC = () => {
         </div>
       </div>
     );
-  };
+  }, [handleDeleteCollection]);
 
-  // If the component is not mounted, return null to prevent rendering issues
-  if (!isPageMounted) {
-    return <Layout title="Collections"><div>Loading collections...</div></Layout>;
-  }
+  // Render the tree component with error boundary
+  const renderTree = useCallback(() => {
+    if (!treeReady) {
+      return <div className="flex justify-center items-center h-[500px]">Loading collections...</div>;
+    }
+
+    return (
+      <ErrorBoundary>
+        <DndProvider backend={HTML5Backend}>
+          <div style={{ height: 500 }}>
+            <SortableTree
+              treeData={treeData}
+              onChange={setTreeData}
+              searchQuery={searchString}
+              searchFocusOffset={0}
+              searchFinishCallback={(matches) => {
+                if (isMounted.current) {
+                  console.log(`${matches.length} nodes found`);
+                }
+              }}
+              canDrag={true}
+              generateNodeProps={({ node, path }) => ({
+                title: renderNode({ node, path: path as number[] })
+              })}
+            />
+          </div>
+        </DndProvider>
+      </ErrorBoundary>
+    );
+  }, [treeData, treeReady, searchString, renderNode]);
 
   return (
     <Layout title="Collections">
@@ -290,25 +345,7 @@ const CollectionsPage: React.FC = () => {
 
         {/* Collections Tree */}
         <div className="border rounded-md p-4 min-h-[500px] bg-white">
-          <DndProvider backend={HTML5Backend}>
-            <div style={{ height: 500 }}>
-              <SortableTree
-                treeData={treeData}
-                onChange={setTreeData}
-                searchQuery={searchString}
-                searchFocusOffset={0}
-                searchFinishCallback={(matches) => {
-                  if (isMounted.current) {
-                    console.log(`${matches.length} nodes found`);
-                  }
-                }}
-                canDrag={true}
-                generateNodeProps={({ node, path }) => ({
-                  title: renderNode({ node, path: path as number[] })
-                })}
-              />
-            </div>
-          </DndProvider>
+          {renderTree()}
         </div>
       </div>
 
