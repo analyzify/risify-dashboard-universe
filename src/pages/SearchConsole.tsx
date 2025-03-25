@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -267,7 +266,7 @@ const SearchConsole = () => {
                       if (name === "clicks" || name === "impressions") {
                         return [formatClicks(value), name.charAt(0).toUpperCase() + name.slice(1)];
                       }
-                      return [value, name.toUpperCase()];
+                      return [value, typeof name === 'string' ? name.toUpperCase() : name.toString()];
                     }}
                   />
                   <Area 
