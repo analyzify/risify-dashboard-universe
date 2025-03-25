@@ -73,3 +73,19 @@
 .rst__tree {
   z-index: 1;
 }
+
+/* Make sure the tree stays within its container */
+.rst__virtualScrollOverride {
+  overflow: auto !important;
+}
+
+/* Improve focus styles */
+.rst__rowContents:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+}
+
+/* Enhance hover states */
+.rst__rowContents:hover {
+  background-color: #f3f4f6;
+}

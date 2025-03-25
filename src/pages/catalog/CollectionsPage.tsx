@@ -1,8 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Layout from "@/components/Layout";
 import SortableTree, { TreeItem, addNodeUnderParent, removeNodeAtPath, changeNodeAtPath } from "react-sortable-tree";
 import "react-sortable-tree/style.css";
+import "@/styles/SortableTree.css";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Download, Upload, ArrowUpDown, Package } from "lucide-react";
@@ -75,6 +76,20 @@ const CollectionsPage: React.FC = () => {
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [renamedValue, setRenamedValue] = useState("");
+  const [isPageMounted, setIsPageMounted] = useState(false);
+  
+  // Reference to track component mounted state
+  const isMounted = useRef(true);
+
+  // Handle component mount/unmount lifecycle
+  useEffect(() => {
+    setIsPageMounted(true);
+    
+    return () => {
+      isMounted.current = false;
+      setIsPageMounted(false);
+    };
+  }, []);
   
   // Function to handle adding a new collection
   const handleAddCollection = () => {
@@ -231,26 +246,10 @@ const CollectionsPage: React.FC = () => {
     );
   };
 
-  // Wrap tree in DndProvider to fix mounting/unmounting issues
-  const SortableTreeWithDndContext = (
-    <DndProvider backend={HTML5Backend}>
-      <div style={{ height: 500 }}>
-        <SortableTree
-          treeData={treeData}
-          onChange={setTreeData}
-          searchQuery={searchString}
-          searchFocusOffset={0}
-          searchFinishCallback={(matches) => {
-            console.log(`${matches.length} nodes found`);
-          }}
-          canDrag={true}
-          generateNodeProps={({ node, path }) => ({
-            title: renderNode({ node, path: path as number[] })
-          })}
-        />
-      </div>
-    </DndProvider>
-  );
+  // If the component is not mounted, return null to prevent rendering issues
+  if (!isPageMounted) {
+    return <Layout title="Collections"><div>Loading collections...</div></Layout>;
+  }
 
   return (
     <Layout title="Collections">
@@ -291,7 +290,25 @@ const CollectionsPage: React.FC = () => {
 
         {/* Collections Tree */}
         <div className="border rounded-md p-4 min-h-[500px] bg-white">
-          {SortableTreeWithDndContext}
+          <DndProvider backend={HTML5Backend}>
+            <div style={{ height: 500 }}>
+              <SortableTree
+                treeData={treeData}
+                onChange={setTreeData}
+                searchQuery={searchString}
+                searchFocusOffset={0}
+                searchFinishCallback={(matches) => {
+                  if (isMounted.current) {
+                    console.log(`${matches.length} nodes found`);
+                  }
+                }}
+                canDrag={true}
+                generateNodeProps={({ node, path }) => ({
+                  title: renderNode({ node, path: path as number[] })
+                })}
+              />
+            </div>
+          </DndProvider>
         </div>
       </div>
 
