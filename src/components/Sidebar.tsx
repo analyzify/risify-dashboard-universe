@@ -203,11 +203,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   ];
 
   const catalogSubmenu = [
-    { label: "Product Data Workspace", href: "/catalog/product-data" },
-    { label: "Relationship Builder", href: "/catalog/relationship-builder" },
-    { label: "Collection Structure", href: "/catalog/collection-structure" },
-    { label: "Bulk Editor", href: "/catalog/bulk-editor" },
-    { label: "Templates", href: "/catalog/templates" },
+    { label: "Products", href: "/catalog/products" },
+    { label: "Relations", href: "/catalog/relations" },
+    { label: "Hierarchy", href: "/catalog/hierarchy" },
+    { label: "Taxonomies", href: "/catalog/taxonomies" },
   ];
 
   const componentsSubmenu = [
@@ -351,4 +350,3 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 };
 
 export default Sidebar;
-

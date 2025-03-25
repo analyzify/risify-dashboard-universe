@@ -45,11 +45,11 @@ const App = () => (
           
           {/* Catalog Management */}
           <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/product-data" element={<PlaceholderPage title="Product Data Workspace" />} />
-          <Route path="/catalog/relationship-builder" element={<PlaceholderPage title="Relationship Builder" />} />
-          <Route path="/catalog/collection-structure" element={<PlaceholderPage title="Collection Structure" />} />
-          <Route path="/catalog/bulk-editor" element={<PlaceholderPage title="Bulk Editor" />} />
-          <Route path="/catalog/templates" element={<PlaceholderPage title="Templates" />} />
+          <Route path="/catalog/products" element={<PlaceholderPage title="Products" />} />
+          <Route path="/catalog/relations" element={<PlaceholderPage title="Relations" />} />
+          <Route path="/catalog/hierarchy" element={<PlaceholderPage title="Hierarchy" />} />
+          <Route path="/catalog/taxonomies" element={<PlaceholderPage title="Taxonomies" />} />
+          <Route path="/catalog/product-data" element={<Navigate to="/catalog/products" replace />} />
           
           {/* Storefront Components */}
           <Route path="/components" element={<Components />} />
