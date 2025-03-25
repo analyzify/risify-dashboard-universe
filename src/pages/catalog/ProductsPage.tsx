@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -135,20 +134,21 @@ const mockProducts = [
   }
 ];
 
-// Inventory stats
-const inventoryStats = [
-  { days: "0 days", count: 735 },
-  { days: "1-30 days", count: 435 },
-  { days: "31-90 days", count: 318 },
-  { days: "91+ days", count: 991 }
-];
+// Updated statistics
+const inventoryStats = {
+  sellThrough: "0.4%",
+  dayZero: "735",
+  day1to30: "435",
+  day31to90: "318",
+  day91plus: "991"
+};
 
 // Product analysis
-const productAnalysis = [
-  { grade: "A-grade", count: "kr 137M" },
-  { grade: "B-grade", count: "kr 69.6M" },
-  { grade: "C-grade", count: "kr 1.5B" }
-];
+const productAnalysis = {
+  gradeA: "kr 137M",
+  gradeB: "kr 69.6M",
+  gradeC: "kr 1.5B"
+};
 
 const ProductsPage = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
@@ -218,9 +218,9 @@ const ProductsPage = () => {
           <Card>
             <CardContent className="p-4">
               <h3 className="text-sm font-medium mb-2">Products by sell-through rate</h3>
-              <div className="flex items-center space-x-2">
-                <span className="text-lg font-semibold">0.4%</span>
-                <span className="text-gray-500">—</span>
+              <div className="flex items-center">
+                <span className="text-2xl font-semibold">{inventoryStats.sellThrough}</span>
+                <span className="text-gray-500 ml-2">average rate</span>
               </div>
             </CardContent>
           </Card>
@@ -229,13 +229,23 @@ const ProductsPage = () => {
           <Card>
             <CardContent className="p-4">
               <h3 className="text-sm font-medium mb-2">Products by days of inventory remaining</h3>
-              <div className="flex items-center space-x-4">
-                {inventoryStats.map((stat, index) => (
-                  <div key={index} className="flex items-center space-x-1">
-                    <span className="text-lg font-semibold">{stat.count}</span>
-                    <span className="text-sm text-gray-500">{stat.days}</span>
-                  </div>
-                ))}
+              <div className="grid grid-cols-4 gap-4">
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{inventoryStats.dayZero}</span>
+                  <span className="text-sm text-gray-500">0 days</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{inventoryStats.day1to30}</span>
+                  <span className="text-sm text-gray-500">1-30 days</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{inventoryStats.day31to90}</span>
+                  <span className="text-sm text-gray-500">31-90 days</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{inventoryStats.day91plus}</span>
+                  <span className="text-sm text-gray-500">91+ days</span>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -244,13 +254,19 @@ const ProductsPage = () => {
           <Card>
             <CardContent className="p-4">
               <h3 className="text-sm font-medium mb-2">ABC product analysis</h3>
-              <div className="flex items-center space-x-4">
-                {productAnalysis.map((analysis, index) => (
-                  <div key={index} className="flex items-center space-x-1">
-                    <span className="text-lg font-semibold">{analysis.count}</span>
-                    <span className="text-sm text-gray-500">{analysis.grade}</span>
-                  </div>
-                ))}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{productAnalysis.gradeA}</span>
+                  <span className="text-sm text-gray-500">A-grade</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{productAnalysis.gradeB}</span>
+                  <span className="text-sm text-gray-500">B-grade</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-semibold">{productAnalysis.gradeC}</span>
+                  <span className="text-sm text-gray-500">C-grade</span>
+                </div>
               </div>
             </CardContent>
           </Card>
