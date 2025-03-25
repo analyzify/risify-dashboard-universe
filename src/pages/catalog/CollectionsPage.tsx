@@ -1,12 +1,11 @@
 
-import React, { useCallback } from "react";
+import React from "react";
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Download, Upload } from "lucide-react";
-import { useCollectionTree } from "@/hooks/useCollectionTree";
-import CollectionTree from "@/components/catalog/CollectionTree";
+import { useCollectionsPage } from "@/hooks/useCollectionsPage";
 import { RenameDialog, AddDialog } from "@/components/catalog/CollectionDialogs";
+import CollectionsHeader from "@/components/catalog/collections/CollectionsHeader";
+import CollectionsSearch from "@/components/catalog/collections/CollectionsSearch";
+import CollectionsContainer from "@/components/catalog/collections/CollectionsContainer";
 
 const CollectionsPage: React.FC = () => {
   const {
@@ -17,7 +16,6 @@ const CollectionsPage: React.FC = () => {
     newNodeName,
     setNewNodeName,
     selectedNodePath,
-    setSelectedNodePath,
     isRenameDialogOpen,
     setIsRenameDialogOpen,
     isAddDialogOpen,
@@ -29,72 +27,38 @@ const CollectionsPage: React.FC = () => {
     handleRenameCollection,
     handleDeleteCollection,
     handleExportCollections,
-    isMounted
-  } = useCollectionTree();
-
-  // Handler for rename action
-  const handleRenameAction = useCallback((path: number[], title: string) => {
-    setSelectedNodePath(path);
-    setRenamedValue(title);
-    setIsRenameDialogOpen(true);
-  }, [setSelectedNodePath, setRenamedValue, setIsRenameDialogOpen]);
-
-  // Handler for add child action
-  const handleAddChildAction = useCallback((path: number[]) => {
-    setSelectedNodePath(path);
-    setIsAddDialogOpen(true);
-  }, [setSelectedNodePath, setIsAddDialogOpen]);
+    isMounted,
+    handleRenameAction,
+    handleAddChildAction,
+    handleAddRootCollection
+  } = useCollectionsPage();
 
   return (
     <Layout title="Collections">
       <div className="space-y-6">
         {/* Header with action buttons */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Collections</h1>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm" onClick={handleExportCollections}>
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-            <Button variant="outline" size="sm">
-              <Upload className="mr-2 h-4 w-4" />
-              Import
-            </Button>
-            <Button size="sm" onClick={() => {
-              setSelectedNodePath([]);
-              setIsAddDialogOpen(true);
-            }}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add collection
-            </Button>
-          </div>
-        </div>
+        <CollectionsHeader 
+          onExport={handleExportCollections}
+          onAddRoot={handleAddRootCollection}
+        />
 
         {/* Search and filter */}
-        <div className="flex justify-between items-center">
-          <div className="w-full max-w-sm">
-            <Input 
-              placeholder="Search collections..." 
-              value={searchString}
-              onChange={(e) => setSearchString(e.target.value)}
-              className="w-full"
-            />
-          </div>
-        </div>
+        <CollectionsSearch 
+          searchString={searchString}
+          setSearchString={setSearchString}
+        />
 
-        {/* Collections Tree with border, better visibility */}
-        <div className="border rounded-md p-4 min-h-[500px] bg-white shadow-sm">
-          <CollectionTree
-            treeData={treeData}
-            setTreeData={setTreeData}
-            searchString={searchString}
-            treeReady={treeReady}
-            isMounted={isMounted}
-            onRename={handleRenameAction}
-            onAddChild={handleAddChildAction}
-            onDelete={handleDeleteCollection}
-          />
-        </div>
+        {/* Collections Tree */}
+        <CollectionsContainer 
+          treeData={treeData}
+          setTreeData={setTreeData}
+          searchString={searchString}
+          treeReady={treeReady}
+          isMounted={isMounted}
+          onRename={handleRenameAction}
+          onAddChild={handleAddChildAction}
+          onDelete={handleDeleteCollection}
+        />
       </div>
 
       {/* Dialogs */}
