@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import SortableTree, { TreeItem, addNodeUnderParent, removeNodeAtPath, changeNodeAtPath } from "react-sortable-tree";
 import "react-sortable-tree/style.css";
@@ -12,7 +13,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -21,6 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/components/ui/use-toast";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 // Define the initial tree data with mock collections
 const initialData: TreeItem[] = [
@@ -164,7 +166,7 @@ const CollectionsPage: React.FC = () => {
     for (let i = 0; i < path.length; i++) {
       const index = path[i];
       currentNode = currentTreeData[index];
-      if (currentNode.children) {
+      if (currentNode && currentNode.children) {
         currentTreeData = currentNode.children;
       }
     }
@@ -229,6 +231,27 @@ const CollectionsPage: React.FC = () => {
     );
   };
 
+  // Wrap tree in DndProvider to fix mounting/unmounting issues
+  const SortableTreeWithDndContext = (
+    <DndProvider backend={HTML5Backend}>
+      <div style={{ height: 500 }}>
+        <SortableTree
+          treeData={treeData}
+          onChange={setTreeData}
+          searchQuery={searchString}
+          searchFocusOffset={0}
+          searchFinishCallback={(matches) => {
+            console.log(`${matches.length} nodes found`);
+          }}
+          canDrag={true}
+          generateNodeProps={({ node, path }) => ({
+            title: renderNode({ node, path: path as number[] })
+          })}
+        />
+      </div>
+    </DndProvider>
+  );
+
   return (
     <Layout title="Collections">
       <div className="space-y-6">
@@ -268,21 +291,7 @@ const CollectionsPage: React.FC = () => {
 
         {/* Collections Tree */}
         <div className="border rounded-md p-4 min-h-[500px] bg-white">
-          <div style={{ height: 500 }}>
-            <SortableTree
-              treeData={treeData}
-              onChange={setTreeData}
-              searchQuery={searchString}
-              searchFocusOffset={0}
-              searchFinishCallback={(matches) => {
-                console.log(`${matches.length} nodes found`);
-              }}
-              canDrag={true}
-              generateNodeProps={({ node, path }) => ({
-                title: renderNode({ node, path })
-              })}
-            />
-          </div>
+          {SortableTreeWithDndContext}
         </div>
       </div>
 

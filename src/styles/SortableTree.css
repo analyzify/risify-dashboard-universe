@@ -62,3 +62,14 @@
 .rst__tree > .rst__node {
   margin-left: 0;
 }
+
+/* Fix for drag and drop interaction */
+.rst__rowContentsDragDisabled {
+  background-color: #f9fafb;
+  border-color: #e4e4e7;
+}
+
+/* Ensure tree container has proper z-index */
+.rst__tree {
+  z-index: 1;
+}
