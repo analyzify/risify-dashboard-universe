@@ -2,12 +2,9 @@
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { 
   MoreHorizontal, 
@@ -102,22 +99,6 @@ const mockProducts = [
   }
 ];
 
-// Updated statistics
-const inventoryStats = {
-  sellThrough: "0.4%",
-  dayZero: "735",
-  day1to30: "435",
-  day31to90: "318",
-  day91plus: "991"
-};
-
-// Product analysis
-const productAnalysis = {
-  gradeA: "kr 137M",
-  gradeB: "kr 69.6M",
-  gradeC: "kr 1.5B"
-};
-
 const ProductsPage = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState("All");
@@ -182,66 +163,6 @@ const ProductsPage = () => {
               Add product
             </Button>
           </div>
-        </div>
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-3 gap-4">
-          {/* Products by sell-through rate */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-sm font-medium mb-2">Products by sell-through rate</h3>
-              <div className="flex items-center">
-                <span className="text-2xl font-semibold">{inventoryStats.sellThrough}</span>
-                <span className="text-gray-500 ml-2">average rate</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Products by days of inventory remaining */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-sm font-medium mb-2">Products by days of inventory remaining</h3>
-              <div className="grid grid-cols-4 gap-4">
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{inventoryStats.dayZero}</span>
-                  <span className="text-sm text-gray-500">0 days</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{inventoryStats.day1to30}</span>
-                  <span className="text-sm text-gray-500">1-30 days</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{inventoryStats.day31to90}</span>
-                  <span className="text-sm text-gray-500">31-90 days</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{inventoryStats.day91plus}</span>
-                  <span className="text-sm text-gray-500">91+ days</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* ABC product analysis */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-sm font-medium mb-2">ABC product analysis</h3>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{productAnalysis.gradeA}</span>
-                  <span className="text-sm text-gray-500">A-grade</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{productAnalysis.gradeB}</span>
-                  <span className="text-sm text-gray-500">B-grade</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-semibold">{productAnalysis.gradeC}</span>
-                  <span className="text-sm text-gray-500">C-grade</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Filters and Search */}
