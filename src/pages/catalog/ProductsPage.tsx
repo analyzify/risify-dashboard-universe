@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,18 +18,21 @@ import {
   Download, 
   Upload,
   Package,
-  Check
+  Tag,
+  Lightbulb
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Mock product data
 const mockProducts = [
   {
     id: 1,
     name: "Ergonomic Desk Chair",
-    status: "Draft",
-    inventory: "24 in stock",
-    sales: 12,
-    channels: 2,
     category: "Office Furniture",
     type: "Chair",
     vendor: "ErgoWorks"
@@ -36,10 +40,6 @@ const mockProducts = [
   {
     id: 2,
     name: "Premium Mechanical Keyboard",
-    status: "Active",
-    inventory: "38 in stock",
-    sales: 28,
-    channels: 3,
     category: "Computer Accessories",
     type: "Input Device",
     vendor: "TechType"
@@ -47,10 +47,6 @@ const mockProducts = [
   {
     id: 3,
     name: "Wireless Noise-Cancelling Headphones",
-    status: "Active",
-    inventory: "15 in stock",
-    sales: 42,
-    channels: 4,
     category: "Audio Equipment",
     type: "Headphones",
     vendor: "SoundWave"
@@ -58,10 +54,6 @@ const mockProducts = [
   {
     id: 4,
     name: "Ultra-Wide Curved Monitor",
-    status: "Draft",
-    inventory: "7 in stock",
-    sales: 9,
-    channels: 2,
     category: "Displays",
     type: "Monitor",
     vendor: "VisualTech"
@@ -69,10 +61,6 @@ const mockProducts = [
   {
     id: 5,
     name: "Smart Home Hub",
-    status: "Active",
-    inventory: "32 in stock",
-    sales: 56,
-    channels: 5,
     category: "Smart Home",
     type: "Control Hub",
     vendor: "HomeConnect"
@@ -80,10 +68,6 @@ const mockProducts = [
   {
     id: 6,
     name: "Portable External SSD",
-    status: "Draft",
-    inventory: "0 in stock for 2 variants",
-    sales: 18,
-    channels: 3,
     category: "Storage Devices",
     type: "External Drive",
     vendor: "DataSpeed"
@@ -91,10 +75,6 @@ const mockProducts = [
   {
     id: 7,
     name: "Professional Drawing Tablet",
-    status: "Archived",
-    inventory: "5 in stock",
-    sales: 11,
-    channels: 2,
     category: "Creative Tools",
     type: "Input Device",
     vendor: "ArtTech"
@@ -102,10 +82,6 @@ const mockProducts = [
   {
     id: 8,
     name: "Adjustable Standing Desk",
-    status: "Active",
-    inventory: "12 in stock",
-    sales: 31,
-    channels: 3,
     category: "Office Furniture",
     type: "Desk",
     vendor: "ErgoWorks"
@@ -113,10 +89,6 @@ const mockProducts = [
   {
     id: 9,
     name: "Wireless Charging Pad",
-    status: "Active",
-    inventory: "48 in stock",
-    sales: 87,
-    channels: 4,
     category: "Charging Accessories",
     type: "Charger",
     vendor: "PowerUp"
@@ -124,10 +96,6 @@ const mockProducts = [
   {
     id: 10,
     name: "Ergonomic Vertical Mouse",
-    status: "Draft",
-    inventory: "19 in stock",
-    sales: 24,
-    channels: 2,
     category: "Computer Accessories",
     type: "Input Device",
     vendor: "ErgoWorks"
@@ -171,14 +139,18 @@ const ProductsPage = () => {
     }
   };
 
-  // Filter products based on active tab
-  const filteredProducts = mockProducts.filter(product => {
-    if (activeTab === "All") return true;
-    return product.status === activeTab;
-  });
+  const handleAssignKeyword = (productId: number) => {
+    console.log(`Assign keyword to product ${productId}`);
+    // Add your implementation for assigning keywords
+  };
 
-  // Further filter based on search term
-  const searchedProducts = filteredProducts.filter(product => 
+  const handleGetOptimizationIdeas = (productId: number) => {
+    console.log(`Get optimization ideas for product ${productId}`);
+    // Add your implementation for getting optimization ideas
+  };
+
+  // Filter products based on search term
+  const searchedProducts = mockProducts.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.vendor.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -272,7 +244,7 @@ const ProductsPage = () => {
           </Card>
         </div>
 
-        {/* Filters and Tabs */}
+        {/* Filters and Search */}
         <div className="flex justify-between items-center">
           <div className="flex space-x-2">
             <Button 
@@ -281,27 +253,6 @@ const ProductsPage = () => {
               onClick={() => setActiveTab("All")}
             >
               All
-            </Button>
-            <Button 
-              variant={activeTab === "Active" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setActiveTab("Active")}
-            >
-              Active
-            </Button>
-            <Button 
-              variant={activeTab === "Draft" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setActiveTab("Draft")}
-            >
-              Draft
-            </Button>
-            <Button 
-              variant={activeTab === "Archived" ? "default" : "outline"} 
-              size="sm"
-              onClick={() => setActiveTab("Archived")}
-            >
-              Archived
             </Button>
             <Button variant="outline" size="sm">
               <Plus className="h-4 w-4" />
@@ -339,13 +290,10 @@ const ProductsPage = () => {
                   />
                 </TableHead>
                 <TableHead>Product</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Inventory</TableHead>
-                <TableHead>Sales channels</TableHead>
-                <TableHead>B2B catalogs</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Vendor</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -364,23 +312,33 @@ const ProductsPage = () => {
                       </div>
                       {product.name}
                     </TableCell>
-                    <TableCell>
-                      <Badge variant={product.status === "Active" ? "default" : "outline"} className="capitalize">
-                        {product.status === "Active" && <Check className="h-3 w-3 mr-1" />}
-                        {product.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{product.inventory}</TableCell>
-                    <TableCell>{product.sales}</TableCell>
-                    <TableCell>{product.channels}</TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell>{product.type}</TableCell>
                     <TableCell>{product.vendor}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleAssignKeyword(product.id)}>
+                            <Tag className="mr-2 h-4 w-4" />
+                            Assign keyword
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleGetOptimizationIdeas(product.id)}>
+                            <Lightbulb className="mr-2 h-4 w-4" />
+                            Get optimization ideas
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-4">
+                  <TableCell colSpan={6} className="text-center py-4">
                     No products found. Try adjusting your search or filters.
                   </TableCell>
                 </TableRow>
