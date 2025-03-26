@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { Package, MoreHorizontal, Check, Type, ChevronRight } from "lucide-react";
+import { Package, MoreHorizontal, Check, Type, FolderTree } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -42,14 +41,13 @@ export interface Collection {
   relationsCount?: number;
 }
 
-interface CollectionBreadcrumbProps {
+interface CollectionRelationshipProps {
   collection: Collection;
   collections: Collection[];
   onRename: (id: string, title: string) => void;
 }
 
-// New component for collection breadcrumbs
-const CollectionBreadcrumb: React.FC<CollectionBreadcrumbProps> = ({ 
+const CollectionRelationship: React.FC<CollectionRelationshipProps> = ({ 
   collection, 
   collections,
   onRename
@@ -57,13 +55,11 @@ const CollectionBreadcrumb: React.FC<CollectionBreadcrumbProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(collection.title);
   
-  // Find parent collection if it exists
   const findParent = (collection: Collection): Collection | undefined => {
     if (!collection.parentId) return undefined;
     return collections.find(c => c.id === collection.parentId);
   };
   
-  // Find children collections if they exist
   const findChildren = (collection: Collection): Collection[] => {
     return collections.filter(c => c.parentId === collection.id);
   };
@@ -80,8 +76,7 @@ const CollectionBreadcrumb: React.FC<CollectionBreadcrumbProps> = ({
   };
   
   return (
-    <div className="flex flex-col space-y-1">
-      {/* Main collection title - editable */}
+    <div className="flex flex-col space-y-2">
       <div className="flex items-center">
         <Package className="h-4 w-4 text-gray-400 flex-shrink-0 mr-2" />
         
@@ -116,50 +111,39 @@ const CollectionBreadcrumb: React.FC<CollectionBreadcrumbProps> = ({
         )}
       </div>
       
-      {/* Parent (if exists) - as small breadcrumb above */}
       {parent && (
-        <div className="flex items-center text-xs text-muted-foreground ml-2">
-          <span className="truncate hover:text-foreground transition-colors cursor-pointer">
-            {parent.title}
-          </span>
-          <ChevronRight className="h-3 w-3 mx-1 flex-shrink-0" />
-          <span className="font-medium text-foreground truncate">
-            {collection.title}
-          </span>
+        <div className="ml-6 -mt-1">
+          <div className="text-xs text-muted-foreground flex items-center">
+            <span className="mr-1">Parent:</span>
+            <span className="font-medium hover:text-foreground transition-colors cursor-pointer">
+              {parent.title}
+            </span>
+          </div>
         </div>
       )}
       
-      {/* Children (if exist) - as small breadcrumbs below */}
       {children.length > 0 && (
-        <div className="ml-2">
+        <div className="ml-6 -mt-1">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center flex-wrap text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground truncate mr-1">
-                    {collection.title}
+                <div className="text-xs text-muted-foreground flex items-center">
+                  <span className="mr-1">Children ({children.length}):</span>
+                  <span className="font-medium truncate hover:text-foreground transition-colors cursor-pointer">
+                    {children.slice(0, 2).map((child, i) => (
+                      <React.Fragment key={child.id}>
+                        {child.title}{i < children.slice(0, 2).length - 1 ? ", " : ""}
+                      </React.Fragment>
+                    ))}
+                    {children.length > 2 && ` +${children.length - 2} more`}
                   </span>
-                  <ChevronRight className="h-3 w-3 mr-1 flex-shrink-0" />
-                  {children.slice(0, 2).map((child, i) => (
-                    <span 
-                      key={child.id} 
-                      className="truncate hover:text-foreground transition-colors cursor-pointer mr-1"
-                    >
-                      {child.title}{i < 1 && children.length > 2 ? "," : ""}
-                    </span>
-                  ))}
-                  {children.length > 2 && (
-                    <span className="text-muted-foreground">
-                      +{children.length - 2} more
-                    </span>
-                  )}
                 </div>
               </TooltipTrigger>
               {children.length > 2 && (
                 <TooltipContent>
-                  <div className="space-y-1">
+                  <div className="space-y-1 py-1">
                     {children.map(child => (
-                      <div key={child.id}>{child.title}</div>
+                      <div key={child.id} className="text-sm">{child.title}</div>
                     ))}
                   </div>
                 </TooltipContent>
@@ -193,7 +177,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
 }) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   
-  // Handle selecting all items
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedItems(collections.map(c => c.id));
@@ -206,7 +189,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
     }
   };
   
-  // Handle selecting individual item
   const handleSelectItem = (id: string, checked: boolean) => {
     const updatedSelection = checked 
       ? [...selectedItems, id]
@@ -219,18 +201,14 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
     }
   };
   
-  // Check if all items are selected
   const allSelected = collections.length > 0 && selectedItems.length === collections.length;
   
-  // Check if some items are selected
   const someSelected = selectedItems.length > 0 && selectedItems.length < collections.length;
 
-  // Generate pagination items
   const renderPaginationItems = () => {
     const items = [];
     const maxVisible = 5;
     
-    // Always show first page
     items.push(
       <PaginationItem key="first">
         <PaginationLink 
@@ -246,7 +224,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
       </PaginationItem>
     );
     
-    // Add ellipsis if needed
     if (currentPage > 3) {
       items.push(
         <PaginationItem key="ellipsis-1">
@@ -255,7 +232,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
       );
     }
     
-    // Add pages around current page
     const startPage = Math.max(2, currentPage - 1);
     const endPage = Math.min(totalPages - 1, currentPage + 1);
     
@@ -278,7 +254,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
       }
     }
     
-    // Add ellipsis if needed
     if (currentPage < totalPages - 2 && totalPages > 3) {
       items.push(
         <PaginationItem key="ellipsis-2">
@@ -287,7 +262,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
       );
     }
     
-    // Always show last page if there's more than one page
     if (totalPages > 1) {
       items.push(
         <PaginationItem key="last">
@@ -315,9 +289,9 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
           <TableRow>
             <TableHead className="w-[40px]">
               <Checkbox 
-                checked={allSelected} 
-                indeterminate={someSelected}
+                checked={allSelected}
                 onCheckedChange={handleSelectAll}
+                data-state={someSelected ? "indeterminate" : undefined}
                 aria-label="Select all"
               />
             </TableHead>
@@ -328,13 +302,19 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                 <span>Type</span>
               </div>
             </TableHead>
+            <TableHead className="w-[150px]">
+              <div className="flex items-center gap-1">
+                <FolderTree className="h-4 w-4 text-gray-400" />
+                <span>Relations</span>
+              </div>
+            </TableHead>
             <TableHead className="w-[100px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {collections.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                 No collections found
               </TableCell>
             </TableRow>
@@ -349,7 +329,7 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                   />
                 </TableCell>
                 <TableCell>
-                  <CollectionBreadcrumb 
+                  <CollectionRelationship 
                     collection={collection} 
                     collections={collections} 
                     onRename={onRename}
@@ -363,6 +343,21 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                   ) : (
                     <span className="text-muted-foreground text-sm">Standard</span>
                   )}
+                </TableCell>
+                <TableCell>
+                  {(() => {
+                    const parentCount = collection.parentId ? 1 : 0;
+                    const childrenCount = collections.filter(c => c.parentId === collection.id).length;
+                    const total = parentCount + childrenCount;
+                    
+                    return total > 0 ? (
+                      <Badge variant="outline" className="bg-secondary/20">
+                        {total} {total === 1 ? 'relation' : 'relations'}
+                      </Badge>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">None</span>
+                    );
+                  })()}
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
