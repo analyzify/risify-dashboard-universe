@@ -3,7 +3,10 @@ import React from "react";
 import CollectionsTable, { Collection } from "@/components/catalog/collections/CollectionsTable";
 
 interface CollectionsContainerProps {
-  collections: Collection[];
+  collections: {
+    display: Collection[];
+    all: Collection[];
+  };
   searchString: string;
   loading: boolean;
   currentPage: number;
@@ -25,11 +28,11 @@ const CollectionsContainer: React.FC<CollectionsContainerProps> = ({
   onDelete,
   onBulkSelect
 }) => {
-  // Filter collections by search string if needed
+  // Filter display collections by search string if needed
   const filteredCollections = searchString.trim() !== '' 
-    ? collections.filter(c => 
+    ? collections.display.filter(c => 
         c.title.toLowerCase().includes(searchString.toLowerCase()))
-    : collections;
+    : collections.display;
 
   if (loading) {
     return (
@@ -47,7 +50,7 @@ const CollectionsContainer: React.FC<CollectionsContainerProps> = ({
   return (
     <div className="border rounded-md p-4 min-h-[500px] bg-white shadow-sm">
       <CollectionsTable 
-        collections={filteredCollections}
+        collections={collections.all} // Pass all collections for parent-child relationship
         onRename={onRename}
         onDelete={onDelete}
         currentPage={currentPage}

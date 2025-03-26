@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Package, MoreHorizontal, Check, Type, Link } from "lucide-react";
+import { Package, MoreHorizontal, Check, Type, ChevronRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -27,6 +27,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface Collection {
   id: string;
@@ -35,6 +41,136 @@ export interface Collection {
   type?: string;
   relationsCount?: number;
 }
+
+interface CollectionBreadcrumbProps {
+  collection: Collection;
+  collections: Collection[];
+  onRename: (id: string, title: string) => void;
+}
+
+// New component for collection breadcrumbs
+const CollectionBreadcrumb: React.FC<CollectionBreadcrumbProps> = ({ 
+  collection, 
+  collections,
+  onRename
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(collection.title);
+  
+  // Find parent collection if it exists
+  const findParent = (collection: Collection): Collection | undefined => {
+    if (!collection.parentId) return undefined;
+    return collections.find(c => c.id === collection.parentId);
+  };
+  
+  // Find children collections if they exist
+  const findChildren = (collection: Collection): Collection[] => {
+    return collections.filter(c => c.parentId === collection.id);
+  };
+  
+  const parent = findParent(collection);
+  const children = findChildren(collection);
+  
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editValue.trim()) {
+      onRename(collection.id, editValue);
+      setIsEditing(false);
+    }
+  };
+  
+  return (
+    <div className="flex flex-col space-y-1">
+      {/* Main collection title - editable */}
+      <div className="flex items-center">
+        <Package className="h-4 w-4 text-gray-400 flex-shrink-0 mr-2" />
+        
+        {isEditing ? (
+          <form onSubmit={handleEditSubmit} className="flex">
+            <input
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              className="border border-input px-2 py-0.5 text-sm rounded-sm w-full focus:border-primary focus:ring-1 focus:ring-primary"
+              autoFocus
+              onBlur={() => {
+                if (editValue.trim()) {
+                  onRename(collection.id, editValue);
+                } else {
+                  setEditValue(collection.title);
+                }
+                setIsEditing(false);
+              }}
+            />
+          </form>
+        ) : (
+          <span 
+            className="cursor-pointer hover:underline"
+            onClick={() => {
+              setIsEditing(true);
+              setEditValue(collection.title);
+            }}
+          >
+            {collection.title}
+          </span>
+        )}
+      </div>
+      
+      {/* Parent (if exists) - as small breadcrumb above */}
+      {parent && (
+        <div className="flex items-center text-xs text-muted-foreground ml-2">
+          <span className="truncate hover:text-foreground transition-colors cursor-pointer">
+            {parent.title}
+          </span>
+          <ChevronRight className="h-3 w-3 mx-1 flex-shrink-0" />
+          <span className="font-medium text-foreground truncate">
+            {collection.title}
+          </span>
+        </div>
+      )}
+      
+      {/* Children (if exist) - as small breadcrumbs below */}
+      {children.length > 0 && (
+        <div className="ml-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center flex-wrap text-xs text-muted-foreground">
+                  <span className="font-medium text-foreground truncate mr-1">
+                    {collection.title}
+                  </span>
+                  <ChevronRight className="h-3 w-3 mr-1 flex-shrink-0" />
+                  {children.slice(0, 2).map((child, i) => (
+                    <span 
+                      key={child.id} 
+                      className="truncate hover:text-foreground transition-colors cursor-pointer mr-1"
+                    >
+                      {child.title}{i < 1 && children.length > 2 ? "," : ""}
+                    </span>
+                  ))}
+                  {children.length > 2 && (
+                    <span className="text-muted-foreground">
+                      +{children.length - 2} more
+                    </span>
+                  )}
+                </div>
+              </TooltipTrigger>
+              {children.length > 2 && (
+                <TooltipContent>
+                  <div className="space-y-1">
+                    {children.map(child => (
+                      <div key={child.id}>{child.title}</div>
+                    ))}
+                  </div>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface CollectionsTableProps {
   collections: Collection[];
@@ -192,19 +328,13 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                 <span>Type</span>
               </div>
             </TableHead>
-            <TableHead className="w-[150px]">
-              <div className="flex items-center gap-1">
-                <Link className="h-4 w-4 text-gray-400" />
-                <span>Relations</span>
-              </div>
-            </TableHead>
             <TableHead className="w-[100px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {collections.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
                 No collections found
               </TableCell>
             </TableRow>
@@ -218,9 +348,12 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                     aria-label={`Select ${collection.title}`}
                   />
                 </TableCell>
-                <TableCell className="flex items-center gap-2">
-                  <Package className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  <span>{collection.title}</span>
+                <TableCell>
+                  <CollectionBreadcrumb 
+                    collection={collection} 
+                    collections={collections} 
+                    onRename={onRename}
+                  />
                 </TableCell>
                 <TableCell>
                   {collection.type ? (
@@ -229,13 +362,6 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                     </Badge>
                   ) : (
                     <span className="text-muted-foreground text-sm">Standard</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {collection.relationsCount ? (
-                    <span className="font-medium">{collection.relationsCount}</span>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">None</span>
                   )}
                 </TableCell>
                 <TableCell className="text-right">

@@ -10,23 +10,23 @@ export interface Collection {
   relationsCount?: number;
 }
 
-// Mock data for collections with type and relations
+// Mock data for collections with type and parent-child relationships
 const mockCollections: Collection[] = [
-  { id: '1', title: 'Electronics', type: 'Category', relationsCount: 15 },
-  { id: '2', title: 'Clothing', type: 'Category', relationsCount: 24 },
-  { id: '3', title: 'Home & Kitchen', type: 'Category', relationsCount: 8 },
-  { id: '4', title: 'Books', type: 'Manual', relationsCount: 12 },
-  { id: '5', title: 'Toys & Games', type: 'Category', relationsCount: 5 },
-  { id: '6', title: 'Sports & Outdoors', type: 'Category', relationsCount: 7 },
-  { id: '7', title: 'Beauty & Personal Care', type: 'Category', relationsCount: 18 },
-  { id: '8', title: 'Health & Household', type: 'Category', relationsCount: 3 },
-  { id: '9', title: 'Automotive', type: 'Attribute', relationsCount: 0 },
-  { id: '10', title: 'Pet Supplies', type: 'Category', relationsCount: 9 },
-  { id: '11', title: 'Office Products', type: 'Category', relationsCount: 6 },
-  { id: '12', title: 'Garden & Outdoor', type: 'Category', relationsCount: 11 },
-  { id: '13', title: 'Tools & Home Improvement', type: 'Category', relationsCount: 14 },
-  { id: '14', title: 'Grocery & Gourmet Food', type: 'Category', relationsCount: 22 },
-  { id: '15', title: 'Industrial & Scientific', type: 'Manual', relationsCount: 0 },
+  { id: '1', title: 'Electronics', type: 'Category', parentId: null },
+  { id: '2', title: 'Clothing', type: 'Category', parentId: null },
+  { id: '3', title: 'Home & Kitchen', type: 'Category', parentId: null },
+  { id: '4', title: 'Books', type: 'Manual', parentId: null },
+  { id: '5', title: 'Toys & Games', type: 'Category', parentId: null },
+  { id: '6', title: 'Smartphones', type: 'Category', parentId: '1' },
+  { id: '7', title: 'Laptops', type: 'Category', parentId: '1' },
+  { id: '8', title: 'Men\'s Clothing', type: 'Category', parentId: '2' },
+  { id: '9', title: 'Women\'s Clothing', type: 'Category', parentId: '2' },
+  { id: '10', title: 'Fiction', type: 'Category', parentId: '4' },
+  { id: '11', title: 'Non-Fiction', type: 'Category', parentId: '4' },
+  { id: '12', title: 'Garden & Outdoor', type: 'Category', parentId: '3' },
+  { id: '13', title: 'iPhone', type: 'Category', parentId: '6' },
+  { id: '14', title: 'Android', type: 'Category', parentId: '6' },
+  { id: '15', title: 'Science Fiction', type: 'Manual', parentId: '10' },
 ];
 
 export const useCollectionsPage = () => {
@@ -76,8 +76,13 @@ export const useCollectionsPage = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     
-    return filtered.slice(startIndex, endIndex);
-  }, [getFilteredCollections, currentPage]);
+    // Return all collections for parent-child relationship rendering
+    // but only paginate the ones we display
+    return {
+      display: filtered.slice(startIndex, endIndex),
+      all: collections // Include all collections for parent-child relationship lookup
+    };
+  }, [getFilteredCollections, currentPage, collections]);
 
   const totalPages = Math.max(1, Math.ceil(getFilteredCollections().length / itemsPerPage));
 
