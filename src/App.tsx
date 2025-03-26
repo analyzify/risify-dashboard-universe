@@ -24,6 +24,7 @@ import ProductsPage from "./pages/catalog/ProductsPage"; // Import the new Produ
 import CollectionsPage from "./pages/catalog/CollectionsPage"; // Import the new Collections component
 import TaxonomyPage from "./pages/catalog/TaxonomyPage"; // Import the new TaxonomyPage
 import MappingsPage from "./pages/catalog/MappingsPage"; // Import the new MappingsPage
+import GalleryPage from "./pages/components/GalleryPage"; // Import the new GalleryPage component
 
 const queryClient = new QueryClient();
 
@@ -65,7 +66,7 @@ const App = () => (
           
           {/* Storefront Components */}
           <Route path="/components" element={<Components />} />
-          <Route path="/components/gallery" element={<PlaceholderPage title="Component Gallery" />} />
+          <Route path="/components/gallery" element={<GalleryPage />} /> {/* Updated to use real GalleryPage */}
           <Route path="/components/my-components" element={<PlaceholderPage title="My Components" />} />
           <Route path="/components/store-audit" element={<PlaceholderPage title="Store Audit" />} />
           <Route path="/components/implementation" element={<PlaceholderPage title="Implementation" />} />
