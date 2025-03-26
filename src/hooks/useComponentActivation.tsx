@@ -6,6 +6,12 @@ type ComponentActivationContextType = {
   activeComponent: string | null;
   openActivationDialog: (componentName: string) => void;
   closeActivationDialog: () => void;
+  storeAuditResults?: {
+    brokenLinks: number;
+    schemaErrors: number;
+    metaIssues: number;
+    healthScore: number;
+  };
 };
 
 const ComponentActivationContext = createContext<ComponentActivationContextType>({
@@ -18,6 +24,14 @@ const ComponentActivationContext = createContext<ComponentActivationContextType>
 export const ComponentActivationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeComponent, setActiveComponent] = useState<string | null>(null);
+
+  // Mock audit results
+  const storeAuditResults = {
+    brokenLinks: 12,
+    schemaErrors: 8,
+    metaIssues: 15,
+    healthScore: 73
+  };
 
   const openActivationDialog = (componentName: string) => {
     setActiveComponent(componentName);
@@ -36,6 +50,7 @@ export const ComponentActivationProvider: React.FC<{ children: React.ReactNode }
         activeComponent,
         openActivationDialog,
         closeActivationDialog,
+        storeAuditResults,
       }}
     >
       {children}
