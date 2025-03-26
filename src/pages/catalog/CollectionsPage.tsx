@@ -9,27 +9,26 @@ import CollectionsContainer from "@/components/catalog/collections/CollectionsCo
 
 const CollectionsPage: React.FC = () => {
   const {
-    treeData,
-    setTreeData,
+    collections,
+    loading,
     searchString,
     setSearchString,
-    newNodeName,
-    setNewNodeName,
-    selectedNodePath,
+    currentPage,
+    totalPages,
+    handlePageChange,
+    newCollectionName,
+    setNewCollectionName,
     isRenameDialogOpen,
     setIsRenameDialogOpen,
     isAddDialogOpen,
     setIsAddDialogOpen,
     renamedValue,
     setRenamedValue,
-    treeReady,
     handleAddCollection,
     handleRenameCollection,
-    handleDeleteCollection,
+    handleDeleteAction,
     handleExportCollections,
-    isMounted,
     handleRenameAction,
-    handleAddChildAction,
     handleAddRootCollection
   } = useCollectionsPage();
 
@@ -48,16 +47,16 @@ const CollectionsPage: React.FC = () => {
           setSearchString={setSearchString}
         />
 
-        {/* Collections Tree */}
+        {/* Collections Table */}
         <CollectionsContainer 
-          treeData={treeData}
-          setTreeData={setTreeData}
+          collections={collections}
           searchString={searchString}
-          treeReady={treeReady}
-          isMounted={isMounted}
+          loading={loading}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
           onRename={handleRenameAction}
-          onAddChild={handleAddChildAction}
-          onDelete={handleDeleteCollection}
+          onDelete={handleDeleteAction}
         />
       </div>
 
@@ -73,8 +72,8 @@ const CollectionsPage: React.FC = () => {
       <AddDialog
         isOpen={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
-        newNodeName={newNodeName}
-        setNewNodeName={setNewNodeName}
+        newNodeName={newCollectionName}
+        setNewNodeName={setNewCollectionName}
         onAdd={handleAddCollection}
       />
     </Layout>

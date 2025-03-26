@@ -40,6 +40,7 @@ export const RenameDialog: React.FC<RenameDialogProps> = ({
           onChange={(e) => setRenamedValue(e.target.value)}
           placeholder="Collection name"
           className="mt-4"
+          autoFocus
         />
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
@@ -83,6 +84,7 @@ export const AddDialog: React.FC<AddDialogProps> = ({
           onChange={(e) => setNewNodeName(e.target.value)}
           placeholder="Collection name"
           className="mt-4"
+          autoFocus
         />
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>

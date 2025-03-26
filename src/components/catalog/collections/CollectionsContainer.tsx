@@ -1,40 +1,56 @@
 
 import React from "react";
-import CollectionTree from "@/components/catalog/CollectionTree";
-import { TreeItem } from "react-sortable-tree";
+import CollectionsTable, { Collection } from "@/components/catalog/collections/CollectionsTable";
 
 interface CollectionsContainerProps {
-  treeData: TreeItem[];
-  setTreeData: (data: TreeItem[]) => void;
+  collections: Collection[];
   searchString: string;
-  treeReady: boolean;
-  isMounted: React.MutableRefObject<boolean>;
-  onRename: (path: number[], title: string) => void;
-  onAddChild: (path: number[]) => void;
-  onDelete: (path: number[]) => void;
+  loading: boolean;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  onRename: (id: string, title: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const CollectionsContainer: React.FC<CollectionsContainerProps> = ({
-  treeData,
-  setTreeData,
+  collections,
   searchString,
-  treeReady,
-  isMounted,
+  loading,
+  currentPage,
+  totalPages,
+  onPageChange,
   onRename,
-  onAddChild,
   onDelete
 }) => {
+  // Filter collections by search string if needed
+  const filteredCollections = searchString.trim() !== '' 
+    ? collections.filter(c => 
+        c.title.toLowerCase().includes(searchString.toLowerCase()))
+    : collections;
+
+  if (loading) {
+    return (
+      <div className="border rounded-md p-4 min-h-[500px] bg-white shadow-sm">
+        <div className="flex justify-center items-center h-[500px]">
+          <div className="text-center">
+            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p>Loading collections...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="border rounded-md p-4 min-h-[500px] bg-white shadow-sm">
-      <CollectionTree
-        treeData={treeData}
-        setTreeData={setTreeData}
-        searchString={searchString}
-        treeReady={treeReady}
-        isMounted={isMounted}
+      <CollectionsTable 
+        collections={filteredCollections}
         onRename={onRename}
-        onAddChild={onAddChild}
         onDelete={onDelete}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
       />
     </div>
   );
