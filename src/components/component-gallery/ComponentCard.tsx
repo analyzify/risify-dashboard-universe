@@ -1,6 +1,6 @@
 
 import React from "react";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Database, BarChart, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,6 +18,11 @@ interface ComponentCardProps {
   added?: string;
   isPrivate?: boolean;
   category?: string;
+  isActive?: boolean;
+  dataSource?: string;
+  isConnected?: boolean;
+  entries?: number;
+  engagements?: number;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({ 
@@ -27,7 +32,12 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   version,
   added,
   isPrivate = false,
-  category
+  category,
+  isActive = false,
+  dataSource = "CMS",
+  isConnected = false,
+  entries = 0,
+  engagements = 0
 }) => {
   return (
     <div className={cn(
@@ -43,7 +53,20 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           />
         </div>
         <div className="flex flex-col justify-center">
-          <h3 className="font-medium line-clamp-1">{title}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium line-clamp-1">{title}</h3>
+            <div className={cn(
+              "flex items-center text-xs px-2 py-0.5 rounded-full",
+              isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+            )}>
+              {isActive ? (
+                <><Check className="h-3 w-3 mr-1" /> Active</>
+              ) : (
+                <><X className="h-3 w-3 mr-1" /> Passive</>
+              )}
+            </div>
+          </div>
+          
           {category && (
             <div className="mt-1">
               <span className="text-xs text-muted-foreground">
@@ -51,6 +74,27 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
               </span>
             </div>
           )}
+          
+          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+            <div className="flex items-center">
+              <Database className="h-3 w-3 mr-1" />
+              <span>{dataSource} {isConnected ? (
+                <span className="text-green-600">- connected</span>
+              ) : (
+                <span className="text-gray-500">- disconnected</span>
+              )}</span>
+            </div>
+            <div className="flex items-center">
+              <span className="font-medium">{entries}</span>
+              <span className="ml-1">entries</span>
+            </div>
+            <div className="flex items-center">
+              <BarChart className="h-3 w-3 mr-1" />
+              <span className="font-medium">{engagements}</span>
+              <span className="ml-1">engagements</span>
+            </div>
+          </div>
+          
           {added && <p className="text-xs text-muted-foreground mt-1">{added}</p>}
           {version && (
             <div className="mt-1 flex items-center">

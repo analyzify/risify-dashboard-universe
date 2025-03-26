@@ -13,33 +13,33 @@ const FILTER_CATEGORIES = [
   "Rich Media"
 ];
 
-// Test data provided by the user
+// Enhanced test data with additional properties
 const COMPONENT_DATA = [
-  { title: "FAQ Accordion", category: "Content", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format" },
-  { title: "Breadcrumbs", category: "Navigation", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format" },
-  { title: "You Are Here Indicator", category: "Navigation", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format" },
-  { title: "Collection Navigation", category: "Navigation", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format" },
-  { title: "Related Searches", category: "Navigation", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format" },
-  { title: "Blog Post Series", category: "Navigation", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format" },
-  { title: "Found in Collections", category: "Navigation", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format" },
-  { title: "Footer", category: "Navigation", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format" },
-  { title: "Mega Menu", category: "Navigation", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format" },
-  { title: "Expert Tips Cards", category: "Content", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format" },
-  { title: "Testimonials & Reviews", category: "Content,Showcase", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format" },
-  { title: "Hero", category: "Showcase,Content", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format" },
-  { title: "Comparison Table", category: "Showcase", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format" },
-  { title: "Feature/USP Gallery", category: "Showcase", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format" },
-  { title: "Trust Badges", category: "Showcase", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format" },
-  { title: "About us - Our Story", category: "Showcase,Content", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format" },
-  { title: "Product Videos Gallery (UGC)", category: "Rich Media", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format" },
-  { title: "Shoppable Video & Photo", category: "Rich Media", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format" },
-  { title: "Social Media Feed", category: "Rich Media", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format" },
-  { title: "Image Gallery", category: "Rich Media", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format" },
-  { title: "Table of contents", category: "Content", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format" },
-  { title: "Product documents", category: "Content", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format" },
-  { title: "Product Specification Table", category: "Content", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format" },
-  { title: "Size Guide", category: "Content", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format" },
-  { title: "Color Variants Display", category: "Content", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format" }
+  { title: "FAQ Accordion", category: "Content", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format", isActive: true, isConnected: true, entries: 12, engagements: 245 },
+  { title: "Breadcrumbs", category: "Navigation", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format", isActive: true, isConnected: true, entries: 8, engagements: 120 },
+  { title: "You Are Here Indicator", category: "Navigation", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format", isActive: false, isConnected: false, entries: 4, engagements: 30 },
+  { title: "Collection Navigation", category: "Navigation", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format", isActive: true, isConnected: true, entries: 24, engagements: 560 },
+  { title: "Related Searches", category: "Navigation", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format", isActive: false, isConnected: true, entries: 18, engagements: 89 },
+  { title: "Blog Post Series", category: "Navigation", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format", isActive: true, isConnected: true, entries: 32, engagements: 420 },
+  { title: "Found in Collections", category: "Navigation", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format", isActive: true, isConnected: false, entries: 7, engagements: 65 },
+  { title: "Footer", category: "Navigation", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format", isActive: true, isConnected: true, entries: 1, engagements: 980 },
+  { title: "Mega Menu", category: "Navigation", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format", isActive: true, isConnected: true, entries: 6, engagements: 750 },
+  { title: "Expert Tips Cards", category: "Content", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format", isActive: false, isConnected: false, entries: 0, engagements: 0 },
+  { title: "Testimonials & Reviews", category: "Content,Showcase", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format", isActive: true, isConnected: true, entries: 45, engagements: 876 },
+  { title: "Hero", category: "Showcase,Content", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format", isActive: true, isConnected: true, entries: 3, engagements: 1250 },
+  { title: "Comparison Table", category: "Showcase", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format", isActive: true, isConnected: true, entries: 8, engagements: 340 },
+  { title: "Feature/USP Gallery", category: "Showcase", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format", isActive: false, isConnected: true, entries: 12, engagements: 180 },
+  { title: "Trust Badges", category: "Showcase", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format", isActive: true, isConnected: true, entries: 8, engagements: 420 },
+  { title: "About us - Our Story", category: "Showcase,Content", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format", isActive: true, isConnected: true, entries: 1, engagements: 890 },
+  { title: "Product Videos Gallery (UGC)", category: "Rich Media", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format", isActive: false, isConnected: false, entries: 0, engagements: 0 },
+  { title: "Shoppable Video & Photo", category: "Rich Media", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format", isActive: true, isConnected: true, entries: 14, engagements: 650 },
+  { title: "Social Media Feed", category: "Rich Media", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format", isActive: true, isConnected: true, entries: 80, engagements: 1430 },
+  { title: "Image Gallery", category: "Rich Media", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format", isActive: true, isConnected: true, entries: 56, engagements: 980 },
+  { title: "Table of contents", category: "Content", image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format", isActive: false, isConnected: false, entries: 3, engagements: 45 },
+  { title: "Product documents", category: "Content", image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&auto=format", isActive: true, isConnected: true, entries: 24, engagements: 320 },
+  { title: "Product Specification Table", category: "Content", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format", isActive: true, isConnected: true, entries: 18, engagements: 540 },
+  { title: "Size Guide", category: "Content", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format", isActive: false, isConnected: true, entries: 5, engagements: 210 },
+  { title: "Color Variants Display", category: "Content", image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format", isActive: true, isConnected: true, entries: 34, engagements: 680 }
 ];
 
 const GalleryPage = () => {
@@ -84,6 +84,11 @@ const GalleryPage = () => {
               title={component.title}
               image={component.image}
               category={component.category}
+              isActive={component.isActive}
+              dataSource="CMS"
+              isConnected={component.isConnected}
+              entries={component.entries}
+              engagements={component.engagements}
             />
           ))}
         </div>
