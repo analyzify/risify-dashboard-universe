@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Package, MoreHorizontal, Type, FolderTree } from "lucide-react";
+import { Package, MoreHorizontal, Type, FolderTree, ArrowUp, ArrowDown } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -136,21 +136,28 @@ const RelationshipsColumn: React.FC<RelationshipsColumnProps> = ({ collection, c
   return (
     <div className="space-y-1 text-xs">
       {parent && (
-        <div className="flex items-center text-muted-foreground">
-          <span className="font-medium mr-1">Parent:</span>
-          <span className="hover:text-foreground transition-colors cursor-pointer">
-            {parent.title}
-          </span>
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                <ArrowUp className="h-3.5 w-3.5 mr-1 text-primary/70" />
+                <span className="truncate">{parent.title}</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p className="text-xs">Parent collection</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
       
       {children.length > 0 && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex items-center text-muted-foreground">
-                <span className="font-medium mr-1">Children ({children.length}):</span>
-                <span className="truncate hover:text-foreground transition-colors cursor-pointer">
+              <div className="flex items-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                <ArrowDown className="h-3.5 w-3.5 mr-1 text-primary/70" />
+                <span className="truncate">
                   {children.slice(0, 2).map((child, i) => (
                     <React.Fragment key={child.id}>
                       {child.title}{i < children.slice(0, 2).length - 1 ? ", " : ""}
@@ -160,15 +167,14 @@ const RelationshipsColumn: React.FC<RelationshipsColumnProps> = ({ collection, c
                 </span>
               </div>
             </TooltipTrigger>
-            {children.length > 2 && (
-              <TooltipContent>
-                <div className="space-y-1 py-1">
-                  {children.map(child => (
-                    <div key={child.id} className="text-sm">{child.title}</div>
-                  ))}
-                </div>
-              </TooltipContent>
-            )}
+            <TooltipContent side="bottom">
+              <div className="space-y-1 py-1">
+                <p className="text-xs font-medium">Child collections ({children.length})</p>
+                {children.map(child => (
+                  <div key={child.id} className="text-xs">{child.title}</div>
+                ))}
+              </div>
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )}
