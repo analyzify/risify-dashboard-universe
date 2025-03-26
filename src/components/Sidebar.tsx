@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -219,7 +218,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   const componentsSubmenu = [
     { label: "Component Gallery", href: "/components/gallery" },
-    { label: "My Components", href: "/components/my-components" },
     { label: "Store Audit", href: "/components/store-audit" },
     { label: "Implementation", href: "/components/implementation" },
     { label: "Component Settings", href: "/components/settings" },

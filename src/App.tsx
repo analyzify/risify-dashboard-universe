@@ -66,7 +66,8 @@ const App = () => (
           
           {/* Storefront Components */}
           <Route path="/components" element={<Components />} />
-          <Route path="/components/gallery" element={<GalleryPage />} /> {/* Keep this route */}
+          <Route path="/components/gallery" element={<GalleryPage />} />
+          <Route path="/components/my-components" element={<Navigate to="/components/gallery" replace />} /> {/* Add redirect */}
           <Route path="/components/store-audit" element={<PlaceholderPage title="Store Audit" />} />
           <Route path="/components/implementation" element={<PlaceholderPage title="Implementation" />} />
           <Route path="/components/settings" element={<PlaceholderPage title="Component Settings" />} />
