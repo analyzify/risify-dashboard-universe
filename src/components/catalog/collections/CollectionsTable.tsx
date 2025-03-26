@@ -1,5 +1,6 @@
+
 import React, { useState } from "react";
-import { Package, MoreHorizontal, Check, Type, FolderTree } from "lucide-react";
+import { Package, MoreHorizontal, Type, FolderTree } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -110,47 +111,70 @@ const CollectionRelationship: React.FC<CollectionRelationshipProps> = ({
           </span>
         )}
       </div>
-      
+    </div>
+  );
+};
+
+interface RelationshipsColumnProps {
+  collection: Collection;
+  collections: Collection[];
+}
+
+const RelationshipsColumn: React.FC<RelationshipsColumnProps> = ({ collection, collections }) => {
+  const findParent = (collection: Collection): Collection | undefined => {
+    if (!collection.parentId) return undefined;
+    return collections.find(c => c.id === collection.parentId);
+  };
+  
+  const findChildren = (collection: Collection): Collection[] => {
+    return collections.filter(c => c.parentId === collection.id);
+  };
+  
+  const parent = findParent(collection);
+  const children = findChildren(collection);
+  
+  return (
+    <div className="space-y-1 text-xs">
       {parent && (
-        <div className="ml-6 -mt-1">
-          <div className="text-xs text-muted-foreground flex items-center">
-            <span className="mr-1">Parent:</span>
-            <span className="font-medium hover:text-foreground transition-colors cursor-pointer">
-              {parent.title}
-            </span>
-          </div>
+        <div className="flex items-center text-muted-foreground">
+          <span className="font-medium mr-1">Parent:</span>
+          <span className="hover:text-foreground transition-colors cursor-pointer">
+            {parent.title}
+          </span>
         </div>
       )}
       
       {children.length > 0 && (
-        <div className="ml-6 -mt-1">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="text-xs text-muted-foreground flex items-center">
-                  <span className="mr-1">Children ({children.length}):</span>
-                  <span className="font-medium truncate hover:text-foreground transition-colors cursor-pointer">
-                    {children.slice(0, 2).map((child, i) => (
-                      <React.Fragment key={child.id}>
-                        {child.title}{i < children.slice(0, 2).length - 1 ? ", " : ""}
-                      </React.Fragment>
-                    ))}
-                    {children.length > 2 && ` +${children.length - 2} more`}
-                  </span>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center text-muted-foreground">
+                <span className="font-medium mr-1">Children ({children.length}):</span>
+                <span className="truncate hover:text-foreground transition-colors cursor-pointer">
+                  {children.slice(0, 2).map((child, i) => (
+                    <React.Fragment key={child.id}>
+                      {child.title}{i < children.slice(0, 2).length - 1 ? ", " : ""}
+                    </React.Fragment>
+                  ))}
+                  {children.length > 2 && ` +${children.length - 2} more`}
+                </span>
+              </div>
+            </TooltipTrigger>
+            {children.length > 2 && (
+              <TooltipContent>
+                <div className="space-y-1 py-1">
+                  {children.map(child => (
+                    <div key={child.id} className="text-sm">{child.title}</div>
+                  ))}
                 </div>
-              </TooltipTrigger>
-              {children.length > 2 && (
-                <TooltipContent>
-                  <div className="space-y-1 py-1">
-                    {children.map(child => (
-                      <div key={child.id} className="text-sm">{child.title}</div>
-                    ))}
-                  </div>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        </div>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
+      )}
+      
+      {!parent && children.length === 0 && (
+        <span className="text-muted-foreground">No relationships</span>
       )}
     </div>
   );
@@ -291,7 +315,7 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
               <Checkbox 
                 checked={allSelected}
                 onCheckedChange={handleSelectAll}
-                data-state={someSelected ? "indeterminate" : undefined}
+                indeterminate={someSelected}
                 aria-label="Select all"
               />
             </TableHead>
@@ -302,10 +326,10 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                 <span>Type</span>
               </div>
             </TableHead>
-            <TableHead className="w-[150px]">
+            <TableHead className="w-[250px]">
               <div className="flex items-center gap-1">
                 <FolderTree className="h-4 w-4 text-gray-400" />
-                <span>Relations</span>
+                <span>Relationships</span>
               </div>
             </TableHead>
             <TableHead className="w-[100px] text-right">Actions</TableHead>
@@ -345,19 +369,10 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                   )}
                 </TableCell>
                 <TableCell>
-                  {(() => {
-                    const parentCount = collection.parentId ? 1 : 0;
-                    const childrenCount = collections.filter(c => c.parentId === collection.id).length;
-                    const total = parentCount + childrenCount;
-                    
-                    return total > 0 ? (
-                      <Badge variant="outline" className="bg-secondary/20">
-                        {total} {total === 1 ? 'relation' : 'relations'}
-                      </Badge>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">None</span>
-                    );
-                  })()}
+                  <RelationshipsColumn 
+                    collection={collection}
+                    collections={collections}
+                  />
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
