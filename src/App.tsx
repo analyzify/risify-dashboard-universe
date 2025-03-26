@@ -22,6 +22,7 @@ import MarketIntelligence from "./pages/MarketIntelligence"; // Import the new p
 import SearchConsole from "./pages/SearchConsole"; // Add the SearchConsole import
 import ProductsPage from "./pages/catalog/ProductsPage"; // Import the new ProductsPage component
 import CollectionsPage from "./pages/catalog/CollectionsPage"; // Import the new Collections component
+import TaxonomyPage from "./pages/catalog/TaxonomyPage"; // Import the new TaxonomyPage
 
 const queryClient = new QueryClient();
 
@@ -51,7 +52,7 @@ const App = () => (
           <Route path="/catalog/relations" element={<PlaceholderPage title="Relations" />} />
           <Route path="/catalog/collections" element={<CollectionsPage />} />
           <Route path="/catalog/hierarchy" element={<Navigate to="/catalog/collections" replace />} />
-          <Route path="/catalog/taxonomies" element={<PlaceholderPage title="Taxonomies" />} />
+          <Route path="/catalog/taxonomies" element={<TaxonomyPage />} /> {/* Updated to use TaxonomyPage */}
           <Route path="/catalog/product-data" element={<Navigate to="/catalog/products" replace />} />
           
           {/* Storefront Components */}

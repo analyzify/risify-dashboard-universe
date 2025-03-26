@@ -1,19 +1,23 @@
 
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Package } from "lucide-react";
 
 const Catalog = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/catalog/products");
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, [navigate]);
+    // Only redirect if we're at the exact /catalog path
+    if (location.pathname === "/catalog") {
+      const timer = setTimeout(() => {
+        navigate("/catalog/products");
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [navigate, location]);
 
   return (
     <Layout title="Catalog Management">
