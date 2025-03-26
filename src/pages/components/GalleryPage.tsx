@@ -55,7 +55,7 @@ const GalleryPage = () => {
       ? true 
       : component.category.split(",").some(cat => cat.trim() === activeFilter);
     
-    // Filter by status (active/passive)
+    // Filter by status (active/inactive)
     const statusMatch = statusFilter === undefined 
       ? true 
       : (statusFilter === "active" ? component.isActive : !component.isActive);
@@ -96,9 +96,8 @@ const GalleryPage = () => {
                 <Check className="h-3.5 w-3.5" />
                 <span>Active</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="passive" aria-label="Show passive components" className="flex items-center gap-1">
+              <ToggleGroupItem value="inactive" aria-label="Show inactive components" className="flex items-center gap-1">
                 <X className="h-3.5 w-3.5" />
-                <span>Passive</span>
               </ToggleGroupItem>
             </ToggleGroup>
           </div>

@@ -62,7 +62,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
               {isActive ? (
                 <><Check className="h-3 w-3 mr-1" /> Active</>
               ) : (
-                <><X className="h-3 w-3 mr-1" /> Passive</>
+                <><X className="h-3 w-3 mr-1" /></>
               )}
             </div>
           </div>
