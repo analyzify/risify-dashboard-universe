@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useComponentActivation } from "@/hooks/useComponentActivation";
 
 interface ComponentCardProps {
   title: string;
@@ -39,6 +40,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   entries = 0,
   engagements = 0
 }) => {
+  const { openActivationDialog } = useComponentActivation();
+  
   return (
     <div className={cn(
       "flex justify-between items-center border-b py-6 px-4 group hover:bg-muted/30",
@@ -133,7 +136,12 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           </DropdownMenuContent>
         </DropdownMenu>
         
-        <Button variant="outline" size="sm" className="h-8">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8"
+          onClick={() => openActivationDialog(title)}
+        >
           Use
         </Button>
       </div>

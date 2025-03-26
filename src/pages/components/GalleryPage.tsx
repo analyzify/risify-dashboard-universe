@@ -5,6 +5,8 @@ import ComponentCard from "@/components/component-gallery/ComponentCard";
 import { Badge } from "@/components/ui/badge";
 import { Check, X } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ComponentActivationProvider } from "@/hooks/useComponentActivation";
+import ActivationDialog from "@/components/component-gallery/ActivationDialog";
 
 // Component categories from the provided test data
 const FILTER_CATEGORIES = [
@@ -64,63 +66,68 @@ const GalleryPage = () => {
   });
 
   return (
-    <Layout title="Component Gallery">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Component Library</h1>
-          <p className="text-muted-foreground mt-1">
-            These components are only visible to you. You can publish them to your store.
-          </p>
-        </div>
+    <ComponentActivationProvider>
+      <Layout title="Component Gallery">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold">Component Library</h1>
+            <p className="text-muted-foreground mt-1">
+              These components are only visible to you. You can publish them to your store.
+            </p>
+          </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2">
-            {FILTER_CATEGORIES.map((filter) => (
-              <Badge 
-                key={filter}
-                variant={activeFilter === filter ? "default" : "outline"} 
-                className="cursor-pointer px-3 py-1 text-sm"
-                onClick={() => setActiveFilter(filter)}
-              >
-                {filter}
-              </Badge>
+          <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
+            {/* Filter Pills */}
+            <div className="flex flex-wrap gap-2">
+              {FILTER_CATEGORIES.map((filter) => (
+                <Badge 
+                  key={filter}
+                  variant={activeFilter === filter ? "default" : "outline"} 
+                  className="cursor-pointer px-3 py-1 text-sm"
+                  onClick={() => setActiveFilter(filter)}
+                >
+                  {filter}
+                </Badge>
+              ))}
+            </div>
+
+            {/* Status Toggle */}
+            <div className="flex items-center">
+              <span className="text-sm font-medium mr-3">Status:</span>
+              <ToggleGroup type="single" value={statusFilter} onValueChange={setStatusFilter}>
+                <ToggleGroupItem value="active" aria-label="Show active components" className="flex items-center gap-1">
+                  <Check className="h-3.5 w-3.5" />
+                  <span>Active</span>
+                </ToggleGroupItem>
+                <ToggleGroupItem value="inactive" aria-label="Show inactive components" className="flex items-center gap-1">
+                  <X className="h-3.5 w-3.5" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+          </div>
+
+          {/* Component List */}
+          <div className="border rounded-lg overflow-hidden">
+            {filteredComponents.map((component, index) => (
+              <ComponentCard
+                key={`${component.title}-${index}`}
+                title={component.title}
+                image={component.image}
+                category={component.category}
+                isActive={component.isActive}
+                dataSource="CMS"
+                isConnected={component.isConnected}
+                entries={component.entries}
+                engagements={component.engagements}
+              />
             ))}
           </div>
-
-          {/* Status Toggle */}
-          <div className="flex items-center">
-            <span className="text-sm font-medium mr-3">Status:</span>
-            <ToggleGroup type="single" value={statusFilter} onValueChange={setStatusFilter}>
-              <ToggleGroupItem value="active" aria-label="Show active components" className="flex items-center gap-1">
-                <Check className="h-3.5 w-3.5" />
-                <span>Active</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="inactive" aria-label="Show inactive components" className="flex items-center gap-1">
-                <X className="h-3.5 w-3.5" />
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </div>
         </div>
-
-        {/* Component List */}
-        <div className="border rounded-lg overflow-hidden">
-          {filteredComponents.map((component, index) => (
-            <ComponentCard
-              key={`${component.title}-${index}`}
-              title={component.title}
-              image={component.image}
-              category={component.category}
-              isActive={component.isActive}
-              dataSource="CMS"
-              isConnected={component.isConnected}
-              entries={component.entries}
-              engagements={component.engagements}
-            />
-          ))}
-        </div>
-      </div>
-    </Layout>
+        
+        {/* Activation Dialog */}
+        <ActivationDialog />
+      </Layout>
+    </ComponentActivationProvider>
   );
 };
 
