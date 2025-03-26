@@ -66,8 +66,7 @@ const App = () => (
           
           {/* Storefront Components */}
           <Route path="/components" element={<Components />} />
-          <Route path="/components/gallery" element={<GalleryPage />} /> {/* Updated to use real GalleryPage */}
-          <Route path="/components/my-components" element={<PlaceholderPage title="My Components" />} />
+          <Route path="/components/gallery" element={<GalleryPage />} /> {/* Keep this route */}
           <Route path="/components/store-audit" element={<PlaceholderPage title="Store Audit" />} />
           <Route path="/components/implementation" element={<PlaceholderPage title="Implementation" />} />
           <Route path="/components/settings" element={<PlaceholderPage title="Component Settings" />} />

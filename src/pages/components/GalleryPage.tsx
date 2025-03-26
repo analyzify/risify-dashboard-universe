@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import ComponentCard from "@/components/component-gallery/ComponentCard";
 import { Badge } from "@/components/ui/badge";
+import { Check, X } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 // Component categories from the provided test data
 const FILTER_CATEGORIES = [
@@ -44,13 +46,22 @@ const COMPONENT_DATA = [
 
 const GalleryPage = () => {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
 
-  // Filter components based on active category
-  const filteredComponents = activeFilter === "All" 
-    ? COMPONENT_DATA 
-    : COMPONENT_DATA.filter(component => 
-        component.category.split(",").some(cat => cat.trim() === activeFilter)
-      );
+  // Filter components based on active category and status
+  const filteredComponents = COMPONENT_DATA.filter(component => {
+    // Filter by category
+    const categoryMatch = activeFilter === "All" 
+      ? true 
+      : component.category.split(",").some(cat => cat.trim() === activeFilter);
+    
+    // Filter by status (active/passive)
+    const statusMatch = statusFilter === undefined 
+      ? true 
+      : (statusFilter === "active" ? component.isActive : !component.isActive);
+    
+    return categoryMatch && statusMatch;
+  });
 
   return (
     <Layout title="Component Gallery">
@@ -62,18 +73,35 @@ const GalleryPage = () => {
           </p>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {FILTER_CATEGORIES.map((filter) => (
-            <Badge 
-              key={filter}
-              variant={activeFilter === filter ? "default" : "outline"} 
-              className="cursor-pointer px-3 py-1 text-sm"
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter}
-            </Badge>
-          ))}
+        <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
+          {/* Filter Pills */}
+          <div className="flex flex-wrap gap-2">
+            {FILTER_CATEGORIES.map((filter) => (
+              <Badge 
+                key={filter}
+                variant={activeFilter === filter ? "default" : "outline"} 
+                className="cursor-pointer px-3 py-1 text-sm"
+                onClick={() => setActiveFilter(filter)}
+              >
+                {filter}
+              </Badge>
+            ))}
+          </div>
+
+          {/* Status Toggle */}
+          <div className="flex items-center">
+            <span className="text-sm font-medium mr-3">Status:</span>
+            <ToggleGroup type="single" value={statusFilter} onValueChange={setStatusFilter}>
+              <ToggleGroupItem value="active" aria-label="Show active components" className="flex items-center gap-1">
+                <Check className="h-3.5 w-3.5" />
+                <span>Active</span>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="passive" aria-label="Show passive components" className="flex items-center gap-1">
+                <X className="h-3.5 w-3.5" />
+                <span>Passive</span>
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </div>
 
         {/* Component List */}
