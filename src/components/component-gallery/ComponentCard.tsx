@@ -17,6 +17,7 @@ interface ComponentCardProps {
   version?: string;
   added?: string;
   isPrivate?: boolean;
+  category?: string;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({ 
@@ -25,7 +26,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   featured = false,
   version,
   added,
-  isPrivate = false
+  isPrivate = false,
+  category
 }) => {
   return (
     <div className={cn(
@@ -42,6 +44,13 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         </div>
         <div className="flex flex-col justify-center">
           <h3 className="font-medium line-clamp-1">{title}</h3>
+          {category && (
+            <div className="mt-1">
+              <span className="text-xs text-muted-foreground">
+                {category.replace(",", ", ")}
+              </span>
+            </div>
+          )}
           {added && <p className="text-xs text-muted-foreground mt-1">{added}</p>}
           {version && (
             <div className="mt-1 flex items-center">
