@@ -11,42 +11,42 @@ const StoreAuditDashboard = () => {
   const auditData = {
     brokenLinks: {
       count: 12,
-      trend: "up",
+      trend: "up" as const,
       change: 3,
       details: [
-        { location: "/products/summer-dress", issue: "Broken product image link", impact: "high", status: "open" },
-        { location: "/collections/winter", issue: "Link to unavailable product", impact: "medium", status: "open" },
-        { location: "/blog/skincare-tips", issue: "Broken external resource link", impact: "low", status: "fixed" }
+        { location: "/products/summer-dress", issue: "Broken product image link", impact: "high" as const, status: "open" as const },
+        { location: "/collections/winter", issue: "Link to unavailable product", impact: "medium" as const, status: "open" as const },
+        { location: "/blog/skincare-tips", issue: "Broken external resource link", impact: "low" as const, status: "fixed" as const }
       ]
     },
     schemaErrors: {
       count: 8,
-      trend: "down",
+      trend: "down" as const,
       change: 2,
       details: [
-        { location: "/products/face-serum", issue: "Missing product schema price", impact: "high", status: "open" },
-        { location: "/collections/bestsellers", issue: "Invalid collection schema", impact: "medium", status: "open" },
-        { location: "/about-us", issue: "Incorrect organization schema", impact: "low", status: "fixed" }
+        { location: "/products/face-serum", issue: "Missing product schema price", impact: "high" as const, status: "open" as const },
+        { location: "/collections/bestsellers", issue: "Invalid collection schema", impact: "medium" as const, status: "open" as const },
+        { location: "/about-us", issue: "Incorrect organization schema", impact: "low" as const, status: "fixed" as const }
       ]
     },
     metaIssues: {
       count: 15,
-      trend: "up",
+      trend: "up" as const,
       change: 4,
       details: [
-        { location: "/products/hair-oil", issue: "Duplicate meta title with /products/hair-serum", impact: "high", status: "open" },
-        { location: "/collections/new-arrivals", issue: "Missing meta description", impact: "medium", status: "open" },
-        { location: "/blog/hair-care", issue: "Meta title too long (> 60 chars)", impact: "medium", status: "open" }
+        { location: "/products/hair-oil", issue: "Duplicate meta title with /products/hair-serum", impact: "high" as const, status: "open" as const },
+        { location: "/collections/new-arrivals", issue: "Missing meta description", impact: "medium" as const, status: "open" as const },
+        { location: "/blog/hair-care", issue: "Meta title too long (> 60 chars)", impact: "medium" as const, status: "open" as const }
       ]
     },
     pageSpeeds: {
       count: 6,
-      trend: "down",
+      trend: "down" as const,
       change: 2,
       details: [
-        { location: "/products/face-mask", issue: "LCP > 4s on mobile", impact: "high", status: "open" },
-        { location: "/collections", issue: "CLS > 0.1 on desktop", impact: "medium", status: "open" },
-        { location: "/homepage", issue: "FID > 300ms on mobile", impact: "high", status: "fixed" }
+        { location: "/products/face-mask", issue: "LCP > 4s on mobile", impact: "high" as const, status: "open" as const },
+        { location: "/collections", issue: "CLS > 0.1 on desktop", impact: "medium" as const, status: "open" as const },
+        { location: "/homepage", issue: "FID > 300ms on mobile", impact: "high" as const, status: "fixed" as const }
       ]
     }
   };
