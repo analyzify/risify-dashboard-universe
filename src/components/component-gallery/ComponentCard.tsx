@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 interface ComponentCardProps {
   title: string;
   image: string;
-  price: string;
   featured?: boolean;
   version?: string;
   added?: string;
@@ -23,7 +22,6 @@ interface ComponentCardProps {
 const ComponentCard: React.FC<ComponentCardProps> = ({ 
   title, 
   image, 
-  price,
   featured = false,
   version,
   added,
@@ -68,10 +66,6 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {price !== "Free" && (
-          <span className="text-sm font-bold text-primary mr-2">{price}</span>
-        )}
-        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -91,7 +85,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         </Button>
         
         <Button size="sm" className="h-8">
-          {price === "Free" ? "Use" : "Publish"}
+          Use
         </Button>
       </div>
     </div>
