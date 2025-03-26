@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { Package, MoreHorizontal, Type, FolderTree, ArrowUp, ArrowDown } from "lucide-react";
+import { Package, MoreHorizontal, FolderTree, ArrowUp, ArrowDown, TrendingUp, Lightbulb } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -40,6 +39,8 @@ export interface Collection {
   parentId?: string | null;
   type?: string;
   relationsCount?: number;
+  popularity?: number;
+  optimizationIdeas?: string[];
 }
 
 interface CollectionRelationshipProps {
@@ -186,6 +187,77 @@ const RelationshipsColumn: React.FC<RelationshipsColumnProps> = ({ collection, c
   );
 };
 
+interface PopularityColumnProps {
+  popularity?: number;
+}
+
+const PopularityColumn: React.FC<PopularityColumnProps> = ({ popularity = 0 }) => {
+  const trafficValue = popularity || Math.floor(Math.random() * 10000);
+  
+  let colorClass = "text-muted-foreground";
+  if (trafficValue > 5000) colorClass = "text-green-600";
+  else if (trafficValue > 2000) colorClass = "text-amber-600";
+  
+  return (
+    <div className="flex items-center space-x-2">
+      <TrendingUp className={`h-4 w-4 ${colorClass}`} />
+      <span className={`font-medium ${colorClass}`}>
+        {trafficValue.toLocaleString()}
+      </span>
+    </div>
+  );
+};
+
+interface OptimizationIdeasColumnProps {
+  ideas?: string[];
+  collectionTitle: string;
+}
+
+const OptimizationIdeasColumn: React.FC<OptimizationIdeasColumnProps> = ({ 
+  ideas = [], 
+  collectionTitle 
+}) => {
+  const hasIdeas = ideas.length > 0 || Math.random() > 0.3;
+  
+  if (!hasIdeas) {
+    return (
+      <span className="text-muted-foreground text-xs">No suggestions</span>
+    );
+  }
+  
+  const displayIdeas = ideas.length > 0 ? ideas : [
+    `Add more products to "${collectionTitle}"`,
+    `Improve SEO for "${collectionTitle}"`,
+    `Create content for "${collectionTitle}"`
+  ];
+  
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center cursor-pointer text-amber-600 hover:text-amber-700">
+            <Lightbulb className="h-4 w-4 mr-1.5" />
+            <span className="text-xs font-medium">{displayIdeas.length} suggestions</span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="left" className="w-80">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold">Optimization Ideas:</p>
+            <ul className="text-xs space-y-1.5">
+              {displayIdeas.map((idea, index) => (
+                <li key={index} className="flex items-start">
+                  <span className="font-medium text-amber-600 mr-1.5">•</span>
+                  <span>{idea}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
 interface CollectionsTableProps {
   collections: Collection[];
   onRename: (id: string, title: string) => void;
@@ -326,16 +398,22 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
               />
             </TableHead>
             <TableHead>Collection Name</TableHead>
-            <TableHead className="w-[150px]">
-              <div className="flex items-center gap-1">
-                <Type className="h-4 w-4 text-gray-400" />
-                <span>Type</span>
-              </div>
-            </TableHead>
             <TableHead className="w-[250px]">
               <div className="flex items-center gap-1">
                 <FolderTree className="h-4 w-4 text-gray-400" />
                 <span>Relationships</span>
+              </div>
+            </TableHead>
+            <TableHead className="w-[150px]">
+              <div className="flex items-center gap-1">
+                <TrendingUp className="h-4 w-4 text-gray-400" />
+                <span>Popularity</span>
+              </div>
+            </TableHead>
+            <TableHead className="w-[180px]">
+              <div className="flex items-center gap-1">
+                <Lightbulb className="h-4 w-4 text-gray-400" />
+                <span>Optimization Ideas</span>
               </div>
             </TableHead>
             <TableHead className="w-[100px] text-right">Actions</TableHead>
@@ -344,7 +422,7 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
         <TableBody>
           {collections.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                 No collections found
               </TableCell>
             </TableRow>
@@ -366,18 +444,18 @@ const CollectionsTable: React.FC<CollectionsTableProps> = ({
                   />
                 </TableCell>
                 <TableCell>
-                  {collection.type ? (
-                    <Badge variant="outline" className="bg-primary/10">
-                      {collection.type}
-                    </Badge>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">Standard</span>
-                  )}
-                </TableCell>
-                <TableCell>
                   <RelationshipsColumn 
                     collection={collection}
                     collections={collections}
+                  />
+                </TableCell>
+                <TableCell>
+                  <PopularityColumn popularity={collection.popularity} />
+                </TableCell>
+                <TableCell>
+                  <OptimizationIdeasColumn 
+                    ideas={collection.optimizationIdeas} 
+                    collectionTitle={collection.title}
                   />
                 </TableCell>
                 <TableCell className="text-right">
