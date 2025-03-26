@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import ComponentCard from "@/components/component-gallery/ComponentCard";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 // Component categories from the provided test data
@@ -57,16 +55,11 @@ const GalleryPage = () => {
   return (
     <Layout title="Component Gallery">
       <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Component Library</h1>
-            <p className="text-muted-foreground mt-1">
-              These components are only visible to you. You can publish them to your store.
-            </p>
-          </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add component
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Component Library</h1>
+          <p className="text-muted-foreground mt-1">
+            These components are only visible to you. You can publish them to your store.
+          </p>
         </div>
 
         {/* Filter Pills */}

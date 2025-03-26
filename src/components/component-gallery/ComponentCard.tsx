@@ -89,11 +89,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           </DropdownMenuContent>
         </DropdownMenu>
         
-        <Button variant="outline" size="sm" className="h-8">
-          Customize
-        </Button>
-        
-        <Button size="sm" className="h-8">
+        <Button variant="secondary" size="sm" className="h-8">
           Use
         </Button>
       </div>
