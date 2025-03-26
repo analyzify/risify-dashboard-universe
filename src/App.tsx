@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -26,6 +25,7 @@ import TaxonomyPage from "./pages/catalog/TaxonomyPage"; // Import the new Taxon
 import MappingsPage from "./pages/catalog/MappingsPage"; // Import the new MappingsPage
 import GalleryPage from "./pages/components/GalleryPage"; // Import the new GalleryPage component
 import StoreAuditPage from "./pages/components/StoreAuditPage"; // Import the new StoreAuditPage component
+import ImplementationPage from "./pages/components/ImplementationPage"; // Import the new ImplementationPage component
 
 const queryClient = new QueryClient();
 
@@ -70,7 +70,7 @@ const App = () => (
           <Route path="/components/gallery" element={<GalleryPage />} />
           <Route path="/components/my-components" element={<Navigate to="/components/gallery" replace />} /> {/* Add redirect */}
           <Route path="/components/store-audit" element={<StoreAuditPage />} /> {/* New route for Store Audit */}
-          <Route path="/components/implementation" element={<PlaceholderPage title="Implementation" />} />
+          <Route path="/components/implementation" element={<ImplementationPage />} /> {/* Updated route for Implementation */}
           <Route path="/components/settings" element={<PlaceholderPage title="Component Settings" />} />
           
           {/* Content & Knowledge */}
