@@ -11,6 +11,7 @@ interface CollectionsContainerProps {
   onPageChange: (page: number) => void;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
+  onBulkSelect?: (selectedIds: string[]) => void;
 }
 
 const CollectionsContainer: React.FC<CollectionsContainerProps> = ({
@@ -21,7 +22,8 @@ const CollectionsContainer: React.FC<CollectionsContainerProps> = ({
   totalPages,
   onPageChange,
   onRename,
-  onDelete
+  onDelete,
+  onBulkSelect
 }) => {
   // Filter collections by search string if needed
   const filteredCollections = searchString.trim() !== '' 
@@ -51,6 +53,7 @@ const CollectionsContainer: React.FC<CollectionsContainerProps> = ({
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={onPageChange}
+        onBulkSelect={onBulkSelect}
       />
     </div>
   );

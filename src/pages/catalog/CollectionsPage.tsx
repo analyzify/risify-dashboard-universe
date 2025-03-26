@@ -6,6 +6,8 @@ import { RenameDialog, AddDialog } from "@/components/catalog/CollectionDialogs"
 import CollectionsHeader from "@/components/catalog/collections/CollectionsHeader";
 import CollectionsSearch from "@/components/catalog/collections/CollectionsSearch";
 import CollectionsContainer from "@/components/catalog/collections/CollectionsContainer";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 const CollectionsPage: React.FC = () => {
   const {
@@ -29,7 +31,10 @@ const CollectionsPage: React.FC = () => {
     handleDeleteAction,
     handleExportCollections,
     handleRenameAction,
-    handleAddRootCollection
+    handleAddRootCollection,
+    selectedCollections,
+    handleBulkSelect,
+    handleBulkDelete
   } = useCollectionsPage();
 
   return (
@@ -47,6 +52,21 @@ const CollectionsPage: React.FC = () => {
           setSearchString={setSearchString}
         />
 
+        {/* Bulk actions */}
+        {selectedCollections.length > 0 && (
+          <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
+            <span className="text-sm font-medium">{selectedCollections.length} collections selected</span>
+            <Button 
+              variant="destructive" 
+              size="sm" 
+              className="ml-auto"
+              onClick={handleBulkDelete}
+            >
+              <Trash2 className="h-4 w-4 mr-1" /> Delete Selected
+            </Button>
+          </div>
+        )}
+
         {/* Collections Table */}
         <CollectionsContainer 
           collections={collections}
@@ -57,6 +77,7 @@ const CollectionsPage: React.FC = () => {
           onPageChange={handlePageChange}
           onRename={handleRenameAction}
           onDelete={handleDeleteAction}
+          onBulkSelect={handleBulkSelect}
         />
       </div>
 

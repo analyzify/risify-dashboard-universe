@@ -6,25 +6,27 @@ export interface Collection {
   id: string;
   title: string;
   parentId?: string | null;
+  type?: string;
+  relationsCount?: number;
 }
 
-// Mock data for collections
+// Mock data for collections with type and relations
 const mockCollections: Collection[] = [
-  { id: '1', title: 'Electronics' },
-  { id: '2', title: 'Clothing' },
-  { id: '3', title: 'Home & Kitchen' },
-  { id: '4', title: 'Books' },
-  { id: '5', title: 'Toys & Games' },
-  { id: '6', title: 'Sports & Outdoors' },
-  { id: '7', title: 'Beauty & Personal Care' },
-  { id: '8', title: 'Health & Household' },
-  { id: '9', title: 'Automotive' },
-  { id: '10', title: 'Pet Supplies' },
-  { id: '11', title: 'Office Products' },
-  { id: '12', title: 'Garden & Outdoor' },
-  { id: '13', title: 'Tools & Home Improvement' },
-  { id: '14', title: 'Grocery & Gourmet Food' },
-  { id: '15', title: 'Industrial & Scientific' },
+  { id: '1', title: 'Electronics', type: 'Category', relationsCount: 15 },
+  { id: '2', title: 'Clothing', type: 'Category', relationsCount: 24 },
+  { id: '3', title: 'Home & Kitchen', type: 'Category', relationsCount: 8 },
+  { id: '4', title: 'Books', type: 'Manual', relationsCount: 12 },
+  { id: '5', title: 'Toys & Games', type: 'Category', relationsCount: 5 },
+  { id: '6', title: 'Sports & Outdoors', type: 'Category', relationsCount: 7 },
+  { id: '7', title: 'Beauty & Personal Care', type: 'Category', relationsCount: 18 },
+  { id: '8', title: 'Health & Household', type: 'Category', relationsCount: 3 },
+  { id: '9', title: 'Automotive', type: 'Attribute', relationsCount: 0 },
+  { id: '10', title: 'Pet Supplies', type: 'Category', relationsCount: 9 },
+  { id: '11', title: 'Office Products', type: 'Category', relationsCount: 6 },
+  { id: '12', title: 'Garden & Outdoor', type: 'Category', relationsCount: 11 },
+  { id: '13', title: 'Tools & Home Improvement', type: 'Category', relationsCount: 14 },
+  { id: '14', title: 'Grocery & Gourmet Food', type: 'Category', relationsCount: 22 },
+  { id: '15', title: 'Industrial & Scientific', type: 'Manual', relationsCount: 0 },
 ];
 
 export const useCollectionsPage = () => {
@@ -43,6 +45,9 @@ export const useCollectionsPage = () => {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
   const [renamedValue, setRenamedValue] = useState('');
   const [newCollectionName, setNewCollectionName] = useState('');
+  
+  // Bulk selection state
+  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
 
   // Simulate loading
   useEffect(() => {
@@ -81,6 +86,11 @@ export const useCollectionsPage = () => {
     setCurrentPage(page);
   }, []);
 
+  // Handle bulk selection
+  const handleBulkSelect = useCallback((selectedIds: string[]) => {
+    setSelectedCollections(selectedIds);
+  }, []);
+
   // Handle actions
   const handleRenameAction = useCallback((id: string, title: string) => {
     setSelectedCollectionId(id);
@@ -113,7 +123,12 @@ export const useCollectionsPage = () => {
     if (!newCollectionName.trim()) return;
     
     const newId = String(collections.length + 1);
-    setCollections(prev => [...prev, { id: newId, title: newCollectionName }]);
+    setCollections(prev => [...prev, { 
+      id: newId, 
+      title: newCollectionName, 
+      type: 'Category',
+      relationsCount: 0
+    }]);
     
     setIsAddDialogOpen(false);
     setNewCollectionName('');
@@ -135,6 +150,17 @@ export const useCollectionsPage = () => {
     
     toast.success('Collections exported successfully');
   }, [collections]);
+
+  // Bulk actions
+  const handleBulkDelete = useCallback(() => {
+    if (selectedCollections.length === 0) return;
+    
+    if (confirm(`Are you sure you want to delete ${selectedCollections.length} collections?`)) {
+      setCollections(prev => prev.filter(c => !selectedCollections.includes(c.id)));
+      setSelectedCollections([]);
+      toast.success(`${selectedCollections.length} collections deleted successfully`);
+    }
+  }, [selectedCollections]);
 
   return {
     collections: getPaginatedCollections(),
@@ -158,6 +184,9 @@ export const useCollectionsPage = () => {
     handleDeleteAction,
     handleExportCollections,
     handleRenameAction,
-    handleAddRootCollection
+    handleAddRootCollection,
+    selectedCollections,
+    handleBulkSelect,
+    handleBulkDelete
   };
 };
