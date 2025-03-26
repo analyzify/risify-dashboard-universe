@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -204,9 +205,16 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   const catalogSubmenu = [
     { label: "Products", href: "/catalog/products" },
-    { label: "Relations", href: "/catalog/relations" },
+    { label: "Mappings", href: "/catalog/mappings" },
     { label: "Collections", href: "/catalog/collections" },
     { label: "Taxonomies", href: "/catalog/taxonomies" },
+  ];
+  
+  const mappingsSubmenu = [
+    { label: "Collection to Taxonomy", href: "/catalog/mappings/collection-taxonomy" },
+    { label: "Vendor to Collection", href: "/catalog/mappings/vendor-collection" },
+    { label: "Product to Blog Post", href: "/catalog/mappings/product-blog" },
+    { label: "Custom Groups", href: "/catalog/mappings/custom-groups" },
   ];
 
   const componentsSubmenu = [
@@ -293,6 +301,27 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             isCollapsed={isCollapsed}
             submenuItems={catalogSubmenu}
           />
+          
+          {!isCollapsed && location.pathname.includes('/catalog/mappings') && (
+            <div className="pl-10 pr-2">
+              <div className="flex flex-col space-y-1 border-l border-muted pl-2 mt-1">
+                {mappingsSubmenu.map((item, index) => (
+                  <Link
+                    key={index}
+                    to={item.href}
+                    className={cn(
+                      "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                      location.pathname === item.href
+                        ? "bg-primary/10 text-primary font-medium" 
+                        : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           <NavItemWithSubmenu
             icon={<Layers className="h-5 w-5" />}

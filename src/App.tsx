@@ -23,6 +23,7 @@ import SearchConsole from "./pages/SearchConsole"; // Add the SearchConsole impo
 import ProductsPage from "./pages/catalog/ProductsPage"; // Import the new ProductsPage component
 import CollectionsPage from "./pages/catalog/CollectionsPage"; // Import the new Collections component
 import TaxonomyPage from "./pages/catalog/TaxonomyPage"; // Import the new TaxonomyPage
+import MappingsPage from "./pages/catalog/MappingsPage"; // Import the new MappingsPage
 
 const queryClient = new QueryClient();
 
@@ -49,11 +50,18 @@ const App = () => (
           {/* Catalog Management */}
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/catalog/products" element={<ProductsPage />} />
-          <Route path="/catalog/relations" element={<PlaceholderPage title="Relations" />} />
+          <Route path="/catalog/mappings" element={<MappingsPage />} />
+          <Route path="/catalog/relations" element={<Navigate to="/catalog/mappings" replace />} />
           <Route path="/catalog/collections" element={<CollectionsPage />} />
           <Route path="/catalog/hierarchy" element={<Navigate to="/catalog/collections" replace />} />
           <Route path="/catalog/taxonomies" element={<TaxonomyPage />} /> {/* Updated to use TaxonomyPage */}
           <Route path="/catalog/product-data" element={<Navigate to="/catalog/products" replace />} />
+          
+          {/* Mapping subcategories */}
+          <Route path="/catalog/mappings/collection-taxonomy" element={<PlaceholderPage title="Collection to Shopify Taxonomy" />} />
+          <Route path="/catalog/mappings/vendor-collection" element={<PlaceholderPage title="Vendor to Collection" />} />
+          <Route path="/catalog/mappings/product-blog" element={<PlaceholderPage title="Product to Blog Post" />} />
+          <Route path="/catalog/mappings/custom-groups" element={<PlaceholderPage title="Custom Groups" />} />
           
           {/* Storefront Components */}
           <Route path="/components" element={<Components />} />
