@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, Clock, ArrowRight, Search, BarChart } from "lucide-react";
+import { CheckCircle, Clock, ArrowRight, Search, BarChart, Sparkles, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 import {
   Table,
   TableBody,
@@ -40,6 +41,7 @@ interface ExtendedTask {
 const Tasks = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const { toast } = useToast();
   
   const allTasks: ExtendedTask[] = [
     { ...growthTasks.tasks[0], status: "active", progress: 40 },
@@ -57,6 +59,13 @@ const Tasks = () => {
       case "high": return "bg-green-50 text-green-600";
       default: return "bg-gray-50 text-gray-600";
     }
+  };
+  
+  const handleCreateTask = (taskTitle) => {
+    toast({
+      title: "Task Created",
+      description: `"${taskTitle}" has been added to your tasks.`,
+    });
   };
   
   return (
@@ -170,8 +179,8 @@ const Tasks = () => {
           </Card>
         )}
 
-        <div className="mt-10 mb-6">
-          <h3 className="text-lg font-medium text-muted-foreground mb-4">Continue where you left off</h3>
+        <div className="mt-8 mb-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">Continue where you left off</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="border-l-2 border-l-blue-400 bg-card/50 hover:bg-card/80 transition-colors">
               <CardContent className="p-4">
@@ -244,6 +253,82 @@ const Tasks = () => {
                 <Button size="sm" variant="ghost" className="w-full h-8 text-xs justify-center border border-muted hover:bg-accent mt-1" onClick={() => console.log("Start task")}>
                   Start
                   <ArrowRight className="ml-1 h-3 w-3" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        
+        <div className="mt-8 mb-6">
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">
+            AI suggested tasks
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-card/30 hover:bg-card/50 transition-colors border-dashed border-muted-foreground/20">
+              <CardContent className="p-3">
+                <div className="flex justify-between items-start mb-1.5">
+                  <h4 className="font-medium text-xs">Optimize Product Descriptions</h4>
+                  <Badge variant="outline" className="text-[10px] bg-emerald-50/30 text-emerald-600 font-normal px-1.5 py-0">
+                    High Impact
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                  Create unique, SEO-friendly product descriptions to improve conversion rates.
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="w-full h-7 text-xs justify-center border border-muted hover:bg-accent"
+                  onClick={() => handleCreateTask("Optimize Product Descriptions")}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Create Task
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card/30 hover:bg-card/50 transition-colors border-dashed border-muted-foreground/20">
+              <CardContent className="p-3">
+                <div className="flex justify-between items-start mb-1.5">
+                  <h4 className="font-medium text-xs">Setup Internal Linking Strategy</h4>
+                  <Badge variant="outline" className="text-[10px] bg-amber-50/30 text-amber-600 font-normal px-1.5 py-0">
+                    Medium Impact
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                  Develop a strategic internal linking plan to improve site structure and SEO.
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="w-full h-7 text-xs justify-center border border-muted hover:bg-accent"
+                  onClick={() => handleCreateTask("Setup Internal Linking Strategy")}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Create Task
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-card/30 hover:bg-card/50 transition-colors border-dashed border-muted-foreground/20">
+              <CardContent className="p-3">
+                <div className="flex justify-between items-start mb-1.5">
+                  <h4 className="font-medium text-xs">Improve Mobile Page Speed</h4>
+                  <Badge variant="outline" className="text-[10px] bg-emerald-50/30 text-emerald-600 font-normal px-1.5 py-0">
+                    High Impact
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                  Optimize images and reduce code bloat to improve mobile page loading times.
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="w-full h-7 text-xs justify-center border border-muted hover:bg-accent"
+                  onClick={() => handleCreateTask("Improve Mobile Page Speed")}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Create Task
                 </Button>
               </CardContent>
             </Card>
