@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles, Edit, Clipboard, Save, RefreshCw } from 'lucide-react';
+import { Sparkles, Edit, Clipboard, Save, RefreshCw, Send, MessageSquare } from 'lucide-react';
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -61,6 +61,7 @@ const DEMO_COLLECTIONS = [
 ];
 
 const ContentGenerator = () => {
+  const [activeTab, setActiveTab] = useState<string>("templates");
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedType, setSelectedType] = useState<any>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -71,6 +72,13 @@ const ContentGenerator = () => {
   });
   const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [chatMessage, setChatMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState<{role: string, content: string}[]>([
+    {
+      role: 'assistant',
+      content: 'Hi there! I\'m your Content Agent. How can I help you with content creation today?'
+    }
+  ]);
   
   const handleTypeSelect = (type: any) => {
     setSelectedType(type);
@@ -189,6 +197,24 @@ Thank you for being part of our story. We're excited to be part of yours.`;
   const handleSaveContent = () => {
     // In a real app, this would save to the store
     toast.success("Content saved to store!");
+  };
+
+  const handleSendChatMessage = () => {
+    if (!chatMessage.trim()) return;
+    
+    // Add user message to chat
+    setChatHistory(prev => [...prev, { role: 'user', content: chatMessage }]);
+    
+    // Simulate AI thinking
+    setTimeout(() => {
+      // Add bot response
+      setChatHistory(prev => [...prev, { 
+        role: 'assistant', 
+        content: `I've noted your request for "${chatMessage}". Based on your Knowledge Base, I can help with this. Would you like me to draft some content focusing on specific aspects of your brand or products?` 
+      }]);
+    }, 1000);
+    
+    setChatMessage('');
   };
   
   const renderStepContent = () => {
@@ -385,41 +411,106 @@ Thank you for being part of our story. We're excited to be part of yours.`;
   
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl animate-fade-in">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold">AI Content Generator</h1>
-        <p className="text-muted-foreground mt-1">
-          Create professional, on-brand content powered by your Knowledge Base
-        </p>
-      </div>
-      
-      <div className="mb-8">
-        <div className="grid grid-cols-4 gap-1 text-center text-sm mb-2">
-          <div className={cn("text-xs sm:text-sm", currentStep >= 1 ? "text-foreground font-medium" : "text-muted-foreground")}>Choose Type</div>
-          <div className={cn("text-xs sm:text-sm", currentStep >= 2 ? "text-foreground font-medium" : "text-muted-foreground")}>Select Content</div>
-          <div className={cn("text-xs sm:text-sm", currentStep >= 3 ? "text-foreground font-medium" : "text-muted-foreground")}>Options</div>
-          <div className={cn("text-xs sm:text-sm", currentStep >= 4 ? "text-foreground font-medium" : "text-muted-foreground")}>Review</div>
-        </div>
+      <Tabs defaultValue="templates" value={activeTab} onValueChange={setActiveTab} className="mb-8">
+        <TabsList className="mb-6">
+          <TabsTrigger value="templates">Content Templates</TabsTrigger>
+          <TabsTrigger value="chat">Chat with Content Agent</TabsTrigger>
+        </TabsList>
         
-        <Progress value={(currentStep / 4) * 100} className="h-2" />
-        
-        <div className="flex justify-between mt-1.5">
-          {[1, 2, 3, 4].map(step => (
-            <div 
-              key={step}
-              className={cn(
-                "w-6 h-6 rounded-full flex items-center justify-center text-xs",
-                step <= currentStep 
-                  ? "bg-primary text-primary-foreground" 
-                  : "bg-muted text-muted-foreground"
-              )}
-            >
-              {step}
+        <TabsContent value="templates">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold">Create Content</h1>
+            <p className="text-muted-foreground mt-1">
+              Create professional, on-brand content powered by your Knowledge Base
+            </p>
+          </div>
+          
+          <div className="mb-8">
+            <div className="grid grid-cols-4 gap-1 text-center text-sm mb-2">
+              <div className={cn("text-xs sm:text-sm", currentStep >= 1 ? "text-foreground font-medium" : "text-muted-foreground")}>Choose Type</div>
+              <div className={cn("text-xs sm:text-sm", currentStep >= 2 ? "text-foreground font-medium" : "text-muted-foreground")}>Select Content</div>
+              <div className={cn("text-xs sm:text-sm", currentStep >= 3 ? "text-foreground font-medium" : "text-muted-foreground")}>Options</div>
+              <div className={cn("text-xs sm:text-sm", currentStep >= 4 ? "text-foreground font-medium" : "text-muted-foreground")}>Review</div>
             </div>
-          ))}
-        </div>
-      </div>
-      
-      {renderStepContent()}
+            
+            <Progress value={(currentStep / 4) * 100} className="h-2" />
+            
+            <div className="flex justify-between mt-1.5">
+              {[1, 2, 3, 4].map(step => (
+                <div 
+                  key={step}
+                  className={cn(
+                    "w-6 h-6 rounded-full flex items-center justify-center text-xs",
+                    step <= currentStep 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted text-muted-foreground"
+                  )}
+                >
+                  {step}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {renderStepContent()}
+        </TabsContent>
+        
+        <TabsContent value="chat" className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold">CHAT with CONTENT AGENT</h1>
+            <h2 className="text-lg text-muted-foreground">for your custom needs</h2>
+          </div>
+          
+          <Card className="h-[500px] flex flex-col">
+            <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 mt-4">
+              {chatHistory.map((message, index) => (
+                <div 
+                  key={index} 
+                  className={cn(
+                    "flex max-w-[80%] p-3 rounded-lg",
+                    message.role === 'user' 
+                      ? "ml-auto bg-primary text-primary-foreground" 
+                      : "bg-muted"
+                  )}
+                >
+                  {message.content}
+                </div>
+              ))}
+            </CardContent>
+            <CardFooter className="border-t p-4">
+              <div className="flex w-full gap-2">
+                <Textarea 
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  placeholder="Ask the Content Agent for any type of content..."
+                  className="flex-1"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendChatMessage();
+                    }
+                  }}
+                />
+                <Button onClick={handleSendChatMessage} size="icon" className="h-auto">
+                  <Send className="h-5 w-5" />
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">How to use the Content Agent</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <p>💡 <strong>Ask for specific content</strong> - "Write a product description for a leather wallet"</p>
+              <p>💡 <strong>Refine content</strong> - "Make it more premium sounding and emphasize craftsmanship"</p>
+              <p>💡 <strong>Generate variations</strong> - "Give me 3 different headline options for this blog post"</p>
+              <p>💡 <strong>Fix content issues</strong> - "Rewrite this to fix grammar and improve flow"</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

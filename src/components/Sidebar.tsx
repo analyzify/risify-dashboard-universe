@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -226,12 +225,11 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Component Gallery", href: "/components/gallery" },
     { label: "Store Audit", href: "/components/store-audit" },
     { label: "Implementation", href: "/components/implementation" },
-    // Removed "Component Settings" entry from this submenu
   ];
 
   const contentSubmenu = [
     { label: "AI Knowledge Base", href: "/content/knowledge-base" },
-    { label: "Content Generator", href: "/content/generator" },
+    { label: "Create Content", href: "/content/generator" },
     { label: "Content Management", href: "/content/management" },
     { label: "Growth Agents", href: "/content/growth-agents" },
     { label: "Content Analytics", href: "/content/analytics" },
@@ -252,9 +250,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Notifications", href: "/settings/notifications" },
     { label: "Billing", href: "/settings/billing" },
   ];
-
-  // Removed the mappings submenu items from the sidebar itself
-  // These will only be rendered on the Mappings page
 
   return (
     <div
@@ -309,8 +304,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             submenuItems={catalogSubmenu}
           />
           
-          {/* Removed the mapping submenu section that was showing in the main sidebar */}
-
           <NavItemWithSubmenu
             icon={<Layers className="h-5 w-5" />}
             label="Storefront Components"

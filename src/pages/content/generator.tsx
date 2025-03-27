@@ -8,9 +8,9 @@ const ContentGeneratorPage = () => {
   return (
     <>
       <Helmet>
-        <title>AI Content Generator | Risify</title>
+        <title>Create Content | Risify</title>
       </Helmet>
-      <Layout title="AI Content Generator">
+      <Layout title="Create Content">
         <ContentGenerator />
       </Layout>
     </>
