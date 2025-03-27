@@ -25,61 +25,65 @@ const ContentAnalytics = () => {
         </TabsList>
         
         <TabsContent value="overview" className="space-y-6">
-          <MetricsGrid 
-            title="FAQ Engagement" 
-            data={faqEngagementData} 
-            valueKey="views"
-            comparisonKey="previousViews"
-            labelKey="question"
-            valueFormatter={(value) => value.toLocaleString()}
-          />
-          
-          <MetricsGrid 
-            title="Top Blogs by Views" 
-            data={topBlogsData}
-            valueKey="views" 
-            comparisonKey="previousViews"
-            labelKey="title"
-            valueFormatter={(value) => value.toLocaleString()}
-          />
-          
-          <MetricsGrid 
-            title="Blogs Bringing Sales" 
-            data={blogSalesData}
-            valueKey="revenue" 
-            comparisonKey="previousRevenue"
-            labelKey="title"
-            valueFormatter={(value) => `NOK ${value.toLocaleString()}`}
-          />
-          
-          <MetricsGrid 
-            title="Sessions by Traffic Source" 
-            data={trafficSourcesData}
-            valueKey="sessions" 
-            comparisonKey="previousSessions"
-            labelKey="source"
-            valueFormatter={(value) => value.toLocaleString()}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <MetricsGrid 
+              title="FAQ Engagement" 
+              data={faqEngagementData} 
+              valueKey="views"
+              comparisonKey="previousViews"
+              labelKey="question"
+              valueFormatter={(value) => value.toLocaleString()}
+            />
+            
+            <MetricsGrid 
+              title="Top Blogs by Views" 
+              data={topBlogsData}
+              valueKey="views" 
+              comparisonKey="previousViews"
+              labelKey="title"
+              valueFormatter={(value) => value.toLocaleString()}
+            />
+            
+            <MetricsGrid 
+              title="Blogs Bringing Sales" 
+              data={blogSalesData}
+              valueKey="revenue" 
+              comparisonKey="previousRevenue"
+              labelKey="title"
+              valueFormatter={(value) => `NOK ${value.toLocaleString()}`}
+            />
+            
+            <MetricsGrid 
+              title="Sessions by Traffic Source" 
+              data={trafficSourcesData}
+              valueKey="sessions" 
+              comparisonKey="previousSessions"
+              labelKey="source"
+              valueFormatter={(value) => value.toLocaleString()}
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="blogs" className="space-y-6">
-          <MetricsGrid 
-            title="Top Blogs by Views" 
-            data={topBlogsData}
-            valueKey="views" 
-            comparisonKey="previousViews"
-            labelKey="title"
-            valueFormatter={(value) => value.toLocaleString()}
-          />
-          
-          <MetricsGrid 
-            title="Blogs Bringing Sales" 
-            data={blogSalesData}
-            valueKey="revenue" 
-            comparisonKey="previousRevenue"
-            labelKey="title"
-            valueFormatter={(value) => `NOK ${value.toLocaleString()}`}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <MetricsGrid 
+              title="Top Blogs by Views" 
+              data={topBlogsData}
+              valueKey="views" 
+              comparisonKey="previousViews"
+              labelKey="title"
+              valueFormatter={(value) => value.toLocaleString()}
+            />
+            
+            <MetricsGrid 
+              title="Blogs Bringing Sales" 
+              data={blogSalesData}
+              valueKey="revenue" 
+              comparisonKey="previousRevenue"
+              labelKey="title"
+              valueFormatter={(value) => `NOK ${value.toLocaleString()}`}
+            />
+          </div>
         </TabsContent>
         
         <TabsContent value="faq" className="space-y-6">
