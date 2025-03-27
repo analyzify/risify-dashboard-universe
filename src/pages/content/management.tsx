@@ -8,9 +8,9 @@ const ContentManagementPage = () => {
   return (
     <>
       <Helmet>
-        <title>Content Management | Risify</title>
+        <title>CMS | Risify</title>
       </Helmet>
-      <Layout title="Content Management">
+      <Layout title="CMS">
         <ContentManagement />
       </Layout>
     </>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Search, Plus, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -129,7 +128,6 @@ const ContentManagement = () => {
     return true;
   });
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredContent.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedContent = filteredContent.slice(startIndex, startIndex + itemsPerPage);
@@ -151,14 +149,13 @@ const ContentManagement = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Content Management</h2>
+        <h2 className="text-xl font-semibold">CMS</h2>
         <Button>
           <Plus className="mr-2 h-4 w-4" /> Add content
         </Button>
       </div>
 
       <div className="flex items-center space-x-4">
-        {/* Filter pills moved to the beginning (left) */}
         <div className="flex items-center space-x-2">
           <Badge 
             variant={selectedType === "faq" ? "default" : "outline"} 
@@ -190,7 +187,6 @@ const ContentManagement = () => {
           </Badge>
         </div>
 
-        {/* Search and filter button */}
         <div className="flex items-center space-x-2 flex-1">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
