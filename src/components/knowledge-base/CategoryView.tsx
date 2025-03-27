@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { ArrowLeft, Edit, Eye, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import CompletionIndicator from "./CompletionIndicator";
 
 // Import the knowledge base data
@@ -41,7 +41,7 @@ const CategoryView = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink isCurrentPage>{category.name}</BreadcrumbLink>
+            <BreadcrumbPage>{category.name}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

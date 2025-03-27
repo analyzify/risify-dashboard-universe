@@ -32,8 +32,7 @@ const CompletionIndicator = ({
     <div className={cn("space-y-1.5", className)}>
       <Progress
         value={percentage}
-        className={cn(sizeClasses[size])}
-        indicatorClassName={getColorClass()}
+        className={cn(sizeClasses[size], getColorClass())}
       />
       {showLabel && (
         <p className="text-xs text-muted-foreground text-right">
