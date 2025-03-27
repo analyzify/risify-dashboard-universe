@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -32,6 +31,7 @@ interface NavItemWithSubmenuProps {
     label: string;
     href: string;
   }>;
+  showOnlyInPath?: string; // New prop to control where submenu items are shown
 }
 
 const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
@@ -39,7 +39,8 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
   label,
   href,
   isCollapsed = false,
-  submenuItems = []
+  submenuItems = [],
+  showOnlyInPath
 }) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +51,9 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
   
   const basePath = href ? href : submenuItems.length > 0 ? submenuItems[0].href.split('/')[1] : '';
   const baseHref = href ? href : `/${basePath}`;
+
+  // Check if we should show submenu based on current path
+  const shouldShowSubmenu = !showOnlyInPath || location.pathname.includes(showOnlyInPath);
 
   useEffect(() => {
     if (isChildActive || isActive) {
@@ -83,7 +87,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
 
   return (
     <div className="relative">
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <Collapsible open={isOpen && shouldShowSubmenu} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <div className="w-full">
             {href ? (
@@ -105,26 +109,28 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                   </div>
                   <span className="truncate">{label}</span>
                 </Link>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsOpen(!isOpen);
-                  }}
-                  className={cn(
-                    "flex items-center justify-center p-2 rounded-md transition-all duration-200",
-                    isAnyActive || isOpen
-                      ? "text-primary" 
-                      : "text-foreground/70 hover:text-foreground"
-                  )}
-                >
-                  <ChevronDown
+                {shouldShowSubmenu && submenuItems.length > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsOpen(!isOpen);
+                    }}
                     className={cn(
-                      "h-4 w-4 flex-shrink-0 transition-transform duration-200",
-                      isOpen ? "rotate-180" : ""
+                      "flex items-center justify-center p-2 rounded-md transition-all duration-200",
+                      isAnyActive || isOpen
+                        ? "text-primary" 
+                        : "text-foreground/70 hover:text-foreground"
                     )}
-                  />
-                </button>
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 flex-shrink-0 transition-transform duration-200",
+                        isOpen ? "rotate-180" : ""
+                      )}
+                    />
+                  </button>
+                )}
               </div>
             ) : (
               <button
@@ -148,37 +154,41 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
                   </div>
                   <span className="truncate">{label}</span>
                 </div>
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 flex-shrink-0 ml-2 transition-transform duration-200",
-                    isOpen ? "rotate-180" : ""
-                  )}
-                />
+                {shouldShowSubmenu && submenuItems.length > 0 && (
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 flex-shrink-0 ml-2 transition-transform duration-200",
+                      isOpen ? "rotate-180" : ""
+                    )}
+                  />
+                )}
               </button>
             )}
           </div>
         </CollapsibleTrigger>
-        <CollapsibleContent className="pl-10 pr-2 pt-1 pb-1">
-          <div className="flex flex-col space-y-1 border-l border-muted pl-2">
-            {submenuItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.href}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                className={cn(
-                  "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                  location.pathname === item.href
-                    ? "bg-primary/10 text-primary font-medium" 
-                    : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </CollapsibleContent>
+        {shouldShowSubmenu && (
+          <CollapsibleContent className="pl-10 pr-2 pt-1 pb-1">
+            <div className="flex flex-col space-y-1 border-l border-muted pl-2">
+              {submenuItems.map((item, index) => (
+                <Link
+                  key={index}
+                  to={item.href}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className={cn(
+                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                    location.pathname === item.href
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </CollapsibleContent>
+        )}
       </Collapsible>
       {isAnyActive && !isOpen && (
         <div className="absolute left-0 h-8 w-1 rounded-r-lg bg-primary" />
@@ -241,6 +251,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Notifications", href: "/settings/notifications" },
     { label: "Billing", href: "/settings/billing" },
   ];
+
+  // Update the catalog submenu to set showOnlyInPath for mappings
+  
 
   // Only show mapping submenu items when we're on the mappings page
   const isMappingsPage = location.pathname.includes('/catalog/mappings');
