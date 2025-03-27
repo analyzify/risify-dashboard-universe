@@ -185,7 +185,7 @@ const PageSelector: React.FC<PageSelectorProps> = ({
               </table>
             </CardContent>
           </Card>
-        </div>
+        </Tabs>
       </div>
       
       <div className="flex justify-between mt-8">
