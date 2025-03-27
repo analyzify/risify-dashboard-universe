@@ -37,6 +37,7 @@ import SetupPage from "./pages/knowledge-base/setup";
 // Import Content Generator page
 import ContentGeneratorPage from "./pages/content/generator";
 import ContentManagementPage from "./pages/content/management"; // Import the content management page
+import ContentAnalyticsPage from "./pages/content/analytics"; // Import the content analytics page
 
 const queryClient = new QueryClient();
 
@@ -92,7 +93,7 @@ const App = () => (
           <Route path="/content/knowledge-base/setup" element={<SetupPage />} />
           <Route path="/content/generator" element={<ContentGeneratorPage />} /> {/* Updated to use the real component */}
           <Route path="/content/management" element={<ContentManagementPage />} /> {/* Updated to use our ContentManagementPage component */}
-          <Route path="/content/analytics" element={<PlaceholderPage title="Content Analytics" />} />
+          <Route path="/content/analytics" element={<ContentAnalyticsPage />} /> {/* Updated to use our ContentAnalyticsPage component */}
           
           {/* Growth Tasks */}
           <Route path="/tasks" element={<Tasks />} />
