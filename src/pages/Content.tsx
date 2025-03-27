@@ -7,7 +7,7 @@ import { FileText } from "lucide-react";
 const Content = () => {
   const navigate = useNavigate();
 
-  // Redirect to the first sub-page (AI Knowledge Base) after a short delay
+  // Redirect to the Knowledge Base page after a short delay
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/content/knowledge-base");

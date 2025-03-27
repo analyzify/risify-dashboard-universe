@@ -1,0 +1,124 @@
+
+{
+  "overview": {
+    "completionScore": 65,
+    "recentUpdates": [
+      { "category": "Brand Guidelines", "updatedAt": "2025-03-25T14:30:00Z", "user": "Store Owner" },
+      { "category": "Product Knowledge", "updatedAt": "2025-03-22T10:15:00Z", "user": "Marketing Manager" },
+      { "category": "Business Fundamentals", "updatedAt": "2025-03-20T09:45:00Z", "user": "Admin" },
+      { "category": "Competitive Landscape", "updatedAt": "2025-03-18T11:20:00Z", "user": "Marketing Manager" }
+    ]
+  },
+  "categories": [
+    {
+      "id": "business-fundamentals",
+      "name": "Business Fundamentals",
+      "icon": "Building2",
+      "description": "Core information about your business model and target market",
+      "completionPercentage": 90,
+      "documents": [
+        { "id": "business-model", "title": "Business Model", "content": "Direct-to-Consumer (D2C) focus", "lastUpdated": "2025-03-20T09:45:00Z" },
+        { "id": "target-audience", "title": "Target Audience", "content": "Fashion-conscious millennials and Gen Z", "lastUpdated": "2025-03-15T14:30:00Z" },
+        { "id": "market-positioning", "title": "Market Positioning", "content": "Premium sustainable fashion", "lastUpdated": "2025-03-10T11:20:00Z" }
+      ]
+    },
+    {
+      "id": "brand-guidelines",
+      "name": "Brand Guidelines",
+      "icon": "Palette",
+      "description": "Brand identity, voice, and visual elements",
+      "completionPercentage": 75,
+      "documents": [
+        { "id": "brand-values", "title": "Brand Values", "content": "Sustainability, Quality, Innovation", "lastUpdated": "2025-03-25T14:30:00Z" },
+        { "id": "visual-identity", "title": "Visual Identity", "content": "Minimalist design with earth tones", "lastUpdated": "2025-03-18T09:15:00Z" }
+      ]
+    },
+    {
+      "id": "product-knowledge",
+      "name": "Product Knowledge",
+      "icon": "ShoppingBag",
+      "description": "Detailed information about your products",
+      "completionPercentage": 60,
+      "documents": [
+        { "id": "product-categories", "title": "Product Categories", "content": "Clothing, Accessories, Home Goods", "lastUpdated": "2025-03-22T10:15:00Z" }
+      ]
+    },
+    {
+      "id": "marketing-strategy",
+      "name": "Marketing Strategy",
+      "icon": "TrendingUp",
+      "description": "Marketing channels, campaigns, and content strategy",
+      "completionPercentage": 40,
+      "documents": [
+        { "id": "marketing-channels", "title": "Marketing Channels", "content": "Social Media, Email, Influencer Partnerships", "lastUpdated": "2025-03-05T15:45:00Z" }
+      ]
+    },
+    {
+      "id": "competitive-landscape",
+      "name": "Competitive Landscape",
+      "icon": "Users",
+      "description": "Analysis of competitors and market trends",
+      "completionPercentage": 80,
+      "documents": [
+        { "id": "direct-competitors", "title": "Direct Competitors", "content": "Top 5 sustainable fashion brands", "lastUpdated": "2025-03-18T11:20:00Z" },
+        { "id": "market-trends", "title": "Market Trends", "content": "Rising demand for transparent supply chains", "lastUpdated": "2025-03-12T13:10:00Z" }
+      ]
+    },
+    {
+      "id": "customer-support",
+      "name": "Customer Support",
+      "icon": "HeadphonesIcon",
+      "description": "Help resources and support protocols",
+      "completionPercentage": 45,
+      "documents": [
+        { "id": "return-policy", "title": "Return Policy", "content": "30-day return window with free shipping", "lastUpdated": "2025-02-28T10:00:00Z" }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "business-model",
+      "category": "business-fundamentals",
+      "title": "Business Model",
+      "description": "Define your core business model",
+      "sections": [
+        { "title": "Business Type", "description": "Select your business model", "type": "select", "options": ["D2C", "B2B", "Marketplace", "Dropshipping", "Hybrid"] },
+        { "title": "Business Description", "description": "Describe your approach", "type": "textarea" },
+        { "title": "Revenue Streams", "description": "List your revenue sources", "type": "text-list" }
+      ]
+    },
+    {
+      "id": "target-audience",
+      "category": "business-fundamentals",
+      "title": "Target Audience",
+      "description": "Define who your customers are",
+      "sections": [
+        { "title": "Demographics", "description": "Age, gender, location, etc.", "type": "textarea" },
+        { "title": "Psychographics", "description": "Values, interests, lifestyle", "type": "textarea" },
+        { "title": "Pain Points", "description": "What problems do you solve for them?", "type": "text-list" }
+      ]
+    },
+    {
+      "id": "brand-values",
+      "category": "brand-guidelines",
+      "title": "Brand Values",
+      "description": "The core principles that guide your brand",
+      "sections": [
+        { "title": "Core Values", "description": "List your brand's core values", "type": "text-list" },
+        { "title": "Mission Statement", "description": "Your brand's purpose", "type": "textarea" },
+        { "title": "Vision Statement", "description": "Your brand's long-term goal", "type": "textarea" }
+      ]
+    },
+    {
+      "id": "product-categories",
+      "category": "product-knowledge",
+      "title": "Product Categories",
+      "description": "Overview of your product offerings",
+      "sections": [
+        { "title": "Main Categories", "description": "List your main product categories", "type": "text-list" },
+        { "title": "Flagship Products", "description": "Your bestsellers or signature items", "type": "text-list" },
+        { "title": "Product USPs", "description": "What makes your products unique", "type": "textarea" }
+      ]
+    }
+  ]
+}

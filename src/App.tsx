@@ -28,6 +28,12 @@ import GalleryPage from "./pages/components/GalleryPage"; // Import the new Gall
 import StoreAuditPage from "./pages/components/StoreAuditPage"; // Import the new StoreAuditPage component
 import ImplementationPage from "./pages/components/ImplementationPage"; // Import the new ImplementationPage component
 
+// Import Knowledge Base pages
+import KnowledgeBasePage from "./pages/knowledge-base";
+import CategoryPage from "./pages/knowledge-base/[category]";
+import EditorPage from "./pages/knowledge-base/editor";
+import SetupPage from "./pages/knowledge-base/setup";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -73,11 +79,13 @@ const App = () => (
           <Route path="/components/my-components" element={<Navigate to="/components/gallery" replace />} /> {/* Add redirect */}
           <Route path="/components/store-audit" element={<StoreAuditPage />} /> {/* New route for Store Audit */}
           <Route path="/components/implementation" element={<ImplementationPage />} /> {/* Updated route for Implementation */}
-          <Route path="/components/settings" element={<PlaceholderPage title="Component Settings" />} />
           
           {/* Content & Knowledge */}
           <Route path="/content" element={<Content />} />
-          <Route path="/content/knowledge-base" element={<PlaceholderPage title="AI Knowledge Base" />} />
+          <Route path="/content/knowledge-base" element={<KnowledgeBasePage />} />
+          <Route path="/content/knowledge-base/:categoryId" element={<CategoryPage />} />
+          <Route path="/content/knowledge-base/editor" element={<EditorPage />} />
+          <Route path="/content/knowledge-base/setup" element={<SetupPage />} />
           <Route path="/content/generator" element={<PlaceholderPage title="Content Generator" />} />
           <Route path="/content/management" element={<PlaceholderPage title="Content Management" />} />
           <Route path="/content/growth-agents" element={<PlaceholderPage title="Growth Agents" />} />
