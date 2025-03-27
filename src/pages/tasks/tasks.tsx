@@ -17,12 +17,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+// Define extended task type that includes both possible properties
+interface ExtendedTask {
+  id: string;
+  categoryId: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  timeEstimate: string;
+  impact: string;
+  completionRate: string;
+  tags?: string[];
+  steps: {
+    id: string;
+    title: string;
+    description: string;
+  }[];
+  status: string;
+  progress?: number;
+  completedDate?: string;
+}
+
 const Tasks = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   
   // For demo purposes, we'll use the first task as "active" and the second as "completed"
-  const allTasks = [
+  const allTasks: ExtendedTask[] = [
     { ...growthTasks.tasks[0], status: "active", progress: 40 },
     { ...growthTasks.tasks[1], status: "completed", completedDate: "2 days ago" }
   ];
@@ -96,7 +117,9 @@ const Tasks = () => {
                               <Clock className="mr-2 h-4 w-4 text-blue-500" />
                               <div className="flex flex-col">
                                 <span>In Progress</span>
-                                <span className="text-xs text-muted-foreground">{task.progress}% completed</span>
+                                {task.progress !== undefined && (
+                                  <span className="text-xs text-muted-foreground">{task.progress}% completed</span>
+                                )}
                               </div>
                             </div>
                           ) : (
@@ -104,7 +127,9 @@ const Tasks = () => {
                               <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
                               <div className="flex flex-col">
                                 <span>Completed</span>
-                                <span className="text-xs text-muted-foreground">{task.completedDate}</span>
+                                {task.completedDate && (
+                                  <span className="text-xs text-muted-foreground">{task.completedDate}</span>
+                                )}
                               </div>
                             </div>
                           )}
