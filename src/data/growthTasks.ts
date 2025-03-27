@@ -32,6 +32,7 @@ export const growthTasks = {
       "timeEstimate": "15-20 minutes",
       "impact": "high",
       "completionRate": "78%",
+      "tags": ["product", "description", "seo"],
       "steps": [
         {
           "id": "research-keywords",
@@ -69,6 +70,7 @@ export const growthTasks = {
       "timeEstimate": "10-15 minutes",
       "impact": "medium",
       "completionRate": "85%",
+      "tags": ["faq", "content", "seo"],
       "steps": [
         {
           "id": "identify-questions",
@@ -184,6 +186,7 @@ export type Task = {
   timeEstimate: string;
   impact: string;
   completionRate: string;
+  tags?: string[];
   steps: TaskStep[];
 };
 

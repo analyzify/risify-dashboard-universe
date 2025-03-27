@@ -39,6 +39,14 @@ import ContentGeneratorPage from "./pages/content/generator";
 import ContentManagementPage from "./pages/content/management"; // Import the content management page
 import ContentAnalyticsPage from "./pages/content/analytics"; // Import the content analytics page
 
+// Import Task pages
+import TaskDiscovery from "./pages/tasks/discovery";
+import ActiveTasks from "./pages/tasks/active";
+import CompletedTasks from "./pages/tasks/completed";
+import TaskTemplates from "./pages/tasks/templates";
+import GrowthAgents from "./pages/tasks/growth-agents";
+import ResultsAndImpact from "./pages/tasks/results";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -97,12 +105,12 @@ const App = () => (
           
           {/* Growth Tasks */}
           <Route path="/tasks" element={<Tasks />} />
-          <Route path="/tasks/discovery" element={<PlaceholderPage title="Task Discovery" />} />
-          <Route path="/tasks/active" element={<PlaceholderPage title="Active Tasks" />} />
-          <Route path="/tasks/completed" element={<PlaceholderPage title="Completed Tasks" />} />
-          <Route path="/tasks/templates" element={<PlaceholderPage title="Task Templates" />} />
-          <Route path="/tasks/growth-agents" element={<PlaceholderPage title="Growth Agents" />} />
-          <Route path="/tasks/results" element={<PlaceholderPage title="Results & Impact" />} />
+          <Route path="/tasks/discovery" element={<TaskDiscovery />} />
+          <Route path="/tasks/active" element={<ActiveTasks />} />
+          <Route path="/tasks/completed" element={<CompletedTasks />} />
+          <Route path="/tasks/templates" element={<TaskTemplates />} />
+          <Route path="/tasks/growth-agents" element={<GrowthAgents />} />
+          <Route path="/tasks/results" element={<ResultsAndImpact />} />
           
           {/* Redirect for the old growth-agents path */}
           <Route path="/content/growth-agents" element={<Navigate to="/tasks/growth-agents" replace />} />
