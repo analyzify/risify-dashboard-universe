@@ -92,7 +92,6 @@ const App = () => (
           <Route path="/content/knowledge-base/setup" element={<SetupPage />} />
           <Route path="/content/generator" element={<ContentGeneratorPage />} /> {/* Updated to use the real component */}
           <Route path="/content/management" element={<ContentManagementPage />} /> {/* Updated to use our ContentManagementPage component */}
-          <Route path="/content/growth-agents" element={<PlaceholderPage title="Growth Agents" />} />
           <Route path="/content/analytics" element={<PlaceholderPage title="Content Analytics" />} />
           
           {/* Growth Tasks */}
@@ -101,7 +100,11 @@ const App = () => (
           <Route path="/tasks/active" element={<PlaceholderPage title="Active Tasks" />} />
           <Route path="/tasks/completed" element={<PlaceholderPage title="Completed Tasks" />} />
           <Route path="/tasks/templates" element={<PlaceholderPage title="Task Templates" />} />
+          <Route path="/tasks/growth-agents" element={<PlaceholderPage title="Growth Agents" />} />
           <Route path="/tasks/results" element={<PlaceholderPage title="Results & Impact" />} />
+          
+          {/* Redirect for the old growth-agents path */}
+          <Route path="/content/growth-agents" element={<Navigate to="/tasks/growth-agents" replace />} />
           
           {/* Settings */}
           <Route path="/settings" element={<Settings />} />

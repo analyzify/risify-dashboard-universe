@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -232,7 +231,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "AI Knowledge Base", href: "/content/knowledge-base" },
     { label: "Create Content", href: "/content/generator" },
     { label: "CMS", href: "/content/management" },
-    { label: "Growth Agents", href: "/content/growth-agents" },
     { label: "Content Analytics", href: "/content/analytics" },
   ];
 
@@ -241,6 +239,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Active Tasks", href: "/tasks/active" },
     { label: "Completed Tasks", href: "/tasks/completed" },
     { label: "Task Templates", href: "/tasks/templates" },
+    { label: "Growth Agents", href: "/tasks/growth-agents" },
     { label: "Results & Impact", href: "/tasks/results" },
   ];
 
