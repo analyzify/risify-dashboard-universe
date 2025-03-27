@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -188,6 +189,7 @@ const NavItemWithSubmenu: React.FC<NavItemWithSubmenuProps> = ({
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -209,13 +211,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Taxonomies", href: "/catalog/taxonomies" },
   ];
   
-  const mappingsSubmenu = [
-    { label: "Collection to Taxonomy", href: "/catalog/mappings/collection-taxonomy" },
-    { label: "Vendor to Collection", href: "/catalog/mappings/vendor-collection" },
-    { label: "Product to Blog Post", href: "/catalog/mappings/product-blog" },
-    { label: "Custom Groups", href: "/catalog/mappings/custom-groups" },
-  ];
-
   const componentsSubmenu = [
     { label: "Component Gallery", href: "/components/gallery" },
     { label: "Store Audit", href: "/components/store-audit" },
@@ -246,6 +241,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Notifications", href: "/settings/notifications" },
     { label: "Billing", href: "/settings/billing" },
   ];
+
+  // Only show mapping submenu items when we're on the mappings page
+  const isMappingsPage = location.pathname.includes('/catalog/mappings');
 
   return (
     <div
@@ -300,23 +298,65 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             submenuItems={catalogSubmenu}
           />
           
-          {!isCollapsed && location.pathname.includes('/catalog/mappings') && (
+          {/* Only show mappings submenu when on the mappings page, not in the main sidebar */}
+          {isMappingsPage && !isCollapsed && (
             <div className="pl-10 pr-2">
               <div className="flex flex-col space-y-1 border-l border-muted pl-2 mt-1">
-                {mappingsSubmenu.map((item, index) => (
-                  <Link
-                    key={index}
-                    to={item.href}
-                    className={cn(
-                      "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                      location.pathname === item.href
-                        ? "bg-primary/10 text-primary font-medium" 
-                        : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                <Link
+                  to="/catalog/mappings/collection-taxonomy"
+                  className={cn(
+                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                    location.pathname === "/catalog/mappings/collection-taxonomy"
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  Collection to Taxonomy
+                </Link>
+                <Link
+                  to="/catalog/mappings/collection-category"
+                  className={cn(
+                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                    location.pathname === "/catalog/mappings/collection-category"
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  Collection to Category
+                </Link>
+                <Link
+                  to="/catalog/mappings/vendor-collection"
+                  className={cn(
+                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                    location.pathname === "/catalog/mappings/vendor-collection"
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  Vendor to Collection
+                </Link>
+                <Link
+                  to="/catalog/mappings/product-blog"
+                  className={cn(
+                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                    location.pathname === "/catalog/mappings/product-blog"
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  Product to Blog Post
+                </Link>
+                <Link
+                  to="/catalog/mappings/custom-groups"
+                  className={cn(
+                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
+                    location.pathname === "/catalog/mappings/custom-groups"
+                      ? "bg-primary/10 text-primary font-medium" 
+                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
+                  )}
+                >
+                  Custom Groups
+                </Link>
               </div>
             </div>
           )}
