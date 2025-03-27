@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { growthTasks } from '@/data/growthTasks';
@@ -18,7 +17,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Define extended task type that includes both possible properties
 interface ExtendedTask {
   id: string;
   categoryId: string;
@@ -43,7 +41,6 @@ const Tasks = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   
-  // For demo purposes, we'll use the first task as "active" and the second as "completed"
   const allTasks: ExtendedTask[] = [
     { ...growthTasks.tasks[0], status: "active", progress: 40 },
     { ...growthTasks.tasks[1], status: "completed", completedDate: "2 days ago" }
@@ -173,90 +170,80 @@ const Tasks = () => {
           </Card>
         )}
 
-        {/* Continue Where You Left Off Section */}
-        <div className="mt-12 mb-8">
-          <h2 className="text-2xl font-bold mb-6">Continue Where You Left Off</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* First Task Card */}
-            <Card className="border-l-4 border-l-blue-500">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">{growthTasks.tasks[0].title}</CardTitle>
-                  <Badge variant="outline" className="bg-blue-50 text-blue-600">
+        <div className="mt-10 mb-6">
+          <h3 className="text-lg font-medium text-muted-foreground mb-4">Continue where you left off</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="border-l-2 border-l-blue-400 bg-card/50 hover:bg-card/80 transition-colors">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-medium text-sm">{growthTasks.tasks[0].title}</h4>
+                  <Badge variant="outline" className="text-xs bg-blue-50/50 text-blue-600 font-normal">
                     In Progress
                   </Badge>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-xs text-muted-foreground mb-2.5 line-clamp-2">
                   {growthTasks.tasks[0].description}
                 </p>
-                <div className="mb-3">
-                  <div className="flex justify-between text-sm mb-1">
+                <div className="mb-2.5">
+                  <div className="flex justify-between text-xs mb-1 text-muted-foreground">
                     <span>Progress</span>
-                    <span>2/5 steps completed</span>
+                    <span>2/5 steps</span>
                   </div>
-                  <Progress value={40} className="h-2" />
+                  <Progress value={40} className="h-1.5" />
                 </div>
-                <Button className="w-full" onClick={() => console.log("Continue task")}>
-                  Continue Task
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button size="sm" variant="ghost" className="w-full h-8 text-xs justify-center border border-muted hover:bg-accent mt-1" onClick={() => console.log("Continue task")}>
+                  Continue
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Second Task Card */}
-            <Card className="border-l-4 border-l-amber-500">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">Optimize Collection Page</CardTitle>
-                  <Badge variant="outline" className="bg-amber-50 text-amber-600">
+            <Card className="border-l-2 border-l-amber-400 bg-card/50 hover:bg-card/80 transition-colors">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-medium text-sm">Optimize Collection Page</h4>
+                  <Badge variant="outline" className="text-xs bg-amber-50/50 text-amber-600 font-normal">
                     Just Started
                   </Badge>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-xs text-muted-foreground mb-2.5 line-clamp-2">
                   Improve your collection page structure and content for better navigation and SEO
                 </p>
-                <div className="mb-3">
-                  <div className="flex justify-between text-sm mb-1">
+                <div className="mb-2.5">
+                  <div className="flex justify-between text-xs mb-1 text-muted-foreground">
                     <span>Progress</span>
-                    <span>1/6 steps completed</span>
+                    <span>1/6 steps</span>
                   </div>
-                  <Progress value={16} className="h-2" />
+                  <Progress value={16} className="h-1.5" />
                 </div>
-                <Button className="w-full" onClick={() => console.log("Continue task")}>
-                  Continue Task
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button size="sm" variant="ghost" className="w-full h-8 text-xs justify-center border border-muted hover:bg-accent mt-1" onClick={() => console.log("Continue task")}>
+                  Continue
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Third Task Card */}
-            <Card className="border-l-4 border-l-purple-500">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">Implement Schema Markup</CardTitle>
-                  <Badge variant="outline" className="bg-purple-50 text-purple-600">
+            <Card className="border-l-2 border-l-purple-400 bg-card/50 hover:bg-card/80 transition-colors">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-medium text-sm">Implement Schema Markup</h4>
+                  <Badge variant="outline" className="text-xs bg-purple-50/50 text-purple-600 font-normal">
                     Not Started
                   </Badge>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-xs text-muted-foreground mb-2.5 line-clamp-2">
                   Add structured data to your product pages to enhance search results appearance
                 </p>
-                <div className="mb-3">
-                  <div className="flex justify-between text-sm mb-1">
+                <div className="mb-2.5">
+                  <div className="flex justify-between text-xs mb-1 text-muted-foreground">
                     <span>Progress</span>
-                    <span>0/4 steps completed</span>
+                    <span>0/4 steps</span>
                   </div>
-                  <Progress value={0} className="h-2" />
+                  <Progress value={0} className="h-1.5" />
                 </div>
-                <Button className="w-full" onClick={() => console.log("Start task")}>
-                  Start Task
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button size="sm" variant="ghost" className="w-full h-8 text-xs justify-center border border-muted hover:bg-accent mt-1" onClick={() => console.log("Start task")}>
+                  Start
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>
               </CardContent>
             </Card>
