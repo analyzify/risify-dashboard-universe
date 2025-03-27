@@ -64,15 +64,15 @@ const BarMetric: React.FC<BarMetricProps> = ({
           <span className="font-medium">{valueFormatter(value)}</span>
         </div>
       </div>
-      <div className="relative h-8">
+      <div className="relative h-5">
         {/* Previous period bar (shown below) */}
         <div 
-          className="absolute left-0 h-4 bg-blue-200 rounded"
+          className="absolute left-0 h-2 bg-blue-200 rounded"
           style={{ width: `${previousWidth}%` }}
         />
         {/* Current period bar (shown on top) */}
         <div 
-          className="absolute left-0 h-4 bg-blue-500 rounded"
+          className="absolute left-0 h-2 bg-blue-500 rounded" 
           style={{ width: `${currentWidth}%` }}
         />
       </div>

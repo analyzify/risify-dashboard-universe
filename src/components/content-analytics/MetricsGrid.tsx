@@ -24,6 +24,11 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
 }) => {
   // Sort data by value in descending order
   const sortedData = [...data].sort((a, b) => b[valueKey] - a[valueKey]);
+  
+  // Find the maximum value in the dataset
+  const maxValue = sortedData.length > 0 
+    ? Math.max(...sortedData.map(item => Math.max(item[valueKey], item[comparisonKey])))
+    : 0;
 
   return (
     <Card>
@@ -39,6 +44,9 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
             ? Math.round(((value - previousValue) / previousValue) * 100) 
             : 0;
           
+          // Calculate relative width based on maximum value in the dataset
+          const relativeFactor = 80; // Max width as percentage (80% of container)
+          
           return (
             <BarMetric
               key={index}
@@ -46,6 +54,7 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
               value={value}
               previousValue={previousValue}
               percentChange={percentChange}
+              maxWidth={relativeFactor}
               valueFormatter={valueFormatter}
             />
           );
