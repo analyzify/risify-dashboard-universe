@@ -235,12 +235,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   ];
 
   const tasksSubmenu = [
+    { label: "Tasks", href: "/tasks/tasks" },
     { label: "Task Discovery", href: "/tasks/discovery" },
-    { label: "Active Tasks", href: "/tasks/active" },
-    { label: "Completed Tasks", href: "/tasks/completed" },
-    { label: "Task Templates", href: "/tasks/templates" },
     { label: "Growth Agents", href: "/tasks/growth-agents" },
-    { label: "Results & Impact", href: "/tasks/results" },
   ];
 
   const settingsSubmenu = [
@@ -321,6 +318,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <NavItemWithSubmenu
             icon={<CheckSquare className="h-5 w-5" />}
             label="Growth Tasks"
+            href="/tasks/tasks"
             isCollapsed={isCollapsed}
             submenuItems={tasksSubmenu}
           />
