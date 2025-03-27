@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Search, Plus, Filter, MoreVertical, Check, Copy, Link2, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -160,7 +159,6 @@ const ContentManagement = () => {
     
     setContentItems(items =>
       items.map(item => {
-        // Only update items that are currently visible in the filtered view
         if (filteredContent.some(filtered => filtered.id === item.id)) {
           return { ...item, selected: newAllSelected };
         }
@@ -323,21 +321,7 @@ const ContentManagement = () => {
                   />
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{item.title}</span>
-                    <Badge 
-                      variant="outline" 
-                      className={cn(
-                        "text-xs",
-                        item.type === "faq" && "border-blue-200 bg-blue-50 text-blue-700",
-                        item.type === "hero" && "border-purple-200 bg-purple-50 text-purple-700",
-                        item.type === "testimonial" && "border-green-200 bg-green-50 text-green-700",
-                        item.type === "cta" && "border-amber-200 bg-amber-50 text-amber-700"
-                      )}
-                    >
-                      {item.type}
-                    </Badge>
-                  </div>
+                  <div className="font-medium">{item.title}</div>
                 </TableCell>
                 <TableCell>{item.addedBy}</TableCell>
                 <TableCell>{item.updatedAt}</TableCell>
