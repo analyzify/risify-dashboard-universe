@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { growthTasks } from '@/data/growthTasks';
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, Clock, ArrowRight, Search, BarChart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -171,6 +172,96 @@ const Tasks = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Continue Where You Left Off Section */}
+        <div className="mt-12 mb-8">
+          <h2 className="text-2xl font-bold mb-6">Continue Where You Left Off</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* First Task Card */}
+            <Card className="border-l-4 border-l-blue-500">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-lg">{growthTasks.tasks[0].title}</CardTitle>
+                  <Badge variant="outline" className="bg-blue-50 text-blue-600">
+                    In Progress
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {growthTasks.tasks[0].description}
+                </p>
+                <div className="mb-3">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Progress</span>
+                    <span>2/5 steps completed</span>
+                  </div>
+                  <Progress value={40} className="h-2" />
+                </div>
+                <Button className="w-full" onClick={() => console.log("Continue task")}>
+                  Continue Task
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Second Task Card */}
+            <Card className="border-l-4 border-l-amber-500">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-lg">Optimize Collection Page</CardTitle>
+                  <Badge variant="outline" className="bg-amber-50 text-amber-600">
+                    Just Started
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Improve your collection page structure and content for better navigation and SEO
+                </p>
+                <div className="mb-3">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Progress</span>
+                    <span>1/6 steps completed</span>
+                  </div>
+                  <Progress value={16} className="h-2" />
+                </div>
+                <Button className="w-full" onClick={() => console.log("Continue task")}>
+                  Continue Task
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Third Task Card */}
+            <Card className="border-l-4 border-l-purple-500">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-lg">Implement Schema Markup</CardTitle>
+                  <Badge variant="outline" className="bg-purple-50 text-purple-600">
+                    Not Started
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Add structured data to your product pages to enhance search results appearance
+                </p>
+                <div className="mb-3">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Progress</span>
+                    <span>0/4 steps completed</span>
+                  </div>
+                  <Progress value={0} className="h-2" />
+                </div>
+                <Button className="w-full" onClick={() => console.log("Start task")}>
+                  Start Task
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </Layout>
   );
