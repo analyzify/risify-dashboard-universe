@@ -2,7 +2,6 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import { growthTasks } from '@/data/growthTasks';
-import GrowthTasksDashboard from "@/components/growth-tasks/Dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -46,7 +45,7 @@ const Tasks = () => {
               <div className="flex justify-between items-center mt-2">
                 <p className="text-sm text-muted-foreground">In progress</p>
                 <Button variant="ghost" size="sm" className="h-8 px-2" 
-                  onClick={() => navigate("/tasks/active")}>
+                  onClick={() => navigate("/tasks/tasks")}>
                   View All <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
@@ -65,7 +64,7 @@ const Tasks = () => {
               <div className="flex justify-between items-center mt-2">
                 <p className="text-sm text-muted-foreground">This month</p>
                 <Button variant="ghost" size="sm" className="h-8 px-2" 
-                  onClick={() => navigate("/tasks/completed")}>
+                  onClick={() => navigate("/tasks/tasks")}>
                   View All <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
@@ -84,7 +83,7 @@ const Tasks = () => {
               <div className="flex justify-between items-center mt-2">
                 <p className="text-sm text-muted-foreground">Traffic growth</p>
                 <Button variant="ghost" size="sm" className="h-8 px-2" 
-                  onClick={() => navigate("/tasks/results")}>
+                  onClick={() => navigate("/tasks/tasks")}>
                   View Results <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
@@ -108,15 +107,15 @@ const Tasks = () => {
                     description={task.description}
                     progress={40}
                     impact={task.impact as "low" | "medium" | "high"} 
-                    onClick={() => navigate("/tasks/active")}
+                    onClick={() => navigate("/tasks/tasks")}
                   />
                 ))}
                 <Button 
                   variant="outline" 
                   className="mt-2"
-                  onClick={() => navigate("/tasks/active")}
+                  onClick={() => navigate("/tasks/tasks")}
                 >
-                  View All Active Tasks
+                  View All Tasks
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -142,15 +141,15 @@ const Tasks = () => {
                     description={task.description}
                     completed={true}
                     impact={task.impact as "low" | "medium" | "high"} 
-                    onClick={() => navigate("/tasks/completed")}
+                    onClick={() => navigate("/tasks/tasks")}
                   />
                 ))}
                 <Button 
                   variant="outline" 
                   className="mt-2"
-                  onClick={() => navigate("/tasks/completed")}
+                  onClick={() => navigate("/tasks/tasks")}
                 >
-                  View All Completed Tasks
+                  View All Tasks
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>

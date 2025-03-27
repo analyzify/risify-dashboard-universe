@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -41,11 +40,8 @@ import ContentAnalyticsPage from "./pages/content/analytics"; // Import the cont
 
 // Import Task pages
 import TaskDiscovery from "./pages/tasks/discovery";
-import ActiveTasks from "./pages/tasks/active";
-import CompletedTasks from "./pages/tasks/completed";
-import TaskTemplates from "./pages/tasks/templates";
+import TasksTablePage from "./pages/tasks/tasks"; // Import the new Tasks table page
 import GrowthAgents from "./pages/tasks/growth-agents";
-import ResultsAndImpact from "./pages/tasks/results";
 
 const queryClient = new QueryClient();
 
@@ -106,11 +102,14 @@ const App = () => (
           {/* Growth Tasks */}
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/tasks/discovery" element={<TaskDiscovery />} />
-          <Route path="/tasks/active" element={<ActiveTasks />} />
-          <Route path="/tasks/completed" element={<CompletedTasks />} />
-          <Route path="/tasks/templates" element={<TaskTemplates />} />
+          <Route path="/tasks/tasks" element={<TasksTablePage />} />
           <Route path="/tasks/growth-agents" element={<GrowthAgents />} />
-          <Route path="/tasks/results" element={<ResultsAndImpact />} />
+          
+          {/* Redirect old routes to new consolidated pages */}
+          <Route path="/tasks/active" element={<Navigate to="/tasks/tasks" replace />} />
+          <Route path="/tasks/completed" element={<Navigate to="/tasks/tasks" replace />} />
+          <Route path="/tasks/templates" element={<Navigate to="/tasks/discovery?view=templates" replace />} />
+          <Route path="/tasks/results" element={<Navigate to="/tasks/tasks" replace />} />
           
           {/* Redirect for the old growth-agents path */}
           <Route path="/content/growth-agents" element={<Navigate to="/tasks/growth-agents" replace />} />
