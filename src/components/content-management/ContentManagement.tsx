@@ -157,50 +157,56 @@ const ContentManagement = () => {
         </Button>
       </div>
 
-      <div className="flex items-center space-x-2 mb-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <input 
-            type="text"
-            placeholder="Search content..."
-            className="h-10 w-full rounded-md border border-input pl-10 pr-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+      <div className="flex items-center space-x-4">
+        {/* Filter pills moved to the beginning (left) */}
+        <div className="flex items-center space-x-2">
+          <Badge 
+            variant={selectedType === "faq" ? "default" : "outline"} 
+            className="cursor-pointer px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600"
+            onClick={() => filterByType("faq")}
+          >
+            FAQ
+          </Badge>
+          <Badge 
+            variant={selectedType === "hero" ? "default" : "outline"} 
+            className="cursor-pointer px-3 py-1 text-xs bg-purple-500 hover:bg-purple-600"
+            onClick={() => filterByType("hero")}
+          >
+            Hero
+          </Badge>
+          <Badge 
+            variant={selectedType === "testimonial" ? "default" : "outline"} 
+            className="cursor-pointer px-3 py-1 text-xs bg-green-500 hover:bg-green-600"
+            onClick={() => filterByType("testimonial")}
+          >
+            Testimonials
+          </Badge>
+          <Badge 
+            variant={selectedType === "cta" ? "default" : "outline"} 
+            className="cursor-pointer px-3 py-1 text-xs bg-amber-500 hover:bg-amber-600"
+            onClick={() => filterByType("cta")}
+          >
+            CTA
+          </Badge>
         </div>
 
-        <Button variant="outline" size="sm">
-          <Filter className="mr-2 h-3 w-3" /> Filter
-        </Button>
+        {/* Search and filter button */}
+        <div className="flex items-center space-x-2 flex-1">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <input 
+              type="text"
+              placeholder="Search content..."
+              className="h-10 w-full rounded-md border border-input pl-10 pr-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
 
-        <Badge 
-          variant={selectedType === "faq" ? "default" : "outline"} 
-          className="cursor-pointer px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600"
-          onClick={() => filterByType("faq")}
-        >
-          FAQ
-        </Badge>
-        <Badge 
-          variant={selectedType === "hero" ? "default" : "outline"} 
-          className="cursor-pointer px-3 py-1 text-xs bg-purple-500 hover:bg-purple-600"
-          onClick={() => filterByType("hero")}
-        >
-          Hero
-        </Badge>
-        <Badge 
-          variant={selectedType === "testimonial" ? "default" : "outline"} 
-          className="cursor-pointer px-3 py-1 text-xs bg-green-500 hover:bg-green-600"
-          onClick={() => filterByType("testimonial")}
-        >
-          Testimonials
-        </Badge>
-        <Badge 
-          variant={selectedType === "cta" ? "default" : "outline"} 
-          className="cursor-pointer px-3 py-1 text-xs bg-amber-500 hover:bg-amber-600"
-          onClick={() => filterByType("cta")}
-        >
-          CTA
-        </Badge>
+          <Button variant="outline" size="sm">
+            <Filter className="mr-2 h-3 w-3" /> Filter
+          </Button>
+        </div>
       </div>
 
       <div className="border rounded-md">
