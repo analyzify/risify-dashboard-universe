@@ -1,5 +1,6 @@
+
 import React, { useState } from "react";
-import { Search, Plus, Filter, MoreVertical, Check, Copy, Link2, ShoppingBag } from "lucide-react";
+import { Search, Plus, Filter, MoreVertical, Check, Copy, Link2, ShoppingBag, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
@@ -29,18 +30,32 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 type ContentType = "faq" | "hero" | "testimonial" | "cta";
 
+interface Reference {
+  id: string;
+  title: string;
+  type: "product" | "collection" | "page";
+  url: string;
+}
+
 interface ContentItem {
   id: string;
   title: string;
   type: ContentType;
-  addedBy: string;
   updatedAt: string;
   selected?: boolean;
+  references?: Reference[];
 }
 
 const ContentManagement = () => {
@@ -48,6 +63,9 @@ const ContentManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [allSelected, setAllSelected] = useState(false);
+  const [showReferencesDialog, setShowReferencesDialog] = useState(false);
+  const [selectedReferences, setSelectedReferences] = useState<Reference[]>([]);
+  const [selectedItemTitle, setSelectedItemTitle] = useState("");
   const itemsPerPage = 5;
   
   const [contentItems, setContentItems] = useState<ContentItem[]>([
@@ -55,78 +73,107 @@ const ContentManagement = () => {
       id: "1",
       title: "What is Risify's return policy?",
       type: "faq",
-      addedBy: "Jane Cooper",
       updatedAt: "Jun 1, 2023",
+      references: [
+        { id: "r1", title: "Returns & Exchanges", type: "page", url: "/pages/returns" },
+        { id: "r2", title: "Customer Support", type: "page", url: "/pages/support" },
+        { id: "r3", title: "Terms & Conditions", type: "page", url: "/pages/terms" },
+      ]
     },
     {
       id: "2",
       title: "How do I switch this product on and off?",
       type: "faq",
-      addedBy: "Jane Cooper",
       updatedAt: "May 30, 2023",
+      references: [
+        { id: "r4", title: "Smart Home Hub", type: "product", url: "/products/smart-home-hub" },
+        { id: "r5", title: "Electronic Devices", type: "collection", url: "/collections/electronics" },
+      ]
     },
     {
       id: "3",
       title: "How does Risify FAQ work?",
       type: "faq",
-      addedBy: "Jane Cooper",
       updatedAt: "Apr 25, 2023",
+      references: [
+        { id: "r6", title: "Help Center", type: "page", url: "/pages/help" },
+      ]
     },
     {
       id: "4",
       title: "Summer Collection Showcase",
       type: "hero",
-      addedBy: "Mark Johnson",
       updatedAt: "May 15, 2023",
+      references: [
+        { id: "r7", title: "Summer Collection", type: "collection", url: "/collections/summer" },
+        { id: "r8", title: "Featured Products", type: "collection", url: "/collections/featured" },
+      ]
     },
     {
       id: "5",
       title: "Customer Success Story",
       type: "testimonial",
-      addedBy: "Sarah Williams",
       updatedAt: "Apr 10, 2023",
+      references: [
+        { id: "r9", title: "Testimonials", type: "page", url: "/pages/testimonials" },
+        { id: "r10", title: "About Us", type: "page", url: "/pages/about" },
+      ]
     },
     {
       id: "6",
       title: "Limited Time Offer",
       type: "cta",
-      addedBy: "David Brown",
       updatedAt: "Jun 5, 2023",
+      references: [
+        { id: "r11", title: "Sale Items", type: "collection", url: "/collections/sale" },
+        { id: "r12", title: "New Arrivals", type: "collection", url: "/collections/new" },
+      ]
     },
     {
       id: "7",
       title: "Product Care Instructions",
       type: "faq",
-      addedBy: "Jane Cooper",
       updatedAt: "Jun 10, 2023",
+      references: [
+        { id: "r13", title: "Care Guide", type: "page", url: "/pages/care-guide" },
+      ]
     },
     {
       id: "8",
       title: "Spring Sale Banner",
       type: "hero",
-      addedBy: "Mark Johnson",
       updatedAt: "Mar 20, 2023",
+      references: [
+        { id: "r14", title: "Spring Collection", type: "collection", url: "/collections/spring" },
+      ]
     },
     {
       id: "9",
       title: "New Customer Review",
       type: "testimonial",
-      addedBy: "Sarah Williams",
       updatedAt: "May 22, 2023",
+      references: []
     },
     {
       id: "10",
       title: "Holiday Special Offer",
       type: "cta",
-      addedBy: "David Brown",
       updatedAt: "Dec 1, 2023",
+      references: [
+        { id: "r15", title: "Holiday Collection", type: "collection", url: "/collections/holiday" },
+        { id: "r16", title: "Gift Ideas", type: "collection", url: "/collections/gifts" },
+        { id: "r17", title: "Seasonal Products", type: "collection", url: "/collections/seasonal" },
+      ]
     },
     {
       id: "11",
       title: "Shipping Information",
       type: "faq",
-      addedBy: "Jane Cooper",
       updatedAt: "Jul 5, 2023",
+      references: [
+        { id: "r18", title: "Shipping Policy", type: "page", url: "/pages/shipping" },
+        { id: "r19", title: "FAQ", type: "page", url: "/pages/faq" },
+      ]
     },
   ]);
 
@@ -200,6 +247,12 @@ const ContentManagement = () => {
   };
 
   const selectedCount = getSelectedItems().length;
+
+  const openReferencesDialog = (item: ContentItem) => {
+    setSelectedReferences(item.references || []);
+    setSelectedItemTitle(item.title);
+    setShowReferencesDialog(true);
+  };
 
   return (
     <div className="space-y-4">
@@ -304,8 +357,8 @@ const ContentManagement = () => {
                 />
               </TableHead>
               <TableHead>Title</TableHead>
-              <TableHead>Added by</TableHead>
               <TableHead>Updated</TableHead>
+              <TableHead>References</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
@@ -323,8 +376,17 @@ const ContentManagement = () => {
                 <TableCell>
                   <div className="font-medium">{item.title}</div>
                 </TableCell>
-                <TableCell>{item.addedBy}</TableCell>
                 <TableCell>{item.updatedAt}</TableCell>
+                <TableCell>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-6 px-2 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                    onClick={() => openReferencesDialog(item)}
+                  >
+                    {item.references?.length || 0} references
+                  </Button>
+                </TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -390,6 +452,46 @@ const ContentManagement = () => {
           </div>
         )}
       </div>
+
+      {/* References Dialog */}
+      <Dialog open={showReferencesDialog} onOpenChange={setShowReferencesDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>References for "{selectedItemTitle}"</DialogTitle>
+            <DialogDescription>
+              This content is used in the following locations:
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-auto">
+            {selectedReferences.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">No references found.</p>
+            ) : (
+              <div className="space-y-3 mt-4">
+                {selectedReferences.map((ref) => (
+                  <div key={ref.id} className="flex items-center justify-between border-b pb-2">
+                    <div className="flex items-center">
+                      <Badge variant="outline" className={cn(
+                        "text-xs mr-2",
+                        ref.type === "product" ? "border-blue-200 bg-blue-50 text-blue-700" :
+                        ref.type === "collection" ? "border-purple-200 bg-purple-50 text-purple-700" :
+                        "border-green-200 bg-green-50 text-green-700"
+                      )}>
+                        {ref.type}
+                      </Badge>
+                      <span className="text-sm font-medium">{ref.title}</span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="h-7 w-7" asChild>
+                      <a href={ref.url} target="_blank" rel="noreferrer">
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
