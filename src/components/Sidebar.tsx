@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
@@ -252,11 +253,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Billing", href: "/settings/billing" },
   ];
 
-  // Update the catalog submenu to set showOnlyInPath for mappings
-  
-
-  // Only show mapping submenu items when we're on the mappings page
-  const isMappingsPage = location.pathname.includes('/catalog/mappings');
+  // Removed the mappings submenu items from the sidebar itself
+  // These will only be rendered on the Mappings page
 
   return (
     <div
@@ -311,68 +309,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             submenuItems={catalogSubmenu}
           />
           
-          {/* Only show mappings submenu when on the mappings page, not in the main sidebar */}
-          {isMappingsPage && !isCollapsed && (
-            <div className="pl-10 pr-2">
-              <div className="flex flex-col space-y-1 border-l border-muted pl-2 mt-1">
-                <Link
-                  to="/catalog/mappings/collection-taxonomy"
-                  className={cn(
-                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                    location.pathname === "/catalog/mappings/collection-taxonomy"
-                      ? "bg-primary/10 text-primary font-medium" 
-                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                  )}
-                >
-                  Collection to Taxonomy
-                </Link>
-                <Link
-                  to="/catalog/mappings/collection-category"
-                  className={cn(
-                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                    location.pathname === "/catalog/mappings/collection-category"
-                      ? "bg-primary/10 text-primary font-medium" 
-                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                  )}
-                >
-                  Collection to Category
-                </Link>
-                <Link
-                  to="/catalog/mappings/vendor-collection"
-                  className={cn(
-                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                    location.pathname === "/catalog/mappings/vendor-collection"
-                      ? "bg-primary/10 text-primary font-medium" 
-                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                  )}
-                >
-                  Vendor to Collection
-                </Link>
-                <Link
-                  to="/catalog/mappings/product-blog"
-                  className={cn(
-                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                    location.pathname === "/catalog/mappings/product-blog"
-                      ? "bg-primary/10 text-primary font-medium" 
-                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                  )}
-                >
-                  Product to Blog Post
-                </Link>
-                <Link
-                  to="/catalog/mappings/custom-groups"
-                  className={cn(
-                    "rounded-md px-2 py-1.5 text-sm transition-all duration-200 truncate",
-                    location.pathname === "/catalog/mappings/custom-groups"
-                      ? "bg-primary/10 text-primary font-medium" 
-                      : "text-foreground/70 hover:bg-accent hover:text-foreground"
-                  )}
-                >
-                  Custom Groups
-                </Link>
-              </div>
-            </div>
-          )}
+          {/* Removed the mapping submenu section that was showing in the main sidebar */}
 
           <NavItemWithSubmenu
             icon={<Layers className="h-5 w-5" />}
