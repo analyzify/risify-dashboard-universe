@@ -15,9 +15,80 @@ const TaskDiscovery = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const { taskCategories, tasks } = growthTasks;
   
+  // Add more dummy content to the tasks array
+  const extendedTasks = [
+    ...tasks,
+    {
+      id: "optimize-url-structure",
+      categoryId: "technical-seo",
+      title: "Optimize URL Structure",
+      description: "Improve your URL structure for better SEO and user experience",
+      difficulty: "medium",
+      timeEstimate: "30-45 minutes",
+      impact: "medium",
+      completionRate: "65%",
+      steps: []
+    },
+    {
+      id: "improve-product-images",
+      categoryId: "product-optimization",
+      title: "Improve Product Images",
+      description: "Enhance product images for better conversion rates",
+      difficulty: "easy",
+      timeEstimate: "20-30 minutes",
+      impact: "high",
+      completionRate: "82%",
+      steps: []
+    },
+    {
+      id: "create-collection-descriptions",
+      categoryId: "collection-optimization",
+      title: "Create Collection Descriptions",
+      description: "Write SEO-friendly descriptions for your collection pages",
+      difficulty: "easy",
+      timeEstimate: "15-20 minutes",
+      impact: "medium",
+      completionRate: "75%",
+      steps: []
+    },
+    {
+      id: "implement-schema-markup",
+      categoryId: "technical-seo",
+      title: "Implement Schema Markup",
+      description: "Add schema markup to improve search results appearance",
+      difficulty: "hard",
+      timeEstimate: "45-60 minutes",
+      impact: "high",
+      completionRate: "52%",
+      steps: []
+    },
+    {
+      id: "create-buying-guide",
+      categoryId: "content-creation",
+      title: "Create Product Buying Guide",
+      description: "Create a comprehensive buying guide to educate customers",
+      difficulty: "medium",
+      timeEstimate: "40-50 minutes",
+      impact: "medium",
+      completionRate: "68%",
+      steps: []
+    },
+    {
+      id: "optimize-meta-descriptions",
+      categoryId: "technical-seo",
+      title: "Optimize Meta Descriptions",
+      description: "Improve your meta descriptions to increase click-through rates",
+      difficulty: "easy",
+      timeEstimate: "25-35 minutes",
+      impact: "medium",
+      completionRate: "79%",
+      steps: []
+    }
+  ];
+  
   const filteredTasks = activeCategory === "all" 
-    ? tasks 
-    : tasks.filter(task => task.categoryId === activeCategory);
+    ? extendedTasks 
+    : extendedTasks.filter(task => task.categoryId === activeCategory);
   
   const handleSelectTask = (task) => {
     toast({
@@ -88,6 +159,7 @@ const TaskDiscovery = () => {
                     
                     <Button 
                       className="w-full mt-2"
+                      variant="outline"
                       onClick={() => handleSelectTask(task)}
                     >
                       Use Template
