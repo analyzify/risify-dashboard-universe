@@ -13,7 +13,8 @@ import {
   Tag, 
   ChevronRight, 
   PlusCircle,
-  ScanText
+  ScanText,
+  LayoutGrid
 } from "lucide-react";
 
 const MappingCard = ({ icon, title, description, href }: { 
@@ -72,6 +73,13 @@ const MappingsPage = () => {
               title="Collection to Taxonomy"
               description="Map your collections to Shopify's native categories for better discoverability."
               href="/catalog/mappings/collection-taxonomy"
+            />
+            
+            <MappingCard
+              icon={<LayoutGrid className="h-5 w-5" />}
+              title="Collection to Shopify/Google Taxonomy - Category"
+              description="Map collections to official Shopify and Google product categories for better search visibility."
+              href="/catalog/mappings/collection-category"
             />
             
             <MappingCard

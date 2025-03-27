@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -61,6 +62,7 @@ const App = () => (
           
           {/* Mapping subcategories */}
           <Route path="/catalog/mappings/collection-taxonomy" element={<PlaceholderPage title="Collection to Shopify Taxonomy" />} />
+          <Route path="/catalog/mappings/collection-category" element={<PlaceholderPage title="Collection to Shopify/Google Taxonomy - Category" />} /> {/* New route */}
           <Route path="/catalog/mappings/vendor-collection" element={<PlaceholderPage title="Vendor to Collection" />} />
           <Route path="/catalog/mappings/product-blog" element={<PlaceholderPage title="Product to Blog Post" />} />
           <Route path="/catalog/mappings/custom-groups" element={<PlaceholderPage title="Custom Groups" />} />
