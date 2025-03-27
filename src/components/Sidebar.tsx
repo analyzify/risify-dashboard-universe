@@ -226,7 +226,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { label: "Component Gallery", href: "/components/gallery" },
     { label: "Store Audit", href: "/components/store-audit" },
     { label: "Implementation", href: "/components/implementation" },
-    { label: "Component Settings", href: "/components/settings" },
+    // Removed "Component Settings" entry from this submenu
   ];
 
   const contentSubmenu = [
