@@ -1,5 +1,6 @@
+
 import React, { useState } from "react";
-import { Search, Plus, Filter } from "lucide-react";
+import { Search, Plus, Filter, MoreVertical, Check, Copy, Link2, ShoppingBag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
@@ -18,7 +19,19 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type ContentType = "faq" | "hero" | "testimonial" | "cta";
 
@@ -35,6 +48,7 @@ const ContentManagement = () => {
   const [selectedType, setSelectedType] = useState<ContentType | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [allSelected, setAllSelected] = useState(false);
   const itemsPerPage = 5;
   
   const [contentItems, setContentItems] = useState<ContentItem[]>([
@@ -140,11 +154,54 @@ const ContentManagement = () => {
     );
   };
 
+  const handleSelectAll = () => {
+    const newAllSelected = !allSelected;
+    setAllSelected(newAllSelected);
+    
+    setContentItems(items =>
+      items.map(item => {
+        // Only update items that are currently visible in the filtered view
+        if (filteredContent.some(filtered => filtered.id === item.id)) {
+          return { ...item, selected: newAllSelected };
+        }
+        return item;
+      })
+    );
+  };
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+
+  const handleAction = (action: string, items: ContentItem | ContentItem[]) => {
+    const itemsList = Array.isArray(items) ? items : [items];
+    const itemNames = itemsList.map(item => item.title).join(", ");
+    
+    switch (action) {
+      case "edit":
+        toast.success(`Editing: ${itemNames}`);
+        break;
+      case "duplicate":
+        toast.success(`Duplicated: ${itemNames}`);
+        break;
+      case "assignToProduct":
+        toast.success(`Assigning to product: ${itemNames}`);
+        break;
+      case "assignToCollection":
+        toast.success(`Assigning to collection: ${itemNames}`);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const getSelectedItems = () => {
+    return contentItems.filter(item => item.selected);
+  };
+
+  const selectedCount = getSelectedItems().length;
 
   return (
     <div className="space-y-4">
@@ -205,6 +262,37 @@ const ContentManagement = () => {
         </div>
       </div>
 
+      {selectedCount > 0 && (
+        <div className="bg-muted/50 p-2 rounded-md flex items-center justify-between">
+          <div className="text-sm">
+            {selectedCount} item{selectedCount !== 1 ? 's' : ''} selected
+          </div>
+          <div className="flex space-x-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Actions <MoreVertical className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuItem onClick={() => handleAction("edit", getSelectedItems())}>
+                  <Check className="mr-2 h-4 w-4" /> Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("duplicate", getSelectedItems())}>
+                  <Copy className="mr-2 h-4 w-4" /> Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("assignToProduct", getSelectedItems())}>
+                  <ShoppingBag className="mr-2 h-4 w-4" /> Assign to Product
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAction("assignToCollection", getSelectedItems())}>
+                  <Link2 className="mr-2 h-4 w-4" /> Assign to Collection
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      )}
+
       <div className="border rounded-md">
         <Table>
           <TableHeader>
@@ -213,11 +301,14 @@ const ContentManagement = () => {
                 <input 
                   type="checkbox" 
                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  checked={allSelected}
+                  onChange={handleSelectAll}
                 />
               </TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Added by</TableHead>
               <TableHead>Updated</TableHead>
+              <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -250,6 +341,29 @@ const ContentManagement = () => {
                 </TableCell>
                 <TableCell>{item.addedBy}</TableCell>
                 <TableCell>{item.updatedAt}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[200px]">
+                      <DropdownMenuItem onClick={() => handleAction("edit", item)}>
+                        <Check className="mr-2 h-4 w-4" /> Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleAction("duplicate", item)}>
+                        <Copy className="mr-2 h-4 w-4" /> Duplicate
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleAction("assignToProduct", item)}>
+                        <ShoppingBag className="mr-2 h-4 w-4" /> Assign to Product
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleAction("assignToCollection", item)}>
+                        <Link2 className="mr-2 h-4 w-4" /> Assign to Collection
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
