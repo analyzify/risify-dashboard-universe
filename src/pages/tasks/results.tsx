@@ -1,12 +1,11 @@
-
 import React from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Search, Award, BarChart, ArrowUp, ArrowDown, LineChart } from "lucide-react";
+import { TrendingUp, Search, Award, BarChart, ArrowUp, ArrowDown, LineChart as LineChartIcon } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ResponsiveLine } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { cn } from "@/lib/utils";
 
 const ResultsAndImpact = () => {
@@ -20,18 +19,13 @@ const ResultsAndImpact = () => {
 
   // Dummy data for trend lines
   const trendData = [
-    {
-      id: "trendLine",
-      data: [
-        { x: 0, y: 50 },
-        { x: 1, y: 55 },
-        { x: 2, y: 40 },
-        { x: 3, y: 65 },
-        { x: 4, y: 60 },
-        { x: 5, y: 70 },
-        { x: 6, y: 62 },
-      ],
-    },
+    { name: 'Mon', keywords: 45, traffic: 2400 },
+    { name: 'Tue', keywords: 50, traffic: 2800 },
+    { name: 'Wed', keywords: 40, traffic: 2200 },
+    { name: 'Thu', keywords: 65, traffic: 3400 },
+    { name: 'Fri', keywords: 60, traffic: 3200 },
+    { name: 'Sat', keywords: 70, traffic: 3800 },
+    { name: 'Sun', keywords: 62, traffic: 3600 },
   ];
 
   return (
@@ -189,10 +183,16 @@ const ResultsAndImpact = () => {
                 </div>
                 
                 <div className="h-[450px] bg-gradient-to-b from-blue-50/50 to-transparent rounded-lg border p-4">
-                  <LineChart className="text-muted-foreground" />
-                  <div className="flex items-center justify-center h-full text-muted-foreground">
-                    <span>Position change chart would display here with more detailed analytics</span>
-                  </div>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={trendData}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="keywords" stroke="#4299e1" strokeWidth={2} />
+                      <Line type="monotone" dataKey="traffic" stroke="#10b981" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </CardContent>
