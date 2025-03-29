@@ -15,7 +15,10 @@ import {
   Settings, 
   ArrowRight,
   Sparkles,
-  Info
+  Info,
+  TrendingUp,
+  TrendingDown,
+  Minus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -149,10 +152,10 @@ const PositionTracking = () => {
   ];
 
   const positionDistribution = [
-    { label: "Top 3", count: 28, percentage: 28, new: 3, lost: 2, color: "#4299e1" },
-    { label: "Top 10", count: 58, percentage: 58, new: 1, lost: 5, color: "#38b2ac" },
-    { label: "Top 20", count: 89, percentage: 89, new: 4, lost: 2, color: "#4c51bf" },
-    { label: "Top 100", count: 105, percentage: 100, new: 2, lost: 2, color: "#667eea" },
+    { label: "Top 3", count: 28, percentage: 28, new: 3, lost: 2, color: "#4299e1", trend: "up" },
+    { label: "Top 10", count: 58, percentage: 58, new: 1, lost: 5, color: "#38b2ac", trend: "down" },
+    { label: "Top 20", count: 89, percentage: 89, new: 4, lost: 2, color: "#4c51bf", trend: "up" },
+    { label: "Top 100", count: 105, percentage: 100, new: 2, lost: 2, color: "#667eea", trend: "stable" },
   ];
 
   const toggleKeywordSelection = (id: string) => {
@@ -181,6 +184,17 @@ const PositionTracking = () => {
     if (position <= 20) return "";
     if (position <= 50) return "text-orange-500 border-orange-300";
     return "";
+  };
+
+  const renderTrendIcon = (trend: string) => {
+    switch (trend) {
+      case "up":
+        return <TrendingUp className="h-4 w-4 text-green-500" />;
+      case "down":
+        return <TrendingDown className="h-4 w-4 text-red-500" />;
+      default:
+        return <Minus className="h-4 w-4 text-gray-400" />;
+    }
   };
 
   return (
@@ -269,8 +283,8 @@ const PositionTracking = () => {
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="md:col-span-1">
             <CardHeader className="pb-2">
-              <CardTitle className="flex items-center justify-between">
-                <span>Keywords</span>
+              <CardTitle className="flex items-center justify-between text-base">
+                <span>Position Distribution</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -284,59 +298,62 @@ const PositionTracking = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {positionDistribution.map((item, index) => (
-                  <div key={index} className="space-y-1">
-                    <div className="text-sm font-medium mb-1">{item.label}</div>
-                    <div className="flex items-center mb-1">
-                      <div className="w-10 h-10 rounded-full border-4 border-[#E5F1FF] flex items-center justify-center mr-3" style={{ borderLeftColor: item.color }}>
-                        <span className="text-[#4299e1] font-bold">{item.count}</span>
-                      </div>
-                      <div className="flex space-x-4">
-                        <div className="flex flex-col">
-                          <span className="text-xs text-muted-foreground">New</span>
-                          <span className="font-medium">{item.new}</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-xs text-muted-foreground">Lost</span>
-                          <span className="font-medium">{item.lost}</span>
-                        </div>
+                  <div key={index} className="relative">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-medium">{item.label}</span>
+                      <div className="flex items-center gap-1">
+                        {renderTrendIcon(item.trend)}
+                        <span className="text-sm font-medium">{item.count}</span>
                       </div>
                     </div>
-                    <div className="h-10 w-full bg-gray-50 rounded relative">
-                      <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
-                        <path 
-                          d="M0,15 Q25,10 50,15 T100,15" 
-                          fill="none" 
-                          stroke="#E0E7FF"
-                          strokeWidth="1.5"
+                    
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full rounded-full" 
+                          style={{ 
+                            width: `${item.percentage}%`, 
+                            backgroundColor: item.color 
+                          }}
                         />
-                      </svg>
-                      <div className={cn(
-                        "absolute top-1/2 right-2 w-2 h-2 rounded-full transform -translate-y-1/2",
-                        index % 2 === 0 ? "bg-red-500" : "bg-gray-400"
-                      )}></div>
+                      </div>
                     </div>
-                    <div className="border-b pb-2"></div>
+                    
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <ArrowUp className="h-3 w-3 text-green-500" />
+                        <span>+{item.new}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <ArrowDown className="h-3 w-3 text-red-500" />
+                        <span>-{item.lost}</span>
+                      </div>
+                    </div>
+                    
+                    {index < positionDistribution.length - 1 && (
+                      <div className="pt-4 my-1 border-b border-gray-100" />
+                    )}
                   </div>
                 ))}
                 
-                <div className="pt-2">
+                <div className="pt-3">
                   <div className="text-sm font-medium mb-2">Improved vs. declined</div>
-                  <div className="flex items-center mt-1">
-                    <div className="text-xl font-bold text-green-500 mr-2">36</div>
-                    <div className="relative h-2 flex-1 rounded-full bg-gray-200">
+                  <div className="flex items-center gap-3">
+                    <div className="text-xl font-bold text-green-500">36</div>
+                    <div className="relative h-2 flex-1 bg-gray-100 rounded-full overflow-hidden">
                       <div className="absolute inset-y-0 left-0 bg-green-500 rounded-l-full" style={{ width: '52%' }}></div>
                       <div className="absolute inset-y-0 right-0 bg-red-500 rounded-r-full" style={{ width: '48%' }}></div>
                     </div>
-                    <div className="text-xl font-bold text-red-500 ml-2">34</div>
+                    <div className="text-xl font-bold text-red-500">34</div>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="md:col-span-2">
+          <Card className="md:col-span-1">
             <CardHeader className="pb-2">
               <CardTitle>Position Changes</CardTitle>
               <CardDescription>
@@ -344,7 +361,7 @@ const PositionTracking = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mt-4 h-[240px] flex items-center justify-center bg-muted/30 rounded-md">
+              <div className="mt-4 h-[340px] flex items-center justify-center bg-muted/30 rounded-md">
                 <p className="text-muted-foreground text-sm">
                   Position change graph will display here
                 </p>
