@@ -341,12 +341,24 @@ const PositionTracking = () => {
                 <div className="pt-3">
                   <div className="text-sm font-medium mb-2">Improved vs. declined</div>
                   <div className="flex items-center gap-3">
-                    <div className="text-xl font-bold text-green-500">36</div>
-                    <div className="relative h-2 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100">
+                        <TrendingUp className="h-3 w-3 text-green-500" />
+                      </div>
+                      <span className="text-sm font-medium">36</span>
+                    </div>
+                    
+                    <div className="relative h-1.5 flex-1 bg-gray-100 rounded-full overflow-hidden">
                       <div className="absolute inset-y-0 left-0 bg-green-500 rounded-l-full" style={{ width: '52%' }}></div>
                       <div className="absolute inset-y-0 right-0 bg-red-500 rounded-r-full" style={{ width: '48%' }}></div>
                     </div>
-                    <div className="text-xl font-bold text-red-500">34</div>
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-100">
+                        <TrendingDown className="h-3 w-3 text-red-500" />
+                      </div>
+                      <span className="text-sm font-medium">34</span>
+                    </div>
                   </div>
                 </div>
               </div>
