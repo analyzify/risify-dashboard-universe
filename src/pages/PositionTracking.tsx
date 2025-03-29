@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
@@ -58,7 +57,6 @@ const PositionTracking = () => {
   const [dateRange, setDateRange] = useState("7d");
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   
-  // Mock data for the position tracking page
   const keywordData = [
     { 
       id: "1", 
@@ -151,11 +149,10 @@ const PositionTracking = () => {
   ];
 
   const positionDistribution = [
-    { position: "1-3", count: 1, percentage: 12.5 },
-    { position: "4-10", count: 3, percentage: 37.5 },
-    { position: "11-20", count: 2, percentage: 25 },
-    { position: "21-50", count: 1, percentage: 12.5 },
-    { position: "51+", count: 1, percentage: 12.5 },
+    { label: "Top 3", count: 28, percentage: 28, new: 3, lost: 2, color: "#4299e1" },
+    { label: "Top 10", count: 58, percentage: 58, new: 1, lost: 5, color: "#38b2ac" },
+    { label: "Top 20", count: 89, percentage: 89, new: 4, lost: 2, color: "#4c51bf" },
+    { label: "Top 100", count: 105, percentage: 100, new: 2, lost: 2, color: "#667eea" },
   ];
 
   const toggleKeywordSelection = (id: string) => {
@@ -170,7 +167,6 @@ const PositionTracking = () => {
     setDateRange(value);
   };
 
-  // Helper function to determine badge variant based on position
   const getPositionBadgeVariant = (position: number) => {
     if (position <= 3) return "default";
     if (position <= 10) return "default";
@@ -179,7 +175,6 @@ const PositionTracking = () => {
     return "destructive";
   };
 
-  // Helper function to determine badge className based on position
   const getPositionBadgeClass = (position: number) => {
     if (position <= 3) return "bg-green-500 hover:bg-green-600";
     if (position <= 10) return "bg-green-400 hover:bg-green-500";
@@ -272,72 +267,87 @@ const PositionTracking = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Card className="md:col-span-2">
-            <CardHeader className="pb-0">
-              <div className="flex items-center justify-between">
-                <CardTitle>Position Changes</CardTitle>
-                <Select value={dateRange} onValueChange={handleDateRangeChange}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select date range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="7d">Last 7 days</SelectItem>
-                    <SelectItem value="30d">Last 30 days</SelectItem>
-                    <SelectItem value="90d">Last 90 days</SelectItem>
-                    <SelectItem value="custom">Custom range</SelectItem>
-                  </SelectContent>
-                </Select>
+          <Card className="md:col-span-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center justify-between">
+                <span>Keywords</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info size={16} className="text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Number of keywords in each position range</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {positionDistribution.map((item, index) => (
+                  <div key={index} className="space-y-1">
+                    <div className="text-sm font-medium mb-1">{item.label}</div>
+                    <div className="flex items-center mb-1">
+                      <div className="w-10 h-10 rounded-full border-4 border-[#E5F1FF] flex items-center justify-center mr-3" style={{ borderLeftColor: item.color }}>
+                        <span className="text-[#4299e1] font-bold">{item.count}</span>
+                      </div>
+                      <div className="flex space-x-4">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">New</span>
+                          <span className="font-medium">{item.new}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">Lost</span>
+                          <span className="font-medium">{item.lost}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="h-10 w-full bg-gray-50 rounded relative">
+                      <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
+                        <path 
+                          d="M0,15 Q25,10 50,15 T100,15" 
+                          fill="none" 
+                          stroke="#E0E7FF"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                      <div className={cn(
+                        "absolute top-1/2 right-2 w-2 h-2 rounded-full transform -translate-y-1/2",
+                        index % 2 === 0 ? "bg-red-500" : "bg-gray-400"
+                      )}></div>
+                    </div>
+                    <div className="border-b pb-2"></div>
+                  </div>
+                ))}
+                
+                <div className="pt-2">
+                  <div className="text-sm font-medium mb-2">Improved vs. declined</div>
+                  <div className="flex items-center mt-1">
+                    <div className="text-xl font-bold text-green-500 mr-2">36</div>
+                    <div className="relative h-2 flex-1 rounded-full bg-gray-200">
+                      <div className="absolute inset-y-0 left-0 bg-green-500 rounded-l-full" style={{ width: '52%' }}></div>
+                      <div className="absolute inset-y-0 right-0 bg-red-500 rounded-r-full" style={{ width: '48%' }}></div>
+                    </div>
+                    <div className="text-xl font-bold text-red-500 ml-2">34</div>
+                  </div>
+                </div>
               </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="md:col-span-2">
+            <CardHeader className="pb-2">
+              <CardTitle>Position Changes</CardTitle>
+              <CardDescription>
+                Where your keywords rank
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mt-4 h-[240px] flex items-center justify-center bg-muted/30 rounded-md">
                 <p className="text-muted-foreground text-sm">
                   Position change graph will display here
                 </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Position Distribution</CardTitle>
-              <CardDescription>
-                Where your keywords rank
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {positionDistribution.map((item) => (
-                  <div key={item.position} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className={cn(
-                          "h-3 w-3 rounded-full",
-                          item.position === "1-3" ? "bg-green-500" :
-                          item.position === "4-10" ? "bg-green-300" :
-                          item.position === "11-20" ? "bg-yellow-400" :
-                          item.position === "21-50" ? "bg-orange-400" :
-                          "bg-red-400"
-                        )} />
-                        <span className="text-sm font-medium">Position {item.position}</span>
-                      </div>
-                      <span className="text-sm">{item.count} keywords</span>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                      <div 
-                        className={cn(
-                          "h-full rounded-full",
-                          item.position === "1-3" ? "bg-green-500" :
-                          item.position === "4-10" ? "bg-green-300" :
-                          item.position === "11-20" ? "bg-yellow-400" :
-                          item.position === "21-50" ? "bg-orange-400" :
-                          "bg-red-400"
-                        )}
-                        style={{ width: `${item.percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
               </div>
             </CardContent>
           </Card>
